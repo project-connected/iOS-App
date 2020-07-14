@@ -9,7 +9,7 @@
 import XCTest
 @testable import Connected_iOS
 
-class Connected_iOSTests: XCTestCase {
+class ConnectediOSTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
