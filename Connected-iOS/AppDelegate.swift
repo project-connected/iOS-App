@@ -12,7 +12,25 @@ import Firebase
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    // MARK: - Properties
+
     var window: UIWindow?
+
+    private let dependency: AppDependency
+
+    // MARK: - Lifecycle
+
+    private override init() {
+        self.dependency = .resolve()
+        super.init()
+    }
+
+    init(dependency: AppDependency) {
+        self.dependency = dependency
+        super.init()
+    }
+
+    // MARK: - Functions
 
     func application(
         _ application: UIApplication,
@@ -23,7 +41,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         window = UIWindow()
         window?.makeKeyAndVisible()
-        window?.rootViewController = ViewController()
+        let factory = dependency.viewControllerFactory
+        window?.rootViewController = factory.create()
 
         return true
     }
