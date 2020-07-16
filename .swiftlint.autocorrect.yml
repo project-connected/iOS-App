@@ -1,5 +1,9 @@
-disabled_rules: # rule identifiers to exclude from running
+whitelist_rules:
+    - trailing_whitespace
 
+disabled_rules: # rule identifiers to exclude from running
+#    - weak_delegate
+    
 opt_in_rules: # some rules are only opt-in
 
 included: # paths to include during linting. `--path` is ignored if present.

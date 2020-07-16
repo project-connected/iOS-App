@@ -8,9 +8,26 @@ target 'Connected-iOS' do
   # Pods for Connected-iOS
   pod 'SwiftLint'
 
+  pod 'Firebase/Analytics'
+  pod 'Firebase/Crashlytics'
+  pod 'Firebase/Performance'
+
+  pod 'RxSwift'
+  pod 'RxCocoa'
+
+  pod 'Kingfisher'
+
+  pod 'Alamofire'
+
+  pod 'Pure'
+
+
   target 'Connected-iOSTests' do
     inherit! :search_paths
     # Pods for testing
+	pod 'RxBlocking'
+	pod 'RxTest'
+
   end
 
 end
