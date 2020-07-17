@@ -2,7 +2,7 @@
 # platform :ios, '9.0'
 
 workspace 'Connected-iOS'
-xcodeproj 'Connected-iOS.xcodeproj'
+project 'Connected-iOS.xcodeproj'
 
 target 'Connected-iOS' do
   # Comment the next line if you don't want to use dynamic frameworks
