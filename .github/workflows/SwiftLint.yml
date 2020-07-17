@@ -25,30 +25,9 @@ jobs:
     - name: Lint
       run: |
         set -o pipefail \
-        && swiftlint \
+        && swiftlint "$@" -- \
         | sed -E "s/$(pwd|sed 's/\//\\\//g')\///" \
-        | sed -E 's/^(.*):([0-9]+):([0-9]+): (warning|error|[^:]+): (.*)/::\4 file=\1,line=\2,col=\3::\5/' \
-        | sed -E "s/warning/error/"
-
-    - name: if fail
-      uses: actions/github-script@v2
-      if: failure()
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const ref = "${{github.ref}}"
-          const pull_number = Number(ref.split("/")[2])
-          await github.pulls.createReview({
-            ...context.repo,
-            pull_number,
-            body:"코드를 다시 확인해주세요. ",
-            event: "REQUEST_CHANGES"
-          })
-          await github.pulls.update({
-            ...context.repo,
-            pull_number,
-            state: "closed"
-          })
+        | sed -E 's/^(.*):([0-9]+):([0-9]+): (warning|error|[^:]+): (.*)/::\4 file=\1,line=\2,col=\3::\5/'
 
 
 
