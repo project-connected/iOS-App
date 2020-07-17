@@ -16,6 +16,7 @@ jobs:
     runs-on: macOS-latest
     env:
       WORKSPACE: Connected-iOS.xcworkspace
+      PROJECT: Coneected-iOS.xcodeproj
       SCHEME: Connected-iOS
       SDK: iphonesimulator
       DESTINATION: platform=iOS Simulator,name=iPhone 11 Pro,OS=latest
@@ -29,8 +30,13 @@ jobs:
 
     - name: Test
       run: |
+        xcodebuild build-for-testing \
+          -workspace "$WORKSPACE" \
+          -scheme "$SCHEME" \
+          -sdk "$SDK" \
+          -destination "$DESTINATION"
         set -o pipefail \
-        && xcodebuild clean test \
+        && xcodebuild test-without-building \
           -workspace "$WORKSPACE" \
           -scheme "$SCHEME" \
           -sdk "$SDK" \
@@ -38,3 +44,13 @@ jobs:
           -configuration Debug \
           -enableCodeCoverage YES \
         | xcpretty -c
+
+      # set -o pipefail \
+      # && xcodebuild clean test \
+      #   -workspace "$WORKSPACE" \
+      #   -scheme "$SCHEME" \
+      #   -sdk "$SDK" \
+      #   -destination "$DESTINATION" \
+      #   -configuration Debug \
+      #   -enableCodeCoverage YES \
+      # | xcpretty -c
