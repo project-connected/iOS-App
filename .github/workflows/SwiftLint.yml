@@ -27,8 +27,8 @@ jobs:
         set -o pipefail \
         && swiftlint \
         | sed -E "s/$(pwd|sed 's/\//\\\//g')\///" \
-        | sed -E "s/warning/error/" \
-        | sed -E 's/^(.*):([0-9]+):([0-9]+): (warning|error|[^:]+): (.*)/::\4 file=\1,line=\2,col=\3::\5/'
+        | sed -E 's/^(.*):([0-9]+):([0-9]+): (warning|error|[^:]+): (.*)/::\4 file=\1,line=\2,col=\3::\5/' \
+        | sed -E "s/warning/error/"
 
     - name: if fail
       uses: actions/github-script@v2
