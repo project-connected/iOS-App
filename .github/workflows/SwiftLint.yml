@@ -24,7 +24,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: |
-          /usr/local/**/swiftlint
+          /usr/local/Cellar/swiftlint
         key: ${{ runner.os }}-
 
     - name: install brew & swiftlint
@@ -36,6 +36,10 @@ jobs:
     - name: lint
       run: |
         swiftlint
-        pwd
+        echo "-------------path-------------"
+        where swiftlint
         echo "$GITHUB_WORKSPACE"
+        echo "-------------files------------"
+        ls -a
+        echo "-------------end------------"
 
