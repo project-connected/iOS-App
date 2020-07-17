@@ -24,14 +24,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: ls
-      run: ls -al
-
     - name: Install Dependencies
-      run: pod install --repo-update
-
-    - name: ls2
-      run: ls -al
+      run: pod install
 
     - name: Test
       run: |
