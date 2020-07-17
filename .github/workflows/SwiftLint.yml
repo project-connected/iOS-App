@@ -19,16 +19,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Cache
-      id: cache
-      uses: actions/cache@v2
-      with:
-        path: |
-          /usr/local/Cellar/swiftlint
-        key: ${{ runner.os }}-
-
     - name: Install swiftlint
-      if: steps.cache.outputs.cache-hit != 'true'
       run: brew install swiftlint
 
     - name: Lint
