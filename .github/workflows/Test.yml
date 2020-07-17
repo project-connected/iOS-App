@@ -23,6 +23,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: List SDKs and Devices
+      run: xcodebuild -showsdks; instruments -s
+
+    - name: Generate Xcode Project
+      run: swift package generate-xcodeproj --enable-code-coverage
+
     - name: Test
       run: |
         set -o pipefail \
