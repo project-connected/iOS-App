@@ -23,7 +23,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     - name: check cocoapods
-      use: pod version
+      run: pod version
 
     - uses: actions/checkout@v2
 
