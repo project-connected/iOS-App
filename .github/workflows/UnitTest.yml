@@ -25,7 +25,9 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Install Dependencies
-      run: pod install
+      run: |
+        pod deintegrate
+        pod install
 
     - name: Test
       run: |
