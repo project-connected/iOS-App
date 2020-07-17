@@ -19,11 +19,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Check brea & swiftlint
-      run: |
-        brew -v
-        swiftlint version
-
     - name: Cache
       id: cache
       uses: actions/cache@v2
@@ -32,10 +27,9 @@ jobs:
           /usr/local/Cellar/swiftlint
         key: ${{ runner.os }}-
 
-    - name: Install brew & swiftlint
+    - name: Install swiftlint
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
         brew install swiftlint
 
     - name: Lint
