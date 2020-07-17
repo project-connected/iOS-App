@@ -28,7 +28,7 @@ jobs:
       run: |
         set -o pipefail \
         && xcodebuild clean test \
-          -project "$WORKSPACE" \
+          -workspace "$WORKSPACE" \
           -scheme "$SCHEME" \
           -sdk "$SDK" \
           -destination "$DESTINATION" \
