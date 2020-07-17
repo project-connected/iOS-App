@@ -15,25 +15,20 @@ jobs:
     # The type of runner that the job will run on
     runs-on: macOS-latest
     env:
-      PROJECT: Connected-iOS.xcodeproj
+      WORKSPACE: Connected-iOS.xcworkspace
       SCHEME: Connected-iOS
+      SDK: iphonesimulator
       DESTINATION: platform=iOS Simulator,name=iPhone 11 Pro,OS=latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     - uses: actions/checkout@v2
 
-    - name: List SDKs and Devices
-      run: xcodebuild -showsdks; instruments -s
-
-    - name: Generate Xcode Project
-      run: swift package generate-xcodeproj --enable-code-coverage
-
     - name: Test
       run: |
         set -o pipefail \
-        && xcodebuild clean build test \
-          -project "$PROJECT" \
+        && xcodebuild clean test \
+          -project "$WORKSPACE" \
           -scheme "$SCHEME" \
           -sdk "$SDK" \
           -destination "$DESTINATION" \

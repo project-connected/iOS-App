@@ -7,7 +7,6 @@
 //
 
 import XCTest
-@testable import Connected_iOS
 
 class ConnectediOSTests: XCTestCase {
 
