@@ -19,7 +19,16 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Cache
+      id: cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          /usr/local/**/swiftlint
+        key: ${{ runner.os }}-
+
     - name: install brew & swiftlint
+      if: steps.cache.outputs.cache-hit != 'true'
       run: |
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
         brew install swiftlint
@@ -28,4 +37,5 @@ jobs:
       run: |
         swiftlint
         pwd
+        echo "$GITHUB_WORKSPACE"
 
