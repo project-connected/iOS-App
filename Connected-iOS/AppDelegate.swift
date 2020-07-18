@@ -7,9 +7,7 @@
 //
 
 import UIKit
-import Firebase
 
-@UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // MARK: - Properties
@@ -37,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
 
-        FirebaseApp.configure()
+        dependency.analyticsService.configure()
 
         window = UIWindow()
         window?.makeKeyAndVisible()

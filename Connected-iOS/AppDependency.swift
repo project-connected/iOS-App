@@ -8,10 +8,12 @@
 
 import Foundation
 import Pure
+import Firebase
 
 extension AppDependency {
     static func resolve() -> AppDependency {
         return AppDependency(
+            analyticsService: FirebaseApp.self,
             viewControllerFactory: .init(
                 dependency: ViewController.Dependency()
             )
@@ -20,6 +22,7 @@ extension AppDependency {
 }
 
 struct AppDependency {
+    let analyticsService: AnalyticsService.Type
     let viewControllerFactory: ViewController.Factory
 }
 

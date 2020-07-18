@@ -2,6 +2,7 @@
 platform :ios, '11.0'
 
 workspace 'Connected-iOS'
+project 'Connected-iOS.xcodeproj'
 
 target 'Connected-iOS' do
   # Comment the next line if you don't want to use dynamic frameworks
@@ -27,8 +28,8 @@ target 'Connected-iOS' do
   target 'Connected-iOSTests' do
     inherit! :search_paths
     # Pods for testing
-	pod 'RxBlocking'
-	pod 'RxTest'
+    pod 'RxBlocking'
+    pod 'RxTest'
 
   end
 

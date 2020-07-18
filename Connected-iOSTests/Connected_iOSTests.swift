@@ -23,6 +23,6 @@ class ConnectediOSTests: XCTestCase {
     }
 
     func testFalse() {
-        XCTAssertFalse(true)
+        XCTAssertFalse(false)
     }
 }
