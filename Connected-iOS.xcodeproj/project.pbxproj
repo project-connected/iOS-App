@@ -19,6 +19,9 @@
 		0884DB8624BD92E000A2E471 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0884DB8524BD92E000A2E471 /* Assets.xcassets */; };
 		0884DB8924BD92E000A2E471 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0884DB8724BD92E000A2E471 /* LaunchScreen.storyboard */; };
 		0884DB9424BD92E000A2E471 /* Connected_iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0884DB9324BD92E000A2E471 /* Connected_iOSTests.swift */; };
+		08CD578524C463E40066AD1B /* Array+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CD578424C463E40066AD1B /* Array+UIView.swift */; };
+		08CD578724C468290066AD1B /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CD578624C468290066AD1B /* SignUpViewController.swift */; };
+		08CD578924C469FF0066AD1B /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CD578824C469FF0066AD1B /* SignUpViewModel.swift */; };
 		08E955E8C08912CB58A2B38B /* Pods_Connected_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 013E666FF0BF1F1502740C72 /* Pods_Connected_iOSTests.framework */; };
 		08EDD0B324C2DCD90038D6B9 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EDD0B224C2DCD90038D6B9 /* NetworkService.swift */; };
 		08EDD0B724C2E3140038D6B9 /* RootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EDD0B624C2E3140038D6B9 /* RootViewModel.swift */; };
@@ -56,6 +59,9 @@
 		0884DB8F24BD92E000A2E471 /* Connected-iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Connected-iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0884DB9324BD92E000A2E471 /* Connected_iOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connected_iOSTests.swift; sourceTree = "<group>"; };
 		0884DB9524BD92E000A2E471 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		08CD578424C463E40066AD1B /* Array+UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+UIView.swift"; sourceTree = "<group>"; };
+		08CD578624C468290066AD1B /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		08CD578824C469FF0066AD1B /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
 		08EDD0B224C2DCD90038D6B9 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		08EDD0B624C2E3140038D6B9 /* RootViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModel.swift; sourceTree = "<group>"; };
 		08EDD0B824C2E5BF0038D6B9 /* RootTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabBarController.swift; sourceTree = "<group>"; };
@@ -159,6 +165,7 @@
 			children = (
 				08EDD0B624C2E3140038D6B9 /* RootViewModel.swift */,
 				08EDD0BF24C409650038D6B9 /* LogInViewModel.swift */,
+				08CD578824C469FF0066AD1B /* SignUpViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -169,6 +176,7 @@
 				0884DB8024BD92DF00A2E471 /* ViewController.swift */,
 				08EDD0B824C2E5BF0038D6B9 /* RootTabBarController.swift */,
 				08EDD0BD24C406D40038D6B9 /* LogInViewController.swift */,
+				08CD578624C468290066AD1B /* SignUpViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -193,6 +201,7 @@
 		08EDD0BA24C2E9ED0038D6B9 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				08CD578424C463E40066AD1B /* Array+UIView.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -444,13 +453,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				0850430924C0505300C672C1 /* AppDependency.swift in Sources */,
+				08CD578924C469FF0066AD1B /* SignUpViewModel.swift in Sources */,
 				08EDD0B924C2E5BF0038D6B9 /* RootTabBarController.swift in Sources */,
 				08EDD0BE24C406D40038D6B9 /* LogInViewController.swift in Sources */,
 				08EDD0B724C2E3140038D6B9 /* RootViewModel.swift in Sources */,
 				085A523924C2BE77009990D5 /* AnalyticsService.swift in Sources */,
 				0884DB8124BD92DF00A2E471 /* ViewController.swift in Sources */,
+				08CD578724C468290066AD1B /* SignUpViewController.swift in Sources */,
 				08EDD0C024C409650038D6B9 /* LogInViewModel.swift in Sources */,
 				0839A11C24C208CA00A15253 /* main.swift in Sources */,
+				08CD578524C463E40066AD1B /* Array+UIView.swift in Sources */,
 				08EDD0B324C2DCD90038D6B9 /* NetworkService.swift in Sources */,
 				0884DB7D24BD92DF00A2E471 /* AppDelegate.swift in Sources */,
 			);

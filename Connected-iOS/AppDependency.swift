@@ -20,6 +20,20 @@ extension AppDependency {
                 dependency: .init(
                     viewModelFactory: RootViewModel.Factory(
                         dependency: .init()
+                    ),
+                    loginViewControllerFactory: LogInViewController.Factory(
+                        dependency: .init(
+                            viewModelFactory: LogInViewModel.Factory(
+                                dependency: .init()
+                            ),
+                            signUpViewControllerFactory: SignUpViewController.Factory(
+                                dependency: .init(
+                                    viewModelFactory: SignUpViewModel.Factory(
+                                        dependency: .init()
+                                    )
+                                )
+                            )
+                        )
                     )
                 )
             )
@@ -34,6 +48,80 @@ struct AppDependency {
     let analyticsService: AnalyticsService.Type
     let networkService: NetworkService
     let rootTabBarControllerFactory: RootTabBarController.Factory
+}
+
+// MARK: - SignUpViewModel
+
+extension SignUpViewModel: FactoryModule {
+    convenience init(dependency: Dependency, payload: ()) {
+        self.init(dependency: dependency)
+    }
+
+    struct Dependency {
+
+    }
+}
+
+extension Factory where Module == SignUpViewModel {
+    func create() -> Module {
+        let module = Module()
+        return module
+    }
+}
+
+// MARK: - SignUpViewController
+
+extension SignUpViewController: FactoryModule {
+    struct Dependency {
+        let viewModelFactory: SignUpViewModel.Factory
+    }
+}
+
+extension Factory where Module == SignUpViewController {
+    func create() -> Module {
+        let module = Module(
+            viewModel: dependency.viewModelFactory.create()
+        )
+        return module
+    }
+}
+
+// MARK: - LogInViewModel
+
+extension LogInViewModel: FactoryModule {
+    convenience init(dependency: Dependency, payload: ()) {
+        self.init(dependency: dependency)
+    }
+
+    struct Dependency {
+
+    }
+}
+
+extension Factory where Module == LogInViewModel {
+    func create() -> Module {
+        let module = Module()
+        return module
+    }
+}
+
+// MARK: - LogInViewController
+
+extension LogInViewController: FactoryModule {
+    struct Dependency {
+        let viewModelFactory: LogInViewModel.Factory
+        let signUpViewControllerFactory: SignUpViewController.Factory
+    }
+}
+
+extension Factory where Module == LogInViewController {
+    func create() -> Module {
+        let module = Module(
+            viewModel: dependency.viewModelFactory.create(),
+            signUpViewControllerFactory: dependency.signUpViewControllerFactory
+        )
+        return module
+    }
 }
 
 // MARK: - RootViewModel
@@ -60,13 +148,16 @@ extension Factory where Module == RootViewModel {
 extension RootTabBarController: FactoryModule {
     struct Dependency {
         let viewModelFactory: RootViewModel.Factory
+        let loginViewControllerFactory: LogInViewController.Factory
     }
 }
 
 extension Factory where Module == RootTabBarController {
     func create() -> Module {
-        let viewModel = dependency.viewModelFactory.create()
-        let module = Module(viewModel: viewModel)
+        let module = Module(
+            viewModel: dependency.viewModelFactory.create(),
+            logInViewControllerFactory: dependency.loginViewControllerFactory
+        )
         return module
     }
 }

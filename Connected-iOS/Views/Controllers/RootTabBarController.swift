@@ -15,12 +15,17 @@ final class RootTabBarController: UITabBarController {
     // MARK: - Properties
 
     private let viewModel: RootViewModelType
+    private let logInViewControllerFactory: LogInViewController.Factory
     private let disposeBag = DisposeBag()
 
     // MARK: - Lifecycle
 
-    init(viewModel: RootViewModelType) {
+    init(
+        viewModel: RootViewModelType,
+        logInViewControllerFactory: LogInViewController.Factory
+    ) {
         self.viewModel = viewModel
+        self.logInViewControllerFactory = logInViewControllerFactory
 
         super.init(nibName: nil, bundle: nil)
 
@@ -64,7 +69,7 @@ final class RootTabBarController: UITabBarController {
         case .home:
             return ViewController()
         case .profile(let isLoggedIn):
-            return isLoggedIn ? ViewController2() : LogInViewController()
+            return isLoggedIn ? ViewController2() : self.logInViewControllerFactory.create()
         }
     }
 
