@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         window = UIWindow()
         window?.makeKeyAndVisible()
-        let factory = dependency.viewControllerFactory
+        let factory = dependency.rootTabBarControllerFactory
         window?.rootViewController = factory.create()
 
         return true
