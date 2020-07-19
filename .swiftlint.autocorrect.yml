@@ -1,5 +1,8 @@
 whitelist_rules:
     - trailing_whitespace
+    - vertical_whitespace
+    - opening_brace
+    - closure_spacing
 
 disabled_rules: # rule identifiers to exclude from running
 #    - weak_delegate
