@@ -45,12 +45,12 @@ final class RootViewModel: RootViewModelType, RootViewModelInputs, RootViewModel
 
     private let shouldSelectProperty: PublishRelay<Int> = PublishRelay()
     func shouldSelect(index: Int) {
-        self.shouldSelectProperty.accept(index)
+        shouldSelectProperty.accept(index)
     }
 
     private let initializedProperty: PublishRelay<Void> = PublishRelay()
     func initialized() {
-        self.initializedProperty.accept(Void())
+        initializedProperty.accept(Void())
     }
 
     // MARK: - Outputs
@@ -58,13 +58,13 @@ final class RootViewModel: RootViewModelType, RootViewModelInputs, RootViewModel
     private let setViewControllersProperty: BehaviorRelay<[RootViewControllerData]>
         = BehaviorRelay(value: [])
     func setViewControllers() -> Driver<[RootViewControllerData]> {
-        return self.setViewControllersProperty.asDriver()
+        return setViewControllersProperty.asDriver()
     }
 
     private let tabBarItemsProperty: BehaviorRelay<[TabBarItem]>
         = BehaviorRelay(value: [])
     func tabBarItems() -> Driver<[TabBarItem]> {
-        return self.tabBarItemsProperty.asDriver()
+        return tabBarItemsProperty.asDriver()
     }
 
     // MARK: - Lifecycle
@@ -72,12 +72,12 @@ final class RootViewModel: RootViewModelType, RootViewModelInputs, RootViewModel
     init() {
 
         let currentUser = Observable.merge(
-            self.initializedProperty.map { false },
+            initializedProperty.map { false },
             Observable.just(nil)
         )
 
-        let standardViewControllers = self.initializedProperty
-            .map(self.generateStandardViewControllers)
+        let standardViewControllers = initializedProperty
+            .map(generateStandardViewControllers)
 
         let personalizedViewControllers = currentUser.filter { $0 != nil }
             .distinctUntilChanged(==)
@@ -85,13 +85,13 @@ final class RootViewModel: RootViewModelType, RootViewModelInputs, RootViewModel
 
         Observable.combineLatest(standardViewControllers, personalizedViewControllers)
             .map(+)
-            .bind(to: self.setViewControllersProperty)
-            .disposed(by: self.disposeBag)
+            .bind(to: setViewControllersProperty)
+            .disposed(by: disposeBag)
 
-        self.initializedProperty
-            .map(self.tabData)
-            .bind(to: self.tabBarItemsProperty)
-            .disposed(by: self.disposeBag)
+        initializedProperty
+            .map(tabData)
+            .bind(to: tabBarItemsProperty)
+            .disposed(by: disposeBag)
 
     }
 

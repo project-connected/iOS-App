@@ -30,11 +30,11 @@ final class RootTabBarController: UITabBarController {
         super.init(nibName: nil, bundle: nil)
 
         self.delegate = self
-        self.setUpLayout()
-        self.bindStyle()
-        self.bindViewModel()
+        setUpLayout()
+        bindStyle()
+        bindViewModel()
 
-        self.viewModel.inputs.initialized()
+        viewModel.inputs.initialized()
     }
 
     required init?(coder: NSCoder) {
@@ -49,15 +49,15 @@ final class RootTabBarController: UITabBarController {
 
     private func bindViewModel() {
 
-        self.viewModel.outputs.setViewControllers()
+        viewModel.outputs.setViewControllers()
             .map { $0.map(self.viewController(from:)) }
             .map { $0.map(UINavigationController.init(rootViewController:)) }
             .drive(onNext: { self.setViewControllers($0, animated: false) })
-            .disposed(by: self.disposeBag)
+            .disposed(by: disposeBag)
 
-        self.viewModel.outputs.tabBarItems()
-            .drive(onNext: self.setTabBarItemStyles(items:))
-            .disposed(by: self.disposeBag)
+        viewModel.outputs.tabBarItems()
+            .drive(onNext: setTabBarItemStyles(items:))
+            .disposed(by: disposeBag)
     }
 
     private func bindStyle() {
@@ -69,7 +69,7 @@ final class RootTabBarController: UITabBarController {
         case .home:
             return ViewController()
         case .profile(let isLoggedIn):
-            return isLoggedIn ? ViewController2() : self.logInViewControllerFactory.create()
+            return isLoggedIn ? ViewController2() : logInViewControllerFactory.create()
         }
     }
 
@@ -77,18 +77,18 @@ final class RootTabBarController: UITabBarController {
         items.forEach { item in
             switch item {
             case .home(let index):
-                self.tabBarItem(at: index)?.image = #imageLiteral(resourceName: "outline_home_black_36pt").withRenderingMode(.alwaysTemplate)
+                tabBarItem(at: index)?.image = #imageLiteral(resourceName: "outline_home_black_36pt").withRenderingMode(.alwaysTemplate)
             case .profile(let index):
-                self.tabBarItem(at: index)?.image = #imageLiteral(resourceName: "baseline_person_black_36pt").withRenderingMode(.alwaysTemplate)
+                tabBarItem(at: index)?.image = #imageLiteral(resourceName: "baseline_person_black_36pt").withRenderingMode(.alwaysTemplate)
             }
         }
     }
 
     private func tabBarItem(at index: Int) -> UITabBarItem? {
-        guard index < (self.tabBar.items?.count ?? 0) else {
+        guard index < (tabBar.items?.count ?? 0) else {
                 return nil
         }
-        return self.tabBar.items?[index]
+        return tabBar.items?[index]
     }
 }
 
@@ -100,7 +100,7 @@ extension RootTabBarController: UITabBarControllerDelegate {
         shouldSelect viewController: UIViewController
     ) -> Bool {
         let index = tabBarController.viewControllers?.firstIndex(of: viewController) ?? 0
-        self.viewModel.inputs.shouldSelect(index: index)
+        viewModel.inputs.shouldSelect(index: index)
         return true
     }
 }

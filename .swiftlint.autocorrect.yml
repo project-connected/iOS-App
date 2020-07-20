@@ -3,6 +3,8 @@ whitelist_rules:
     - vertical_whitespace
     - opening_brace
     - closure_spacing
+    - trailing_comma
+    - trailing_newline
 
 disabled_rules: # rule identifiers to exclude from running
 #    - weak_delegate

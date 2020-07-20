@@ -41,24 +41,24 @@ final class LogInViewModel: LogInViewModelType, LogInViewModelInputs, LogInViewM
         = PublishRelay()
 
     func logInClicked() {
-        self.btnClickedProperty.accept(.logIn)
+        btnClickedProperty.accept(.logIn)
     }
 
     func signUpClicked() {
-        self.btnClickedProperty.accept(.signUp)
+        btnClickedProperty.accept(.signUp)
     }
 
     // MARK: - Outputs
 
     private let displayViewControllerProperty: Signal<LogInViewControllerData>
     func displayViewController() -> Signal<LogInViewControllerData> {
-        return self.displayViewControllerProperty
+        return displayViewControllerProperty
     }
 
     // MARK: - Lifecycle
 
     init() {
-        self.displayViewControllerProperty = self.btnClickedProperty.asSignal()
+        displayViewControllerProperty = btnClickedProperty.asSignal()
 
     }
 

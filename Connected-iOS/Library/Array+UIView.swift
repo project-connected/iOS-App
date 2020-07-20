@@ -17,8 +17,15 @@ extension Array where Element: UIView {
     }
 
     @discardableResult
+    func addArrangedSubviews(parent: UIStackView) -> Array {
+        self.forEach { parent.addArrangedSubview($0) }
+        return self
+    }
+
+    @discardableResult
     func setTranslatesAutoresizingMaskIntoConstraints(value: Bool = false) -> Array {
         self.forEach { $0.translatesAutoresizingMaskIntoConstraints = value }
         return self
     }
+
 }

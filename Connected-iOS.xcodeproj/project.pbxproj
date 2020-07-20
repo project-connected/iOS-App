@@ -12,7 +12,7 @@
 		0839A11C24C208CA00A15253 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0839A11B24C208CA00A15253 /* main.swift */; };
 		0850430724C04A8800C672C1 /* .swiftlint.autocorrect.yml in Resources */ = {isa = PBXBuildFile; fileRef = 0850430624C04A8800C672C1 /* .swiftlint.autocorrect.yml */; };
 		0850430924C0505300C672C1 /* AppDependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0850430824C0505300C672C1 /* AppDependency.swift */; };
-		085A523924C2BE77009990D5 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085A523824C2BE77009990D5 /* AnalyticsService.swift */; };
+		085A523924C2BE77009990D5 /* AnalyticsServiceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 085A523824C2BE77009990D5 /* AnalyticsServiceType.swift */; };
 		087CAE7924C0319400C2A1C4 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 087CAE7824C0319400C2A1C4 /* .swiftlint.yml */; };
 		0884DB7D24BD92DF00A2E471 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0884DB7C24BD92DF00A2E471 /* AppDelegate.swift */; };
 		0884DB8124BD92DF00A2E471 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0884DB8024BD92DF00A2E471 /* ViewController.swift */; };
@@ -22,8 +22,12 @@
 		08CD578524C463E40066AD1B /* Array+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CD578424C463E40066AD1B /* Array+UIView.swift */; };
 		08CD578724C468290066AD1B /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CD578624C468290066AD1B /* SignUpViewController.swift */; };
 		08CD578924C469FF0066AD1B /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CD578824C469FF0066AD1B /* SignUpViewModel.swift */; };
+		08CD578B24C53B130066AD1B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CD578A24C53B130066AD1B /* User.swift */; };
+		08CD578D24C53BA30066AD1B /* AppDelegateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CD578C24C53BA30066AD1B /* AppDelegateViewModel.swift */; };
+		08CD579024C5B87E0066AD1B /* AutoLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CD578F24C5B87E0066AD1B /* AutoLayout.swift */; };
+		08CD579324C5BC740066AD1B /* BorderStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CD579224C5BC740066AD1B /* BorderStyles.swift */; };
 		08E955E8C08912CB58A2B38B /* Pods_Connected_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 013E666FF0BF1F1502740C72 /* Pods_Connected_iOSTests.framework */; };
-		08EDD0B324C2DCD90038D6B9 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EDD0B224C2DCD90038D6B9 /* NetworkService.swift */; };
+		08EDD0B324C2DCD90038D6B9 /* NetworkServiceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EDD0B224C2DCD90038D6B9 /* NetworkServiceType.swift */; };
 		08EDD0B724C2E3140038D6B9 /* RootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EDD0B624C2E3140038D6B9 /* RootViewModel.swift */; };
 		08EDD0B924C2E5BF0038D6B9 /* RootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EDD0B824C2E5BF0038D6B9 /* RootTabBarController.swift */; };
 		08EDD0BE24C406D40038D6B9 /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EDD0BD24C406D40038D6B9 /* LogInViewController.swift */; };
@@ -47,7 +51,7 @@
 		0839A11B24C208CA00A15253 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		0850430624C04A8800C672C1 /* .swiftlint.autocorrect.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.autocorrect.yml; sourceTree = "<group>"; };
 		0850430824C0505300C672C1 /* AppDependency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDependency.swift; sourceTree = "<group>"; };
-		085A523824C2BE77009990D5 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
+		085A523824C2BE77009990D5 /* AnalyticsServiceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsServiceType.swift; sourceTree = "<group>"; };
 		087CAE7624C01B1700C2A1C4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		087CAE7824C0319400C2A1C4 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		0884DB7924BD92DF00A2E471 /* Connected-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Connected-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -62,7 +66,11 @@
 		08CD578424C463E40066AD1B /* Array+UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+UIView.swift"; sourceTree = "<group>"; };
 		08CD578624C468290066AD1B /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		08CD578824C469FF0066AD1B /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
-		08EDD0B224C2DCD90038D6B9 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		08CD578A24C53B130066AD1B /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		08CD578C24C53BA30066AD1B /* AppDelegateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateViewModel.swift; sourceTree = "<group>"; };
+		08CD578F24C5B87E0066AD1B /* AutoLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoLayout.swift; sourceTree = "<group>"; };
+		08CD579224C5BC740066AD1B /* BorderStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderStyles.swift; sourceTree = "<group>"; };
+		08EDD0B224C2DCD90038D6B9 /* NetworkServiceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceType.swift; sourceTree = "<group>"; };
 		08EDD0B624C2E3140038D6B9 /* RootViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModel.swift; sourceTree = "<group>"; };
 		08EDD0B824C2E5BF0038D6B9 /* RootTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabBarController.swift; sourceTree = "<group>"; };
 		08EDD0BD24C406D40038D6B9 /* LogInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
@@ -97,7 +105,7 @@
 		085A523724C2BE30009990D5 /* AnalyticsService */ = {
 			isa = PBXGroup;
 			children = (
-				085A523824C2BE77009990D5 /* AnalyticsService.swift */,
+				085A523824C2BE77009990D5 /* AnalyticsServiceType.swift */,
 			);
 			path = AnalyticsService;
 			sourceTree = "<group>";
@@ -152,6 +160,14 @@
 			path = "Connected-iOSTests";
 			sourceTree = "<group>";
 		};
+		08CD579124C5BC650066AD1B /* Styles */ = {
+			isa = PBXGroup;
+			children = (
+				08CD579224C5BC740066AD1B /* BorderStyles.swift */,
+			);
+			path = Styles;
+			sourceTree = "<group>";
+		};
 		08D5698824C2CDFE00171E63 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -166,6 +182,7 @@
 				08EDD0B624C2E3140038D6B9 /* RootViewModel.swift */,
 				08EDD0BF24C409650038D6B9 /* LogInViewModel.swift */,
 				08CD578824C469FF0066AD1B /* SignUpViewModel.swift */,
+				08CD578C24C53BA30066AD1B /* AppDelegateViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -186,6 +203,7 @@
 			children = (
 				08EDD0B124C2DCBD0038D6B9 /* NetworkService */,
 				085A523724C2BE30009990D5 /* AnalyticsService */,
+				08CD578A24C53B130066AD1B /* User.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -193,7 +211,7 @@
 		08EDD0B124C2DCBD0038D6B9 /* NetworkService */ = {
 			isa = PBXGroup;
 			children = (
-				08EDD0B224C2DCD90038D6B9 /* NetworkService.swift */,
+				08EDD0B224C2DCD90038D6B9 /* NetworkServiceType.swift */,
 			);
 			path = NetworkService;
 			sourceTree = "<group>";
@@ -201,7 +219,9 @@
 		08EDD0BA24C2E9ED0038D6B9 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				08CD579124C5BC650066AD1B /* Styles */,
 				08CD578424C463E40066AD1B /* Array+UIView.swift */,
+				08CD578F24C5B87E0066AD1B /* AutoLayout.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -452,18 +472,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08CD578D24C53BA30066AD1B /* AppDelegateViewModel.swift in Sources */,
 				0850430924C0505300C672C1 /* AppDependency.swift in Sources */,
 				08CD578924C469FF0066AD1B /* SignUpViewModel.swift in Sources */,
 				08EDD0B924C2E5BF0038D6B9 /* RootTabBarController.swift in Sources */,
 				08EDD0BE24C406D40038D6B9 /* LogInViewController.swift in Sources */,
 				08EDD0B724C2E3140038D6B9 /* RootViewModel.swift in Sources */,
-				085A523924C2BE77009990D5 /* AnalyticsService.swift in Sources */,
+				085A523924C2BE77009990D5 /* AnalyticsServiceType.swift in Sources */,
+				08CD578B24C53B130066AD1B /* User.swift in Sources */,
 				0884DB8124BD92DF00A2E471 /* ViewController.swift in Sources */,
+				08CD579324C5BC740066AD1B /* BorderStyles.swift in Sources */,
 				08CD578724C468290066AD1B /* SignUpViewController.swift in Sources */,
 				08EDD0C024C409650038D6B9 /* LogInViewModel.swift in Sources */,
 				0839A11C24C208CA00A15253 /* main.swift in Sources */,
 				08CD578524C463E40066AD1B /* Array+UIView.swift in Sources */,
-				08EDD0B324C2DCD90038D6B9 /* NetworkService.swift in Sources */,
+				08CD579024C5B87E0066AD1B /* AutoLayout.swift in Sources */,
+				08EDD0B324C2DCD90038D6B9 /* NetworkServiceType.swift in Sources */,
 				0884DB7D24BD92DF00A2E471 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -34,9 +34,9 @@ final class LogInViewController: UIViewController {
 
         super.init(nibName: nil, bundle: nil)
 
-        self.setUpLayout()
-        self.bindStyle()
-        self.bindViewModel()
+        setUpLayout()
+        bindStyle()
+        bindViewModel()
     }
 
     required init?(coder: NSCoder) {
@@ -47,18 +47,18 @@ final class LogInViewController: UIViewController {
 
     private func bindViewModel() {
 
-        self.signUpBtn.rx.tap.asDriver()
-            .drive(onNext: self.viewModel.inputs.signUpClicked)
-            .disposed(by: self.disposeBag)
+        signUpBtn.rx.tap.asDriver()
+            .drive(onNext: viewModel.inputs.signUpClicked)
+            .disposed(by: disposeBag)
 
-        self.logInBtn.rx.tap.asDriver()
-            .drive(onNext: self.viewModel.inputs.logInClicked)
-            .disposed(by: self.disposeBag)
+        logInBtn.rx.tap.asDriver()
+            .drive(onNext: viewModel.inputs.logInClicked)
+            .disposed(by: disposeBag)
 
-        self.viewModel.outputs.displayViewController()
-            .map(self.viewController(from:))
+        viewModel.outputs.displayViewController()
+            .map(viewController(from:))
             .emit(onNext: { self.navigationController?.pushViewController($0, animated: true) })
-            .disposed(by: self.disposeBag)
+            .disposed(by: disposeBag)
     }
 
     private func bindStyle() {
@@ -83,21 +83,21 @@ final class LogInViewController: UIViewController {
             .setTranslatesAutoresizingMaskIntoConstraints()
 
         NSLayoutConstraint.activate([
-            logo.centerXAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerXAnchor),
-            logo.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 100),
+            logo.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            logo.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 100),
 
-            logInBtn.centerXAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerXAnchor),
-            logInBtn.topAnchor.constraint(equalTo: self.logo.bottomAnchor, constant: 30),
+            logInBtn.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            logInBtn.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: 30),
 
-            signUpBtn.centerXAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerXAnchor),
-            signUpBtn.topAnchor.constraint(equalTo: self.logInBtn.bottomAnchor, constant: 30)
+            signUpBtn.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            signUpBtn.topAnchor.constraint(equalTo: logInBtn.bottomAnchor, constant: 30)
         ])
     }
 
     private func viewController(from data: LogInViewControllerData) -> UIViewController {
         switch data {
         case .signUp:
-            return self.signUpViewControllerFactory.create()
+            return signUpViewControllerFactory.create()
         case .logIn:
             return ViewController()
         }
