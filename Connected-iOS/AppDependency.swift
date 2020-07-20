@@ -13,40 +13,73 @@ import Firebase
 extension AppDependency {
 
     static func resolve() -> AppDependency {
-        return AppDependency(
-            analyticsService: FirebaseApp.self,
-            networkService: TempNetworkService(),
-            rootTabBarControllerFactory: .init(
-                dependency: .init(
-                    viewModelFactory: RootViewModel.Factory(
-                        dependency: .init()
-                    ),
-                    loginViewControllerFactory: LogInViewController.Factory(
-                        dependency: .init(
-                            viewModelFactory: LogInViewModel.Factory(
-                                dependency: .init()
-                            ),
-                            signUpViewControllerFactory: SignUpViewController.Factory(
-                                dependency: .init(
-                                    viewModelFactory: SignUpViewModel.Factory(
-                                        dependency: .init()
-                                    )
-                                )
+
+        let networkService: NetworkServiceType = TempNetworkService()
+        let analyticsService: AnalyticsServiceType.Type = FirebaseApp.self
+
+        let loginViewControllerFactory: LogInViewController.Factory = .init(
+            dependency: .init(
+                viewModelFactory: LogInViewModel.Factory(
+                    dependency: .init()
+                ),
+                signUpViewControllerFactory: SignUpViewController.Factory(
+                    dependency: .init(
+                        viewModelFactory: SignUpViewModel.Factory(
+                            dependency: .init(
+                                networkService: networkService
                             )
                         )
                     )
                 )
             )
         )
+
+        let rootTabBarControllerFactory: RootTabBarController.Factory = .init(
+            dependency: .init(
+                viewModelFactory: RootViewModel.Factory(
+                    dependency: .init()
+                ),
+                loginViewControllerFactory: loginViewControllerFactory
+            )
+        )
+
+        return AppDependency(
+            viewModel: AppDelegateViewModel.Factory(
+                dependency: .init()
+            ),
+            analyticsService: analyticsService,
+            networkService: networkService,
+            rootTabBarControllerFactory: rootTabBarControllerFactory
+        )
     }
 
+}
+
+// MARK: - AppDelegateViewModel
+
+extension AppDelegateViewModel: FactoryModule {
+    convenience init(dependency: Dependency, payload: ()) {
+        self.init(dependency: dependency)
+    }
+
+    struct Dependency {
+
+    }
+}
+
+extension Factory where Module == AppDelegateViewModel {
+    func create() -> Module {
+        let module = Module()
+        return module
+    }
 }
 
 // MARK: - AppDependency
 
 struct AppDependency {
-    let analyticsService: AnalyticsService.Type
-    let networkService: NetworkService
+    let viewModel: AppDelegateViewModel.Factory
+    let analyticsService: AnalyticsServiceType.Type
+    let networkService: NetworkServiceType
     let rootTabBarControllerFactory: RootTabBarController.Factory
 }
 
@@ -58,13 +91,15 @@ extension SignUpViewModel: FactoryModule {
     }
 
     struct Dependency {
-
+        let networkService: NetworkServiceType
     }
 }
 
 extension Factory where Module == SignUpViewModel {
     func create() -> Module {
-        let module = Module()
+        let module = Module(
+            networkService: dependency.networkService
+        )
         return module
     }
 }
@@ -158,21 +193,6 @@ extension Factory where Module == RootTabBarController {
             viewModel: dependency.viewModelFactory.create(),
             logInViewControllerFactory: dependency.loginViewControllerFactory
         )
-        return module
-    }
-}
-
-// MARK: - ViewController
-
-extension ViewController: FactoryModule {
-
-    struct Dependency {
-    }
-}
-
-extension Factory where Module == ViewController {
-    func create() -> Module {
-        let module = Module()
         return module
     }
 }

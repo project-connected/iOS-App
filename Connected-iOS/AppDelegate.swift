@@ -42,6 +42,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let factory = dependency.rootTabBarControllerFactory
         window?.rootViewController = factory.create()
 
+        bindViewModel()
+
         return true
+    }
+
+    private func bindViewModel() {
+
     }
 }

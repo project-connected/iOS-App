@@ -8,8 +8,8 @@
 
 import Foundation
 
-protocol NetworkService {
+protocol NetworkServiceType {
 
 }
 
-class TempNetworkService: NetworkService { }
+class TempNetworkService: NetworkServiceType { }

@@ -14,7 +14,7 @@ class TestAppDelegate: NSObject, UIApplicationDelegate {
     var window: UIWindow?
 }
 
-class MockAnalyticsService: AnalyticsService {
+class MockAnalyticsService: AnalyticsServiceType {
     static var count: Int = 0
     static func configure() {
         count += 1
