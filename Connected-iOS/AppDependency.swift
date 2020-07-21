@@ -14,7 +14,7 @@ extension AppDependency {
 
     static func resolve() -> AppDependency {
 
-        let networkService: NetworkServiceType = TempNetworkService()
+        let networkService: NetworkServiceType = MockNetworkService()
         let analyticsService: AnalyticsServiceType.Type = FirebaseApp.self
 
         let loginViewControllerFactory: LogInViewController.Factory = .init(

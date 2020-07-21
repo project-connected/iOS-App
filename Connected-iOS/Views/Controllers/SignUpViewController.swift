@@ -78,6 +78,18 @@ final class SignUpViewController: UIViewController {
         viewModel.outputs.isSignUpButtonEnabled()
             .drive(signUpButton.rx.isEnabled)
             .disposed(by: disposeBag)
+
+        viewModel.outputs.showSignUpErrorMsg()
+            .emit(onNext: { error in
+                self.signUpButton.setTitle("error - \(error)", for: .normal)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.logIn()
+            .emit(onNext: { user in
+                self.signUpButton.setTitle("log in - \(user)", for: .normal)
+            })
+            .disposed(by: disposeBag)
     }
 
     private func bindStyle() {

@@ -19,6 +19,8 @@ protocol SignUpViewModelInputs {
 
 protocol SignUpViewModelOutputs {
     func isSignUpButtonEnabled() -> Driver<Bool>
+    func showSignUpErrorMsg() -> Signal<String>
+    func logIn() -> Signal<User>
 }
 
 protocol SignUpViewModelType {
@@ -64,6 +66,16 @@ final class SignUpViewModel: SignUpViewModelType, SignUpViewModelInputs, SignUpV
         isSignUpButtonEnabledProperty.asDriver()
     }
 
+    private let showSignUpErrorMsgProperty: PublishRelay<String> = PublishRelay()
+    func showSignUpErrorMsg() -> Signal<String> {
+        showSignUpErrorMsgProperty.asSignal()
+    }
+
+    private let logInProperty: PublishRelay<User> = PublishRelay()
+    func logIn() -> Signal<User> {
+        logInProperty.asSignal()
+    }
+
     // MARK: - Lifecycle
 
     init(networkService: NetworkServiceType) {
@@ -82,19 +94,46 @@ final class SignUpViewModel: SignUpViewModelType, SignUpViewModelInputs, SignUpV
             .map { $0.0 && $0.1 && $0.2 }
             .bind(to: isSignUpButtonEnabledProperty)
             .disposed(by: disposeBag)
+
+        let signUpData = Observable.combineLatest(
+            emailTextProperty,
+            passwordTextProperty,
+            nicknameTextProperty
+        )
+
+        let signUpResult = signUpButtonClickedProperty
+            .do(onNext: { print("button tap!") })
+            .withLatestFrom(signUpData)
+            .do(onNext: { print("do on next :", $0); print("요청!") })
+            .flatMap { (email, password, nickname) in
+                return self.networkService.signUp(email: email, password: password, nickname: nickname)
+            }.materialize()
+            .share()
+
+        signUpResult
+            .compactMap { $0.error }
+            .map { $0.localizedDescription }
+            .bind(to: showSignUpErrorMsgProperty)
+            .disposed(by: disposeBag)
+
+        signUpResult
+            .compactMap { $0.element }
+            .bind(to: logInProperty)
+            .disposed(by: disposeBag)
+
     }
 
     // MARK: - Functions
 
     private func validateEmail(email: String) -> Bool {
-        return false
+        return true
     }
 
     private func validatePassword(password: String) -> Bool {
-        return false
+        return true
     }
 
     private func validateNickname(nickname: String) -> Bool {
-        return false
+        return true
     }
 }

@@ -7,9 +7,27 @@
 //
 
 import Foundation
+import RxSwift
 
-protocol NetworkServiceType {
-
+enum NetworkService {
+    case signUp(email: String, password: String, nickname: String)
 }
 
-class TempNetworkService: NetworkServiceType { }
+protocol NetworkServiceType {
+    func signUp(email: String, password: String, nickname: String) -> Single<User>
+}
+
+class MockNetworkService: NetworkServiceType {
+
+    func signUp(email: String, password: String, nickname: String) -> Single<User> {
+        if email == "1" {
+            return Single.just(User(authToken: "auth-token-string"))
+        } else {
+            enum MockError: Error {
+                case just
+            }
+            return Single.error(MockError.just)
+        }
+    }
+
+}

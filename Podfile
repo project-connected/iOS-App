@@ -10,7 +10,7 @@ target 'Connected-iOS' do
   pod 'RxSwift'
   pod 'RxCocoa'
   pod 'Kingfisher'
-  pod 'Alamofire'
+  pod 'Moya'
   pod 'Pure'
   pod 'Pure/Stub'
 

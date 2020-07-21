@@ -11,5 +11,11 @@ import Foundation
 typealias AuthToken = String
 
 struct User {
-    let authToken: AuthToken? = nil
+    let authToken: AuthToken?
+}
+
+struct SignUpInfo {
+    let email: String
+    let password: String
+    let nickname: String
 }
