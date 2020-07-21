@@ -8,38 +8,41 @@
 
 import XCTest
 @testable import Connected_iOS
-@testable import Pure
+import Pure
+import Nimble
 
 class TestAppDelegate: NSObject, UIApplicationDelegate {
-    var window: UIWindow?
+    var window: UIWindow? = UIWindow()
 }
 
-class MockAnalyticsService: AnalyticsService {
+class MockAnalyticsService: AnalyticsServiceType {
     static var count: Int = 0
     static func configure() {
         count += 1
     }
 }
 
+class MockNetworkService: NetworkServiceType {
+
+}
+
 class AppDelegateTests: XCTestCase {
 
     func testInjectRootViewControllerDependencies() {
-
-        let dependency = AppDependency(
+        let appDelegate = AppDelegate(
+            viewModel: AppDelegateViewModel(),
             analyticsService: MockAnalyticsService.self,
-            viewControllerFactory: ViewController.Factory(dependency: .init())
+            networkService: MockNetworkService(),
+            rootViewController: ViewController()
         )
-        let appDelegate = AppDelegate(dependency: dependency)
-        appDelegate.window = UIWindow()
-        appDelegate.window?.rootViewController = ViewController()
 
         _ = appDelegate.application(.shared, didFinishLaunchingWithOptions: nil)
 
-        XCTAssertEqual(MockAnalyticsService.count, 1)
+        expect(MockAnalyticsService.count).to(equal(1))
     }
 
     func testUseTestAppDelegate() {
-        XCTAssertTrue(UIApplication.shared.delegate is TestAppDelegate)
+        expect(UIApplication.shared.delegate).to(beAKindOf(TestAppDelegate.self))
     }
 
 }

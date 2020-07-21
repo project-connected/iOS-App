@@ -9,8 +9,8 @@
 import Foundation
 import Firebase
 
-protocol AnalyticsService {
+protocol AnalyticsServiceType {
     static func configure()
 }
 
-extension FirebaseApp: AnalyticsService { }
+extension FirebaseApp: AnalyticsServiceType { }
