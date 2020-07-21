@@ -79,12 +79,14 @@ final class SignUpViewController: UIViewController {
             .drive(signUpButton.rx.isEnabled)
             .disposed(by: disposeBag)
 
+        // TODO: 회원가입 에러 발생 시 에러 메세지 띄우기
         viewModel.outputs.showSignUpErrorMsg()
             .emit(onNext: { error in
                 self.signUpButton.setTitle("error - \(error)", for: .normal)
             })
             .disposed(by: disposeBag)
 
+        // TODO: 회원가입 성공 시 로그인 시키기
         viewModel.outputs.logIn()
             .emit(onNext: { user in
                 self.signUpButton.setTitle("log in - \(user)", for: .normal)

@@ -101,38 +101,34 @@ final class SignUpViewModel: SignUpViewModelType, SignUpViewModelInputs, SignUpV
             nicknameTextProperty
         )
 
-        let signUpResult = signUpButtonClickedProperty
-            .do(onNext: { print("button tap!") })
+        signUpButtonClickedProperty
             .withLatestFrom(signUpData)
-            .do(onNext: { print("do on next :", $0); print("요청!") })
             .flatMap { (email, password, nickname) in
                 return self.networkService.signUp(email: email, password: password, nickname: nickname)
-            }.materialize()
-            .share()
-
-        signUpResult
-            .compactMap { $0.error }
-            .map { $0.localizedDescription }
-            .bind(to: showSignUpErrorMsgProperty)
-            .disposed(by: disposeBag)
-
-        signUpResult
-            .compactMap { $0.element }
-            .bind(to: logInProperty)
-            .disposed(by: disposeBag)
-
+        }.subscribeOn(ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+        .bind(onNext: { result in
+            switch result {
+            case .success(let user):
+                self.logInProperty.accept(user)
+            case .failure(let error):
+                self.showSignUpErrorMsgProperty.accept(error.localizedDescription)
+            }
+        }).disposed(by: disposeBag)
     }
 
     // MARK: - Functions
 
+    // TODO: 이메일 유효성 검사 만들기
     private func validateEmail(email: String) -> Bool {
         return true
     }
 
+    // TODO: 비밀번호 유효성 검사 만들기
     private func validatePassword(password: String) -> Bool {
         return true
     }
 
+    // TODO: 닉네임 유효성 검사 만들기
     private func validateNickname(nickname: String) -> Bool {
         return true
     }
