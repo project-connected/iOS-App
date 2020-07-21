@@ -44,12 +44,12 @@ extension AppDependency {
         )
 
         return AppDependency(
-            viewModel: AppDelegateViewModel.Factory(
+            viewModelFactory: AppDelegateViewModel.Factory(
                 dependency: .init()
             ),
             analyticsService: analyticsService,
             networkService: networkService,
-            rootTabBarControllerFactory: rootTabBarControllerFactory
+            rootViewController: rootTabBarControllerFactory.create()
         )
     }
 
@@ -68,7 +68,7 @@ extension AppDelegateViewModel: FactoryModule {
 }
 
 extension Factory where Module == AppDelegateViewModel {
-    func create() -> Module {
+    func create() -> AppDelegateViewModelType {
         let module = Module()
         return module
     }
@@ -77,10 +77,10 @@ extension Factory where Module == AppDelegateViewModel {
 // MARK: - AppDependency
 
 struct AppDependency {
-    let viewModel: AppDelegateViewModel.Factory
+    let viewModelFactory: AppDelegateViewModel.Factory
     let analyticsService: AnalyticsServiceType.Type
     let networkService: NetworkServiceType
-    let rootTabBarControllerFactory: RootTabBarController.Factory
+    let rootViewController: UIViewController
 }
 
 // MARK: - SignUpViewModel
@@ -96,7 +96,7 @@ extension SignUpViewModel: FactoryModule {
 }
 
 extension Factory where Module == SignUpViewModel {
-    func create() -> Module {
+    func create() -> SignUpViewModelType {
         let module = Module(
             networkService: dependency.networkService
         )
@@ -113,7 +113,7 @@ extension SignUpViewController: FactoryModule {
 }
 
 extension Factory where Module == SignUpViewController {
-    func create() -> Module {
+    func create() -> UIViewController {
         let module = Module(
             viewModel: dependency.viewModelFactory.create()
         )
@@ -134,7 +134,7 @@ extension LogInViewModel: FactoryModule {
 }
 
 extension Factory where Module == LogInViewModel {
-    func create() -> Module {
+    func create() -> LogInViewModelType {
         let module = Module()
         return module
     }
@@ -150,7 +150,7 @@ extension LogInViewController: FactoryModule {
 }
 
 extension Factory where Module == LogInViewController {
-    func create() -> Module {
+    func create() -> UIViewController {
         let module = Module(
             viewModel: dependency.viewModelFactory.create(),
             signUpViewControllerFactory: dependency.signUpViewControllerFactory
@@ -172,7 +172,7 @@ extension RootViewModel: FactoryModule {
 }
 
 extension Factory where Module == RootViewModel {
-    func create() -> Module {
+    func create() -> RootViewModelType {
         let module = Module()
         return module
     }
@@ -188,7 +188,7 @@ extension RootTabBarController: FactoryModule {
 }
 
 extension Factory where Module == RootTabBarController {
-    func create() -> Module {
+    func create() -> UIViewController {
         let module = Module(
             viewModel: dependency.viewModelFactory.create(),
             logInViewControllerFactory: dependency.loginViewControllerFactory

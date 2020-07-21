@@ -114,11 +114,14 @@ PODS:
     - nanopb/encode (= 1.30905.0)
   - nanopb/decode (1.30905.0)
   - nanopb/encode (1.30905.0)
+  - Nimble (8.1.1)
   - PromisesObjC (1.2.8)
   - Protobuf (3.12.0)
   - Pure (1.1.2):
     - Pure/Core (= 1.1.2)
   - Pure/Core (1.1.2)
+  - Pure/Stub (1.1.2):
+    - Pure/Core
   - RxBlocking (5.1.1):
     - RxSwift (~> 5)
   - RxCocoa (5.1.1):
@@ -137,7 +140,9 @@ DEPENDENCIES:
   - Firebase/Crashlytics
   - Firebase/Performance
   - Kingfisher
+  - Nimble
   - Pure
+  - Pure/Stub
   - RxBlocking
   - RxCocoa
   - RxSwift
@@ -166,6 +171,7 @@ SPEC REPOS:
     - GTMSessionFetcher
     - Kingfisher
     - nanopb
+    - Nimble
     - PromisesObjC
     - Protobuf
     - Pure
@@ -197,6 +203,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 6f5c8abbab8a9bce4bb3f057e317728ec6182b10
   Kingfisher: 8050bc6f7f68cbf3908bd04df7ccbac188f6d6d6
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
+  Nimble: 5f8a2fb6fa343a7242dfdd9d42f7267419d464b2
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   Protobuf: 2793fcd0622a00b546c60e7cbbcc493e043e9bb9
   Pure: da92a66df10fc902db96290083c121f84ee73d6f
@@ -207,6 +214,6 @@ SPEC CHECKSUMS:
   RxTest: 711632d5644dffbeb62c936a521b5b008a1e1faa
   SwiftLint: 22ccbbe3b8008684be5955693bab135e0ed6a447
 
-PODFILE CHECKSUM: c598354ee72063fe0b7d2701ec8bfb076a1e3698
+PODFILE CHECKSUM: 55680fb12d350b6adffe9cdac2e42de1b47d1cca
 
 COCOAPODS: 1.9.1

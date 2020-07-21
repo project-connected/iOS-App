@@ -14,17 +14,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    private let dependency: AppDependency
+    private let viewModel: AppDelegateViewModelType
+    private let analyticsService: AnalyticsServiceType.Type
+    private let networkService: NetworkServiceType
+    private let rootViewController: UIViewController
 
     // MARK: - Lifecycle
 
     private override init() {
-        self.dependency = .resolve()
+        let dependency = AppDependency.resolve()
+        self.viewModel = dependency.viewModelFactory.create()
+        self.analyticsService = dependency.analyticsService
+        self.networkService = dependency.networkService
+        self.rootViewController = dependency.rootViewController
         super.init()
     }
 
-    init(dependency: AppDependency) {
-        self.dependency = dependency
+    init(
+        viewModel: AppDelegateViewModelType,
+        analyticsService: AnalyticsServiceType.Type,
+        networkService: NetworkServiceType,
+        rootViewController: UIViewController
+    ) {
+        self.viewModel = viewModel
+        self.analyticsService = analyticsService
+        self.networkService = networkService
+        self.rootViewController = rootViewController
+
         super.init()
     }
 
@@ -35,12 +51,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
 
-        dependency.analyticsService.configure()
+        analyticsService.configure()
 
         window = UIWindow()
         window?.makeKeyAndVisible()
-        let factory = dependency.rootTabBarControllerFactory
-        window?.rootViewController = factory.create()
+        window?.rootViewController = rootViewController
 
         bindViewModel()
 

@@ -14,6 +14,7 @@ protocol SignUpViewModelInputs {
     func emailText(email: String)
     func passwordText(password: String)
     func nicknameText(nickname: String)
+    func signUpButtonClicked()
 }
 
 protocol SignUpViewModelOutputs {
@@ -49,6 +50,11 @@ final class SignUpViewModel: SignUpViewModelType, SignUpViewModelInputs, SignUpV
     private let nicknameTextProperty: PublishRelay<String> = PublishRelay()
     func nicknameText(nickname: String) {
         nicknameTextProperty.accept(nickname)
+    }
+
+    private let signUpButtonClickedProperty: PublishRelay<Void> = PublishRelay()
+    func signUpButtonClicked() {
+        signUpButtonClickedProperty.accept(Void())
     }
 
     // MARK: - Outputs

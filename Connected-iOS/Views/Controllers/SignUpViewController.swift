@@ -69,6 +69,12 @@ final class SignUpViewController: UIViewController {
             .drive(onNext: viewModel.inputs.nicknameText(nickname:))
             .disposed(by: disposeBag)
 
+        signUpButton.rx.tap
+            .asDriver()
+            .throttle(.microseconds(500))
+            .drive(onNext: { self.viewModel.inputs.signUpButtonClicked() })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.isSignUpButtonEnabled()
             .drive(signUpButton.rx.isEnabled)
             .disposed(by: disposeBag)
