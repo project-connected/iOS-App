@@ -79,11 +79,8 @@ final class SignUpViewController: UIViewController {
             .drive(signUpButton.rx.isEnabled)
             .disposed(by: disposeBag)
 
-        // TODO: 회원가입 에러 발생 시 에러 메세지 띄우기
         viewModel.outputs.showSignUpErrorMsg()
-            .emit(onNext: { error in
-                self.signUpButton.setTitle("error - \(error)", for: .normal)
-            })
+            .emit(onNext: { self.showAlert(title: "회원가입 실패", msg: $0, style: .alert) })
             .disposed(by: disposeBag)
 
         // TODO: 회원가입 성공 시 로그인 시키기
@@ -159,4 +156,5 @@ final class SignUpViewController: UIViewController {
             scrollView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor)
         ])
     }
+
 }
