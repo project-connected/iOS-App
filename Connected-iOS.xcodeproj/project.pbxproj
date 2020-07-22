@@ -19,6 +19,7 @@
 		0884DB8624BD92E000A2E471 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0884DB8524BD92E000A2E471 /* Assets.xcassets */; };
 		0884DB8924BD92E000A2E471 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0884DB8724BD92E000A2E471 /* LaunchScreen.storyboard */; };
 		08A1809024C7418800EADCE0 /* Result+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A1808F24C7418800EADCE0 /* Result+.swift */; };
+		08C79D5424C7F20600CBDF5F /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C79D5324C7F20600CBDF5F /* UIViewController+Alert.swift */; };
 		08CD578524C463E40066AD1B /* Array+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CD578424C463E40066AD1B /* Array+UIView.swift */; };
 		08CD578724C468290066AD1B /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CD578624C468290066AD1B /* SignUpViewController.swift */; };
 		08CD578924C469FF0066AD1B /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CD578824C469FF0066AD1B /* SignUpViewModel.swift */; };
@@ -63,6 +64,7 @@
 		0884DB8F24BD92E000A2E471 /* Connected-iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Connected-iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0884DB9524BD92E000A2E471 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		08A1808F24C7418800EADCE0 /* Result+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Result+.swift"; sourceTree = "<group>"; };
+		08C79D5324C7F20600CBDF5F /* UIViewController+Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
 		08CD578424C463E40066AD1B /* Array+UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+UIView.swift"; sourceTree = "<group>"; };
 		08CD578624C468290066AD1B /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		08CD578824C469FF0066AD1B /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
@@ -249,6 +251,7 @@
 				08CD578424C463E40066AD1B /* Array+UIView.swift */,
 				08CD578F24C5B87E0066AD1B /* AutoLayout.swift */,
 				08A1808F24C7418800EADCE0 /* Result+.swift */,
+				08C79D5324C7F20600CBDF5F /* UIViewController+Alert.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -515,6 +518,7 @@
 				0839A11C24C208CA00A15253 /* main.swift in Sources */,
 				08CD578524C463E40066AD1B /* Array+UIView.swift in Sources */,
 				08CD579024C5B87E0066AD1B /* AutoLayout.swift in Sources */,
+				08C79D5424C7F20600CBDF5F /* UIViewController+Alert.swift in Sources */,
 				08EDD0B324C2DCD90038D6B9 /* NetworkServiceType.swift in Sources */,
 				0884DB7D24BD92DF00A2E471 /* AppDelegate.swift in Sources */,
 			);
@@ -670,6 +674,7 @@
 			baseConfigurationReference = E5BA46C2FB8D416CC1FA3FFC /* Pods-Connected-iOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Connected-iOS/Connected-iOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = P6Y6LBX995;
 				INFOPLIST_FILE = "Connected-iOS/Info.plist";
@@ -689,6 +694,7 @@
 			baseConfigurationReference = D4279D2AFEA754C5790CC964 /* Pods-Connected-iOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Connected-iOS/Connected-iOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = P6Y6LBX995;
 				INFOPLIST_FILE = "Connected-iOS/Info.plist";
