@@ -20,7 +20,7 @@ protocol SignUpViewModelInputs {
 protocol SignUpViewModelOutputs {
     func isSignUpButtonEnabled() -> Driver<Bool>
     func showSignUpErrorMsg() -> Signal<String>
-    func logIn() -> Signal<User>
+    func signIn() -> Signal<User>
 }
 
 protocol SignUpViewModelType {
@@ -71,9 +71,9 @@ final class SignUpViewModel: SignUpViewModelType, SignUpViewModelInputs, SignUpV
         showSignUpErrorMsgProperty.asSignal()
     }
 
-    private let logInProperty: PublishRelay<User> = PublishRelay()
-    func logIn() -> Signal<User> {
-        logInProperty.asSignal()
+    private let signInProperty: PublishRelay<User> = PublishRelay()
+    func signIn() -> Signal<User> {
+        signInProperty.asSignal()
     }
 
     // MARK: - Lifecycle
@@ -109,7 +109,7 @@ final class SignUpViewModel: SignUpViewModelType, SignUpViewModelInputs, SignUpV
         .bind(onNext: { result in
             switch result {
             case .success(let user):
-                self.logInProperty.accept(user)
+                self.signInProperty.accept(user)
             case .failure(let error):
                 self.showSignUpErrorMsgProperty.accept(error.localizedDescription)
             }

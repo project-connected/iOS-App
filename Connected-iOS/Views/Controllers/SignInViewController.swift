@@ -1,8 +1,8 @@
 //
-//  SignUpViewController.swift
+//  SignInViewController.swift
 //  Connected-iOS
 //
-//  Created by Jaedoo Ko on 2020/07/19.
+//  Created by Jaedoo Ko on 2020/07/22.
 //  Copyright © 2020 connected. All rights reserved.
 //
 
@@ -10,32 +10,33 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-final class SignUpViewController: UIViewController {
+final class SignInViewController: UIViewController {
 
     // MARK: - UI Properties
+
     private let scrollView: UIScrollView = UIScrollView()
     private let contentView: UIView = UIView()
     private let formStackView: UIStackView = UIStackView()
     private let emailTextField: UITextField = UITextField()
     private let passwordTextField: UITextField = UITextField()
     private let nicknameTextField: UITextField = UITextField()
-    private let signUpButton: UIButton = UIButton(type: .system)
+    private let signInButton: UIButton = UIButton(type: .system)
 
     // MARK: - Properties
 
-    private let viewModel: SignUpViewModelType
+    private let viewModel: SignInViewModelType
     private let disposeBag = DisposeBag()
 
     // MARK: - Lifecycle
 
-    init(viewModel: SignUpViewModelType) {
+    init(viewModel: SignInViewModelType) {
         self.viewModel = viewModel
 
         super.init(nibName: nil, bundle: nil)
 
-        setUpLayout()
-        bindStyle()
-        bindViewModel()
+        self.setUpLayout()
+        self.bindStyle()
+        self.bindViewModel()
     }
 
     required init?(coder: NSCoder) {
@@ -61,32 +62,24 @@ final class SignUpViewController: UIViewController {
             .drive(onNext: viewModel.inputs.passwordText(password:))
             .disposed(by: disposeBag)
 
-        nicknameTextField.rx.text
-            .orEmpty
-            .asDriver()
-            .debounce(.milliseconds(500))
-            .distinctUntilChanged()
-            .drive(onNext: viewModel.inputs.nicknameText(nickname:))
-            .disposed(by: disposeBag)
-
-        signUpButton.rx.tap
+        signInButton.rx.tap
             .asDriver()
             .throttle(.microseconds(500))
-            .drive(onNext: { self.viewModel.inputs.signUpButtonClicked() })
+            .drive(onNext: { self.viewModel.inputs.signInButtonClicked() })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.isSignUpButtonEnabled()
-            .drive(signUpButton.rx.isEnabled)
+        viewModel.outputs.isSignInButtonEnabled()
+            .drive(signInButton.rx.isEnabled)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.showSignUpErrorMsg()
-            .emit(onNext: { self.showAlert(title: "회원가입 실패", msg: $0, style: .alert) })
+        viewModel.outputs.showSignInErrorMsg()
+            .emit(onNext: { self.showAlert(title: "로그인 실패", msg: $0, style: .alert) })
             .disposed(by: disposeBag)
 
-        // TODO: 회원가입 성공 시 로그인 시키기
+        // TODO: 로그인 시키기
         viewModel.outputs.signIn()
             .emit(onNext: { user in
-                self.signUpButton.setTitle("sign in - \(user)", for: .normal)
+                self.signInButton.setTitle("sign in - \(user)", for: .normal)
             })
             .disposed(by: disposeBag)
     }
@@ -101,10 +94,10 @@ final class SignUpViewController: UIViewController {
         _ = baseBorderStyle(view: passwordTextField)
         _ = baseBorderStyle(view: nicknameTextField)
 
-        signUpButton.setTitle("Sign UP", for: .normal)
-        signUpButton.setTitleColor(.white, for: .normal)
-        signUpButton.setBackgroundColorWithState(.systemBlue, for: .normal)
-        signUpButton.setBackgroundColorWithState(.systemGray, for: .disabled)
+        signInButton.setTitle("Sign In", for: .normal)
+        signInButton.setTitleColor(.white, for: .normal)
+        signInButton.setBackgroundColorWithState(.systemBlue, for: .normal)
+        signInButton.setBackgroundColorWithState(.systemGray, for: .disabled)
 
         formStackView.axis = .vertical
         formStackView.distribution = .fillEqually
@@ -113,7 +106,7 @@ final class SignUpViewController: UIViewController {
     }
 
     private func setUpLayout() {
-        [emailTextField, passwordTextField, nicknameTextField, signUpButton]
+        [emailTextField, passwordTextField, signInButton]
             .addArrangedSubviews(parent: formStackView)
             .setTranslatesAutoresizingMaskIntoConstraints()
 
@@ -133,13 +126,9 @@ final class SignUpViewController: UIViewController {
             passwordTextField.trailingAnchor.constraint(equalTo: formStackView.trailingAnchor, constant: -10),
             passwordTextField.heightAnchor.constraint(equalToConstant: 100),
 
-            nicknameTextField.leadingAnchor.constraint(equalTo: formStackView.leadingAnchor, constant: 10),
-            nicknameTextField.trailingAnchor.constraint(equalTo: formStackView.trailingAnchor, constant: -10),
-            nicknameTextField.heightAnchor.constraint(equalToConstant: 100),
-
-            signUpButton.leadingAnchor.constraint(equalTo: formStackView.leadingAnchor, constant: 10),
-            signUpButton.trailingAnchor.constraint(equalTo: formStackView.trailingAnchor, constant: -10),
-            signUpButton.heightAnchor.constraint(equalToConstant: 100),
+            signInButton.leadingAnchor.constraint(equalTo: formStackView.leadingAnchor, constant: 10),
+            signInButton.trailingAnchor.constraint(equalTo: formStackView.trailingAnchor, constant: -10),
+            signInButton.heightAnchor.constraint(equalToConstant: 100),
 
             formStackView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             formStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
@@ -157,5 +146,4 @@ final class SignUpViewController: UIViewController {
             scrollView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor)
         ])
     }
-
 }

@@ -15,13 +15,22 @@ enum NetworkError: Error {
 
 enum NetworkService {
     case signUp(email: String, password: String, nickname: String)
+    case signIn(email: String, password: String)
 }
 
 protocol NetworkServiceType {
     func signUp(email: String, password: String, nickname: String) -> Single<Result<User, NetworkError>>
+    func signIn(email: String, password: String) -> Single<Result<User, NetworkError>>
 }
 
 class MockNetworkService: NetworkServiceType {
+    func signIn(email: String, password: String) -> Single<Result<User, NetworkError>> {
+        if email == "1" {
+            return Single.just(.success(User(authToken: "auth-token-string")))
+        } else {
+            return Single.just(.failure(.just))
+        }
+    }
 
     func signUp(email: String, password: String, nickname: String) -> Single<Result<User, NetworkError>> {
         if email == "1" {

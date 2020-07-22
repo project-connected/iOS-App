@@ -21,16 +21,19 @@ final class LogInViewController: UIViewController {
 
     private let viewModel: LogInViewModelType
     private let signUpViewControllerFactory: SignUpViewController.Factory
+    private let signInViewControllerFactory: SignInViewController.Factory
     private let disposeBag = DisposeBag()
 
     // MARK: - Lifecycle
 
     init(
         viewModel: LogInViewModelType,
-        signUpViewControllerFactory: SignUpViewController.Factory
+        signUpViewControllerFactory: SignUpViewController.Factory,
+        signInViewControllerFactory: SignInViewController.Factory
     ) {
         self.viewModel = viewModel
         self.signUpViewControllerFactory = signUpViewControllerFactory
+        self.signInViewControllerFactory = signInViewControllerFactory
 
         super.init(nibName: nil, bundle: nil)
 
@@ -76,12 +79,12 @@ final class LogInViewController: UIViewController {
 
         logo.text = "Connected"
 
-        logInBtn.setTitle("LogIn", for: .normal)
+        logInBtn.setTitle("Sign In", for: .normal)
         logInBtn.setTitleColor(.black, for: .normal)
         logInBtn.layer.borderColor = UIColor.black.cgColor
         logInBtn.layer.borderWidth = 1
 
-        signUpBtn.setTitle("SignUp", for: .normal)
+        signUpBtn.setTitle("Sign Up", for: .normal)
         signUpBtn.setTitleColor(.black, for: .normal)
         signUpBtn.layer.borderColor = UIColor.black.cgColor
         signUpBtn.layer.borderWidth = 1
@@ -108,8 +111,8 @@ final class LogInViewController: UIViewController {
         switch data {
         case .signUp:
             return signUpViewControllerFactory.create()
-        case .logIn:
-            return ViewController()
+        case .signIn:
+            return signInViewControllerFactory.create()
         }
     }
 }
