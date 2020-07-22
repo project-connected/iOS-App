@@ -30,6 +30,15 @@ extension AppDependency {
                             )
                         )
                     )
+                ),
+                signInViewControllerFactory: SignInViewController.Factory(
+                    dependency: .init(
+                        viewModelFactory: SignInViewModel.Factory(
+                            dependency: .init(
+                                networkService: networkService
+                            )
+                        )
+                    )
                 )
             )
         )
@@ -55,6 +64,49 @@ extension AppDependency {
 
 }
 
+// MARK: - SignInViewController
+
+extension SignInViewController: FactoryModule {
+    struct Dependency {
+        let viewModelFactory: SignInViewModel.Factory
+    }
+}
+
+extension Factory where Module == SignInViewController {
+    func create() -> UIViewController {
+        let module = Module(viewModel: dependency.viewModelFactory.create())
+        return module
+    }
+}
+
+// MARK: - SignInViewModel
+
+extension SignInViewModel: FactoryModule {
+    convenience init(dependency: Dependency, payload: ()) {
+        self.init(dependency: dependency)
+    }
+
+    struct Dependency {
+        let networkService: NetworkServiceType
+    }
+}
+
+extension Factory where Module == SignInViewModel {
+    func create() -> SignInViewModelType {
+        let module = Module(networkService: dependency.networkService)
+        return module
+    }
+}
+
+// MARK: - AppDependency
+
+struct AppDependency {
+    let viewModelFactory: AppDelegateViewModel.Factory
+    let analyticsService: AnalyticsServiceType.Type
+    let networkService: NetworkServiceType
+    let rootViewController: UIViewController
+}
+
 // MARK: - AppDelegateViewModel
 
 extension AppDelegateViewModel: FactoryModule {
@@ -72,15 +124,6 @@ extension Factory where Module == AppDelegateViewModel {
         let module = Module()
         return module
     }
-}
-
-// MARK: - AppDependency
-
-struct AppDependency {
-    let viewModelFactory: AppDelegateViewModel.Factory
-    let analyticsService: AnalyticsServiceType.Type
-    let networkService: NetworkServiceType
-    let rootViewController: UIViewController
 }
 
 // MARK: - SignUpViewModel
@@ -146,6 +189,7 @@ extension LogInViewController: FactoryModule {
     struct Dependency {
         let viewModelFactory: LogInViewModel.Factory
         let signUpViewControllerFactory: SignUpViewController.Factory
+        let signInViewControllerFactory: SignInViewController.Factory
     }
 }
 
@@ -153,7 +197,8 @@ extension Factory where Module == LogInViewController {
     func create() -> UIViewController {
         let module = Module(
             viewModel: dependency.viewModelFactory.create(),
-            signUpViewControllerFactory: dependency.signUpViewControllerFactory
+            signUpViewControllerFactory: dependency.signUpViewControllerFactory,
+            signInViewControllerFactory: dependency.signInViewControllerFactory
         )
         return module
     }

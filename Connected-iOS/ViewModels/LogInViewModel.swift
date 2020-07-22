@@ -12,7 +12,7 @@ import RxCocoa
 
 enum LogInViewControllerData {
     case signUp
-    case logIn
+    case signIn
 }
 
 protocol LogInViewModelInputs {
@@ -41,7 +41,7 @@ final class LogInViewModel: LogInViewModelType, LogInViewModelInputs, LogInViewM
         = PublishRelay()
 
     func logInClicked() {
-        btnClickedProperty.accept(.logIn)
+        btnClickedProperty.accept(.signIn)
     }
 
     func signUpClicked() {
