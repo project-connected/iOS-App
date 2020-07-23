@@ -15,6 +15,7 @@ final class RootTabBarController: UITabBarController {
     // MARK: - Properties
 
     private let viewModel: RootViewModelType
+    private let homeViewControllerFactory: HomeViewController.Factory
     private let logInViewControllerFactory: LogInViewController.Factory
     private let disposeBag = DisposeBag()
 
@@ -22,16 +23,18 @@ final class RootTabBarController: UITabBarController {
 
     init(
         viewModel: RootViewModelType,
+        homeViewControllerFactory: HomeViewController.Factory,
         logInViewControllerFactory: LogInViewController.Factory
     ) {
         self.viewModel = viewModel
+        self.homeViewControllerFactory = homeViewControllerFactory
         self.logInViewControllerFactory = logInViewControllerFactory
 
         super.init(nibName: nil, bundle: nil)
 
         self.delegate = self
         setUpLayout()
-        bindStyle()
+        bindStyles()
         bindViewModel()
 
         viewModel.inputs.initialized()
@@ -60,14 +63,14 @@ final class RootTabBarController: UITabBarController {
             .disposed(by: disposeBag)
     }
 
-    private func bindStyle() {
+    private func bindStyles() {
 
     }
 
     private func viewController(from data: RootViewControllerData) -> UIViewController {
         switch data {
         case .home:
-            return ViewController()
+            return homeViewControllerFactory.create()
         case .profile(let isLoggedIn):
             return isLoggedIn ? ViewController2() : logInViewControllerFactory.create()
         }

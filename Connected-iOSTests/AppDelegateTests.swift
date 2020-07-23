@@ -22,10 +22,6 @@ class MockAnalyticsService: AnalyticsServiceType {
     }
 }
 
-class MockNetworkService: NetworkServiceType {
-
-}
-
 class AppDelegateTests: XCTestCase {
 
     func testInjectRootViewControllerDependencies() {

@@ -12,28 +12,26 @@ import Firebase
 
 extension AppDependency {
 
-    static func resolve() -> AppDependency {
-
-        let networkService: NetworkServiceType = MockNetworkService()
-        let analyticsService: AnalyticsServiceType.Type = FirebaseApp.self
-
-        let loginViewControllerFactory: LogInViewController.Factory = .init(
+    private static func resolveLogInDependencies(
+        networkService: NetworkServiceType
+    ) -> LogInViewController.Factory {
+        return LogInViewController.Factory(
             dependency: .init(
-                viewModelFactory: LogInViewModel.Factory(
+                viewModelFactory: .init(
                     dependency: .init()
                 ),
-                signUpViewControllerFactory: SignUpViewController.Factory(
+                signUpViewControllerFactory: .init(
                     dependency: .init(
-                        viewModelFactory: SignUpViewModel.Factory(
+                        viewModelFactory: .init(
                             dependency: .init(
                                 networkService: networkService
                             )
                         )
                     )
                 ),
-                signInViewControllerFactory: SignInViewController.Factory(
+                signInViewControllerFactory: .init(
                     dependency: .init(
-                        viewModelFactory: SignInViewModel.Factory(
+                        viewModelFactory: .init(
                             dependency: .init(
                                 networkService: networkService
                             )
@@ -42,18 +40,59 @@ extension AppDependency {
                 )
             )
         )
+    }
+
+    private static func resolveHomeDependencies(
+        networkService: NetworkServiceType,
+        imageLoader: ImageLoaderType
+    ) -> HomeViewController.Factory {
+        return HomeViewController.Factory(
+            dependency: .init(
+                viewModelFactory: .init(
+                    dependency: .init(
+                        networkService: networkService
+                    )
+                ),
+                projectThumbnailDataSourceFactory: .init(
+                    dependency: .init(
+                        cellViewModelFactory: .init(),
+                        cellConfigurator: .init(
+                            dependency: .init(
+                                viewModelFactory: .init(),
+                                imageLoader: imageLoader
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    }
+
+    static func resolve() -> AppDependency {
+
+        let networkService: NetworkServiceType = MockNetworkService()
+        let analyticsService: AnalyticsServiceType.Type = FirebaseApp.self
+        let imageLoader: ImageLoaderType = KingfisherImageLoader()
+
+        let homeViewControllerFactory = resolveHomeDependencies(
+            networkService: networkService,
+            imageLoader: imageLoader
+        )
+
+        let loginViewControllerFactory = resolveLogInDependencies(networkService: networkService)
 
         let rootTabBarControllerFactory: RootTabBarController.Factory = .init(
             dependency: .init(
-                viewModelFactory: RootViewModel.Factory(
+                viewModelFactory: .init(
                     dependency: .init()
                 ),
+                homeViewControllerFactory: homeViewControllerFactory,
                 loginViewControllerFactory: loginViewControllerFactory
             )
         )
 
         return AppDependency(
-            viewModelFactory: AppDelegateViewModel.Factory(
+            viewModelFactory: .init(
                 dependency: .init()
             ),
             analyticsService: analyticsService,
@@ -62,6 +101,103 @@ extension AppDependency {
         )
     }
 
+}
+
+// MARK: - ProjectThumbnailCell
+
+extension ProjectThumbnailCardCell: ConfiguratorModule {
+    struct Dependency {
+        let viewModelFactory: ProjectThumbnailCellViewModel.Factory
+        let imageLoader: ImageLoaderType
+    }
+
+    struct Payload {
+        let project: Project
+    }
+
+    func configure(dependency: Dependency, payload: Payload) {
+        if self.viewModel == nil {
+            self.viewModel = dependency.viewModelFactory.create()
+            self.imageLoader = dependency.imageLoader
+            self.bindViewModel()
+        }
+        self.configureWith(with: payload.project)
+    }
+}
+
+// MARK: - ProjectThumbnailCellViewModel
+
+extension ProjectThumbnailCellViewModel: FactoryModule {
+    convenience init(dependency: (), payload: ()) {
+        self.init()
+    }
+}
+
+extension Factory where Module == ProjectThumbnailCellViewModel {
+    func create() -> ProjectThumbnailCellViewModelType {
+        let module = Module()
+        return module
+    }
+}
+
+// MARK: - ProjectThumbnailDataSource
+
+extension ProjectThumbnailDataSource: FactoryModule {
+
+    struct Dependency {
+        let cellViewModelFactory: ProjectThumbnailCellViewModel.Factory
+        let cellConfigurator: ProjectThumbnailCardCell.Configurator
+    }
+}
+
+extension Factory where Module == ProjectThumbnailDataSource {
+    func create() -> BaseDataSource {
+        let module = Module(
+            cellViewModelFactory: dependency.cellViewModelFactory,
+            cellConfigurator: dependency.cellConfigurator
+        )
+        return module
+    }
+}
+
+// MARK: - HomeViewController
+
+extension HomeViewController: FactoryModule {
+    struct Dependency {
+        let viewModelFactory: HomeViewModel.Factory
+        let projectThumbnailDataSourceFactory: ProjectThumbnailDataSource.Factory
+    }
+}
+
+extension Factory where Module == HomeViewController {
+    func create() -> UIViewController {
+        let module = Module(
+            viewModel: dependency.viewModelFactory.create(),
+            projectThumbnailDataSource: dependency.projectThumbnailDataSourceFactory.create()
+        )
+        return module
+    }
+}
+
+// MARK: - HomeViewModel
+
+extension HomeViewModel: FactoryModule {
+    convenience init(dependency: Dependency, payload: ()) {
+        self.init(dependency: dependency)
+    }
+
+    struct Dependency {
+        let networkService: NetworkServiceType
+    }
+}
+
+extension Factory where Module == HomeViewModel {
+    func create() -> HomeViewModelType {
+        let module = Module(
+            networkService: dependency.networkService
+        )
+        return module
+    }
 }
 
 // MARK: - SignInViewController
@@ -228,6 +364,7 @@ extension Factory where Module == RootViewModel {
 extension RootTabBarController: FactoryModule {
     struct Dependency {
         let viewModelFactory: RootViewModel.Factory
+        let homeViewControllerFactory: HomeViewController.Factory
         let loginViewControllerFactory: LogInViewController.Factory
     }
 }
@@ -236,6 +373,7 @@ extension Factory where Module == RootTabBarController {
     func create() -> UIViewController {
         let module = Module(
             viewModel: dependency.viewModelFactory.create(),
+            homeViewControllerFactory: dependency.homeViewControllerFactory,
             logInViewControllerFactory: dependency.loginViewControllerFactory
         )
         return module

@@ -34,7 +34,7 @@ final class SignUpViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
 
         setUpLayout()
-        bindStyle()
+        bindStyles()
         bindViewModel()
     }
 
@@ -91,7 +91,7 @@ final class SignUpViewController: UIViewController {
             .disposed(by: disposeBag)
     }
 
-    private func bindStyle() {
+    private func bindStyles() {
         view.backgroundColor = .white
 
         emailTextField.backgroundColor = .white
