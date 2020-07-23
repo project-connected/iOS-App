@@ -11,11 +11,11 @@ import RxSwift
 import RxCocoa
 
 protocol HomeViewModelInputs {
-
+    func projectClicked(project: Project)
 }
 
 protocol HomeViewModelOutputs {
-
+    func showProjectDetail() -> Signal<Project>
 }
 
 protocol HomeViewModelType {
@@ -34,12 +34,26 @@ final class HomeViewModel: HomeViewModelType, HomeViewModelInputs, HomeViewModel
 
     // MARK: - Inputs
 
+    private let projectClickedProperty: PublishRelay<Project> = PublishRelay()
+    func projectClicked(project: Project) {
+        projectClickedProperty.accept(project)
+    }
+
     // MARK: - Outputs
+
+    private let showProjectDetailProperty: PublishRelay<Project> = PublishRelay()
+    func showProjectDetail() -> Signal<Project> {
+        return showProjectDetailProperty.asSignal()
+    }
 
     // MARK: - Lifecycle
 
     init(networkService: NetworkServiceType) {
         self.networkService = networkService
+
+        projectClickedProperty
+            .bind(to: showProjectDetailProperty)
+            .disposed(by: disposeBag)
     }
 
     // MARK: - Functions

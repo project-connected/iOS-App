@@ -18,18 +18,21 @@ final class HomeViewController: UIViewController {
 
     // MARK: - Properties
 
+    private let disposeBag = DisposeBag()
     private let viewModel: HomeViewModelType
     private let dataSource: BaseDataSource
-    private let disposeBag = DisposeBag()
+    private let projectDetailViewControllerFactory: ProjectDetailViewController.Factory
 
     // MARK: - Lifecycle
 
     init(
         viewModel: HomeViewModelType,
-        projectThumbnailDataSource: BaseDataSource
+        projectThumbnailDataSource: BaseDataSource,
+        projectDetailViewControllerFactory: ProjectDetailViewController.Factory
     ) {
         self.viewModel = viewModel
         self.dataSource = projectThumbnailDataSource
+        self.projectDetailViewControllerFactory = projectDetailViewControllerFactory
 
         let layout = UICollectionViewFlowLayout()
         self.collectionView = UICollectionView(frame: CGRect(), collectionViewLayout: layout)
@@ -49,7 +52,10 @@ final class HomeViewController: UIViewController {
     // MARK: - Functions
 
     private func bindViewModel() {
-
+        viewModel.outputs.showProjectDetail()
+            .map { self.projectDetailViewControllerFactory.create(.init(project: $0)) }
+            .emit(onNext: { self.navigationController?.pushViewController($0, animated: true) })
+            .disposed(by: disposeBag)
     }
 
     private func bindStyles() {
@@ -78,6 +84,7 @@ final class HomeViewController: UIViewController {
 
     private func configureCollectionView() {
         collectionView.dataSource = dataSource
+        collectionView.delegate = self
         collectionView.registerCell(ProjectThumbnailCardCell.self)
 
         var items = [
@@ -88,5 +95,14 @@ final class HomeViewController: UIViewController {
         items += items
 
         dataSource.set(items: items, cellClass: ProjectThumbnailCardCell.self, section: 0)
+    }
+
+}
+
+extension HomeViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let project = dataSource[indexPath] as? Project {
+            viewModel.inputs.projectClicked(project: project)
+        }
     }
 }

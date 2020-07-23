@@ -37,6 +37,10 @@ open class BaseDataSource: NSObject, UICollectionViewDataSource, UITableViewData
         self.items[section] = items.map { ($0, Cell.reusableId) }
     }
 
+    public final subscript(indexPath: IndexPath) -> Any {
+        return items[indexPath.section][indexPath.item].item
+    }
+
     open func configureCell(collectionCell cell: UICollectionViewCell, with item: Any) { }
     open func configureCell(tableCell cell: UITableViewCell, with item: Any) { }
 

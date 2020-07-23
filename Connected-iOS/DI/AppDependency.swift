@@ -63,6 +63,13 @@ extension AppDependency {
                             )
                         )
                     )
+                ),
+                projectDetailViewControllerFactory: .init(
+                    dependency: .init(
+                        viewModelFactory: .init(
+                            dependency: .init()
+                        )
+                    )
                 )
             )
         )
@@ -101,6 +108,47 @@ extension AppDependency {
         )
     }
 
+}
+
+// MARK: - ProjectDetailViewModel
+
+extension ProjectDetailViewModel: FactoryModule {
+    convenience init(dependency: Dependency, payload: ()) {
+        self.init(dependency: dependency)
+    }
+
+    struct Dependency {
+
+    }
+}
+
+extension Factory where Module == ProjectDetailViewModel {
+    func create() -> ProjectDetailViewModelType {
+        let module = Module()
+        return module
+    }
+}
+
+// MARK: - ProjectDetailViewController
+
+extension ProjectDetailViewController: FactoryModule {
+    struct Dependency {
+        let viewModelFactory: ProjectDetailViewModel.Factory
+    }
+
+    struct Payload {
+        let project: Project
+    }
+}
+
+extension Factory where Module == ProjectDetailViewController {
+    func create(_ payload: Module.Payload) -> ProjectDetailViewController {
+        let module = Module(
+            viewModel: dependency.viewModelFactory.create(),
+            project: payload.project
+        )
+        return module
+    }
 }
 
 // MARK: - ProjectThumbnailCell
@@ -166,6 +214,7 @@ extension HomeViewController: FactoryModule {
     struct Dependency {
         let viewModelFactory: HomeViewModel.Factory
         let projectThumbnailDataSourceFactory: ProjectThumbnailDataSource.Factory
+        let projectDetailViewControllerFactory: ProjectDetailViewController.Factory
     }
 }
 
@@ -173,7 +222,8 @@ extension Factory where Module == HomeViewController {
     func create() -> UIViewController {
         let module = Module(
             viewModel: dependency.viewModelFactory.create(),
-            projectThumbnailDataSource: dependency.projectThumbnailDataSourceFactory.create()
+            projectThumbnailDataSource: dependency.projectThumbnailDataSourceFactory.create(),
+            projectDetailViewControllerFactory: dependency.projectDetailViewControllerFactory
         )
         return module
     }
