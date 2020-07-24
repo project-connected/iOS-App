@@ -22,7 +22,7 @@ enum TabBarItem {
 
 protocol RootViewModelInputs {
     func shouldSelect(index: Int)
-    func initialized()
+    func viewDidLoad()
 }
 
 protocol RootViewModelOutputs {
@@ -48,9 +48,9 @@ final class RootViewModel: RootViewModelType, RootViewModelInputs, RootViewModel
         shouldSelectProperty.accept(index)
     }
 
-    private let initializedProperty: PublishRelay<Void> = PublishRelay()
-    func initialized() {
-        initializedProperty.accept(Void())
+    private let viewDidLoadProperty: PublishRelay<Void> = PublishRelay()
+    func viewDidLoad() {
+        viewDidLoadProperty.accept(Void())
     }
 
     // MARK: - Outputs
@@ -72,11 +72,11 @@ final class RootViewModel: RootViewModelType, RootViewModelInputs, RootViewModel
     init() {
 
         let currentUser = Observable.merge(
-            initializedProperty.map { false },
+            viewDidLoadProperty.map { false },
             Observable.just(nil)
         )
 
-        let standardViewControllers = initializedProperty
+        let standardViewControllers = viewDidLoadProperty
             .map(generateStandardViewControllers)
 
         let personalizedViewControllers = currentUser.filter { $0 != nil }
@@ -88,7 +88,7 @@ final class RootViewModel: RootViewModelType, RootViewModelInputs, RootViewModel
             .bind(to: setViewControllersProperty)
             .disposed(by: disposeBag)
 
-        initializedProperty
+        viewDidLoadProperty
             .map(tabData)
             .bind(to: tabBarItemsProperty)
             .disposed(by: disposeBag)

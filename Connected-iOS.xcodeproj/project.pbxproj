@@ -44,6 +44,8 @@
 		08DEA59924C8993A00222A56 /* BaseCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA59824C8993A00222A56 /* BaseCellTests.swift */; };
 		08DEA59B24C98EF500222A56 /* ProjectDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA59A24C98EF500222A56 /* ProjectDetailViewController.swift */; };
 		08DEA59D24C9930C00222A56 /* ProjectDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA59C24C9930C00222A56 /* ProjectDetailViewModel.swift */; };
+		08DEA5A024CA884300222A56 /* HomeContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA59F24CA884300222A56 /* HomeContainerViewController.swift */; };
+		08DEA5A224CA887B00222A56 /* HomeContainerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5A124CA887B00222A56 /* HomeContainerViewModel.swift */; };
 		08E455BB24C6BB8700E3A4FF /* RootTabBarControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E455BA24C6BB8700E3A4FF /* RootTabBarControllerTests.swift */; };
 		08EDD0B324C2DCD90038D6B9 /* NetworkServiceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EDD0B224C2DCD90038D6B9 /* NetworkServiceType.swift */; };
 		08EDD0B724C2E3140038D6B9 /* RootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EDD0B624C2E3140038D6B9 /* RootViewModel.swift */; };
@@ -106,6 +108,8 @@
 		08DEA59824C8993A00222A56 /* BaseCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCellTests.swift; sourceTree = "<group>"; };
 		08DEA59A24C98EF500222A56 /* ProjectDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewController.swift; sourceTree = "<group>"; };
 		08DEA59C24C9930C00222A56 /* ProjectDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewModel.swift; sourceTree = "<group>"; };
+		08DEA59F24CA884300222A56 /* HomeContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeContainerViewController.swift; sourceTree = "<group>"; };
+		08DEA5A124CA887B00222A56 /* HomeContainerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeContainerViewModel.swift; sourceTree = "<group>"; };
 		08E455BA24C6BB8700E3A4FF /* RootTabBarControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabBarControllerTests.swift; sourceTree = "<group>"; };
 		08EDD0B224C2DCD90038D6B9 /* NetworkServiceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceType.swift; sourceTree = "<group>"; };
 		08EDD0B624C2E3140038D6B9 /* RootViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModel.swift; sourceTree = "<group>"; };
@@ -259,6 +263,7 @@
 				08EDD0BF24C409650038D6B9 /* LogInViewModel.swift */,
 				08CD578824C469FF0066AD1B /* SignUpViewModel.swift */,
 				08C79D5624C7FFD300CBDF5F /* SignInViewModel.swift */,
+				08DEA5A124CA887B00222A56 /* HomeContainerViewModel.swift */,
 				08C79D5E24C810D500CBDF5F /* HomeViewModel.swift */,
 				08C79D6624C8337500CBDF5F /* ProjectThumbnailCellViewModel.swift */,
 				08DEA59C24C9930C00222A56 /* ProjectDetailViewModel.swift */,
@@ -274,6 +279,7 @@
 				08EDD0BD24C406D40038D6B9 /* LogInViewController.swift */,
 				08CD578624C468290066AD1B /* SignUpViewController.swift */,
 				08C79D5824C8013700CBDF5F /* SignInViewController.swift */,
+				08DEA59F24CA884300222A56 /* HomeContainerViewController.swift */,
 				08C79D5C24C810A800CBDF5F /* HomeViewController.swift */,
 				08DEA59A24C98EF500222A56 /* ProjectDetailViewController.swift */,
 			);
@@ -625,11 +631,13 @@
 				0884DB8124BD92DF00A2E471 /* ViewController.swift in Sources */,
 				08CD579324C5BC740066AD1B /* BorderStyles.swift in Sources */,
 				08CD578724C468290066AD1B /* SignUpViewController.swift in Sources */,
+				08DEA5A224CA887B00222A56 /* HomeContainerViewModel.swift in Sources */,
 				08EDD0C024C409650038D6B9 /* LogInViewModel.swift in Sources */,
 				08C79D5924C8013700CBDF5F /* SignInViewController.swift in Sources */,
 				0839A11C24C208CA00A15253 /* main.swift in Sources */,
 				08C79D6724C8337500CBDF5F /* ProjectThumbnailCellViewModel.swift in Sources */,
 				08CD578524C463E40066AD1B /* Array+UIView.swift in Sources */,
+				08DEA5A024CA884300222A56 /* HomeContainerViewController.swift in Sources */,
 				08CD579024C5B87E0066AD1B /* AutoLayout.swift in Sources */,
 				08C79D5424C7F20600CBDF5F /* UIViewController+Alert.swift in Sources */,
 				08C79D7424C853F600CBDF5F /* Project.swift in Sources */,

@@ -42,32 +42,39 @@ extension AppDependency {
         )
     }
 
-    private static func resolveHomeDependencies(
+    private static func resolveHomeContainerDependencies(
         networkService: NetworkServiceType,
         imageLoader: ImageLoaderType
-    ) -> HomeViewController.Factory {
-        return HomeViewController.Factory(
+    ) -> HomeContainerViewController.Factory {
+        return .init(
             dependency: .init(
                 viewModelFactory: .init(
-                    dependency: .init(
-                        networkService: networkService
-                    )
+                    dependency: .init()
                 ),
-                projectThumbnailDataSourceFactory: .init(
-                    dependency: .init(
-                        cellViewModelFactory: .init(),
-                        cellConfigurator: .init(
-                            dependency: .init(
-                                viewModelFactory: .init(),
-                                imageLoader: imageLoader
-                            )
-                        )
-                    )
-                ),
-                projectDetailViewControllerFactory: .init(
+                homeViewControllerFactory: .init(
                     dependency: .init(
                         viewModelFactory: .init(
-                            dependency: .init()
+                            dependency: .init(
+                                networkService: networkService
+                            )
+                        ),
+                        projectThumbnailDataSourceFactory: .init(
+                            dependency: .init(
+                                cellViewModelFactory: .init(),
+                                cellConfigurator: .init(
+                                    dependency: .init(
+                                        viewModelFactory: .init(),
+                                        imageLoader: imageLoader
+                                    )
+                                )
+                            )
+                        ),
+                        projectDetailViewControllerFactory: .init(
+                            dependency: .init(
+                                viewModelFactory: .init(
+                                    dependency: .init()
+                                )
+                            )
                         )
                     )
                 )
@@ -81,7 +88,7 @@ extension AppDependency {
         let analyticsService: AnalyticsServiceType.Type = FirebaseApp.self
         let imageLoader: ImageLoaderType = KingfisherImageLoader()
 
-        let homeViewControllerFactory = resolveHomeDependencies(
+        let homeContainerViewControllerFactory = resolveHomeContainerDependencies(
             networkService: networkService,
             imageLoader: imageLoader
         )
@@ -93,7 +100,7 @@ extension AppDependency {
                 viewModelFactory: .init(
                     dependency: .init()
                 ),
-                homeViewControllerFactory: homeViewControllerFactory,
+                homeContainerViewControllerFactory: homeContainerViewControllerFactory,
                 loginViewControllerFactory: loginViewControllerFactory
             )
         )
@@ -108,6 +115,44 @@ extension AppDependency {
         )
     }
 
+}
+
+// MARK: - HomeContainerViewController
+
+extension HomeContainerViewController: FactoryModule {
+    struct Dependency {
+        let viewModelFactory: HomeContainerViewModel.Factory
+        let homeViewControllerFactory: HomeViewController.Factory
+    }
+}
+
+extension Factory where Module == HomeContainerViewController {
+    func create() -> HomeContainerViewController {
+        let module = Module(
+            viewModel: dependency.viewModelFactory.create(),
+            homeViewController: dependency.homeViewControllerFactory.create()
+        )
+        return module
+    }
+}
+
+// MARK: - HomeContainerViewModel
+
+extension HomeContainerViewModel: FactoryModule {
+    convenience init(dependency: Dependency, payload: ()) {
+        self.init(dependency: dependency)
+    }
+
+    struct Dependency {
+
+    }
+}
+
+extension Factory where Module == HomeContainerViewModel {
+    func create() -> HomeContainerViewModelType {
+        let module = Module()
+        return module
+    }
 }
 
 // MARK: - ProjectDetailViewModel
@@ -414,7 +459,7 @@ extension Factory where Module == RootViewModel {
 extension RootTabBarController: FactoryModule {
     struct Dependency {
         let viewModelFactory: RootViewModel.Factory
-        let homeViewControllerFactory: HomeViewController.Factory
+        let homeContainerViewControllerFactory: HomeContainerViewController.Factory
         let loginViewControllerFactory: LogInViewController.Factory
     }
 }
@@ -423,7 +468,7 @@ extension Factory where Module == RootTabBarController {
     func create() -> UIViewController {
         let module = Module(
             viewModel: dependency.viewModelFactory.create(),
-            homeViewControllerFactory: dependency.homeViewControllerFactory,
+            homeContainerViewControllerFactory: dependency.homeContainerViewControllerFactory,
             logInViewControllerFactory: dependency.loginViewControllerFactory
         )
         return module

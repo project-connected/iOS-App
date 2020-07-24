@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-final class HomeViewController: UIViewController {
+final class HomeViewController: UITableViewController {
 
     // MARK: - UI Properties
 
@@ -43,12 +43,27 @@ final class HomeViewController: UIViewController {
         bindStyles()
         bindViewModel()
         configureCollectionView()
+
+        let refresh = UIRefreshControl()
+        refresh.attributedTitle = NSAttributedString(string: "새로고침")
+        refresh.addTarget(self, action: #selector(pullToRefresh(refresh:)), for: .valueChanged)
+        tableView.refreshControl = refresh
+    }
+
+    @objc func pullToRefresh(refresh: UIRefreshControl) {
+        viewModel.inputs.refresh()
+        refresh.endRefreshing()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        viewModel.inputs.viewWillAppear()
+    }
     // MARK: - Functions
 
     private func bindViewModel() {
@@ -56,9 +71,23 @@ final class HomeViewController: UIViewController {
             .map { self.projectDetailViewControllerFactory.create(.init(project: $0)) }
             .emit(onNext: { self.navigationController?.pushViewController($0, animated: true) })
             .disposed(by: disposeBag)
+
+        viewModel.outputs.projects()
+            .drive(onNext: { items in
+                self.dataSource.set(items: items, cellClass: ProjectThumbnailCardCell.self, section: 0)
+                self.collectionView.reloadData()
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.showErrorMsg()
+            .do(onNext: { print($0) })
+            .emit(onNext: { self.showAlert(title: "에러 발생", msg: $0, style: .alert) })
+            .disposed(by: disposeBag)
+
     }
 
     private func bindStyles() {
+        tableView.backgroundColor = .yellow
         view.backgroundColor = .white
 
         collectionView.backgroundColor = .clear
@@ -86,15 +115,6 @@ final class HomeViewController: UIViewController {
         collectionView.dataSource = dataSource
         collectionView.delegate = self
         collectionView.registerCell(ProjectThumbnailCardCell.self)
-
-        var items = [
-            Project(id: 1, name: "project name", thumbnailImageUrl: "", categories: ["개발", "카테"]),
-            Project(id: 2, name: "name project", thumbnailImageUrl: "", categories: ["디자인", "고리"])
-        ]
-
-        items += items
-
-        dataSource.set(items: items, cellClass: ProjectThumbnailCardCell.self, section: 0)
     }
 
 }
