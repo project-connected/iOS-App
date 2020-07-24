@@ -10,8 +10,6 @@ import UIKit
 
 class ProjectThumbnailDataSource: BaseDataSource {
 
-    // MARK: - UI Properties
-
     // MARK: - Properties
 
     private let cellViewModelFactory: ProjectThumbnailCellViewModel.Factory

@@ -58,13 +58,31 @@ extension AppDependency {
                                 networkService: networkService
                             )
                         ),
-                        projectThumbnailDataSourceFactory: .init(
+                        projectCollectionDataSourceFactory: .init(
                             dependency: .init(
-                                cellViewModelFactory: .init(),
+                                cellViewModelFactory: .init(
+                                    dependency: .init(
+                                        networkService: networkService
+                                    )
+                                ),
                                 cellConfigurator: .init(
                                     dependency: .init(
-                                        viewModelFactory: .init(),
-                                        imageLoader: imageLoader
+                                        viewModelFactory: .init(
+                                            dependency: .init(
+                                                networkService: networkService
+                                            )
+                                        ),
+                                        projectThumbnailCellDataSource: .init(
+                                            dependency: .init(
+                                                cellViewModelFactory: .init(),
+                                                cellConfigurator: .init(
+                                                    dependency: .init(
+                                                        viewModelFactory: .init(),
+                                                        imageLoader: imageLoader
+                                                    )
+                                                )
+                                            )
+                                        )
                                     )
                                 )
                             )
@@ -85,7 +103,8 @@ extension AppDependency {
     static func resolve() -> AppDependency {
 
         let networkService: NetworkServiceType = MockNetworkService()
-        let analyticsService: AnalyticsServiceType.Type = FirebaseApp.self
+//        let analyticsService: AnalyticsServiceType.Type = FirebaseApp.self
+        let analyticsService: AnalyticsServiceType.Type = MockAnalyticsService.self
         let imageLoader: ImageLoaderType = KingfisherImageLoader()
 
         let homeContainerViewControllerFactory = resolveHomeContainerDependencies(
@@ -115,6 +134,73 @@ extension AppDependency {
         )
     }
 
+}
+
+// MARK: - ProjectCollectionDataSource
+
+extension ProjectCollectionDataSource: FactoryModule {
+    struct Dependency {
+        let cellViewModelFactory: ProjectCollectionCellViewModel.Factory
+        let cellConfigurator: ProjectCollectionCell.Configurator
+    }
+
+    struct Payload {
+        weak var cellDelegate: ProjectCollectionCellDelegate?
+    }
+}
+
+extension Factory where Module == ProjectCollectionDataSource {
+    func create(payload: Module.Payload) -> BaseDataSource {
+        let module = Module(
+            cellViewModelFactory: dependency.cellViewModelFactory,
+            cellConfigurator: dependency.cellConfigurator,
+            cellDelegate: payload.cellDelegate
+        )
+        return module
+    }
+}
+
+// MARK: - ProjectCollectionCellViewModel
+
+extension ProjectCollectionCellViewModel: FactoryModule {
+    convenience init(dependency: Dependency, payload: ()) {
+        self.init(dependency: dependency)
+    }
+
+    struct Dependency {
+        let networkService: NetworkServiceType
+    }
+}
+
+extension Factory where Module == ProjectCollectionCellViewModel {
+    func create() -> ProjectCollectionCellViewModelType {
+        let module = Module(
+            networkService: dependency.networkService
+        )
+        return module
+    }
+}
+
+// MARK: - ProjectCollectionCell
+
+extension ProjectCollectionCell: ConfiguratorModule {
+    struct Dependency {
+        let viewModelFactory: ProjectCollectionCellViewModel.Factory
+        let projectThumbnailCellDataSource: ProjectThumbnailDataSource.Factory
+    }
+
+    struct Payload {
+        let projectSubject: HomeProjectSubject
+    }
+
+    func configure(dependency: Dependency, payload: Payload) {
+        if self.viewModel == nil {
+            self.viewModel = dependency.viewModelFactory.create()
+            self.dataSource = dependency.projectThumbnailCellDataSource.create()
+            self.bindViewModel()
+        }
+        self.configureWith(with: payload.projectSubject)
+    }
 }
 
 // MARK: - HomeContainerViewController
@@ -258,7 +344,7 @@ extension Factory where Module == ProjectThumbnailDataSource {
 extension HomeViewController: FactoryModule {
     struct Dependency {
         let viewModelFactory: HomeViewModel.Factory
-        let projectThumbnailDataSourceFactory: ProjectThumbnailDataSource.Factory
+        let projectCollectionDataSourceFactory: ProjectCollectionDataSource.Factory
         let projectDetailViewControllerFactory: ProjectDetailViewController.Factory
     }
 }
@@ -267,7 +353,7 @@ extension Factory where Module == HomeViewController {
     func create() -> UIViewController {
         let module = Module(
             viewModel: dependency.viewModelFactory.create(),
-            projectThumbnailDataSource: dependency.projectThumbnailDataSourceFactory.create(),
+            projectCollectionDataSourceFactory: dependency.projectCollectionDataSourceFactory,
             projectDetailViewControllerFactory: dependency.projectDetailViewControllerFactory
         )
         return module

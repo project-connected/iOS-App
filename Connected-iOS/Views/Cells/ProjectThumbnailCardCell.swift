@@ -21,9 +21,9 @@ class ProjectThumbnailCardCell: UICollectionViewCell, BaseCell {
 
     // MARK: - Properties
 
+    private let disposeBag = DisposeBag()
     var viewModel: ProjectThumbnailCellViewModelType?
     var imageLoader: ImageLoaderType?
-    private let disposeBag = DisposeBag()
 
     // MARK: - Lifecycle
 

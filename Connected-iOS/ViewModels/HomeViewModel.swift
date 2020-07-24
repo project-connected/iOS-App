@@ -10,16 +10,40 @@ import Foundation
 import RxSwift
 import RxCocoa
 
+enum HomeProjectSubject {
+    case popular
+}
+
+extension HomeProjectSubject {
+    var title: String {
+        switch self {
+        case .popular:
+            return "인기 있는"
+        }
+    }
+
+    var url: String {
+        switch self {
+        case .popular:
+            return "popular"
+        }
+    }
+}
+
+enum HomeViewControllerData {
+    case projectDatail(project: Project)
+}
+
 protocol HomeViewModelInputs {
-    func projectClicked(project: Project)
+    func showProjectDetail(project: Project)
     func viewWillAppear()
     func refresh()
 }
 
 protocol HomeViewModelOutputs {
-    func showProjectDetail() -> Signal<Project>
-    func projects() -> Driver<[Project]>
-    func showErrorMsg() -> Signal<String>
+    func presentViewController() -> Signal<HomeViewControllerData>
+    func projectSubjects() -> Driver<[HomeProjectSubject]>
+//    func showErrorMsg() -> Signal<String>
 }
 
 protocol HomeViewModelType {
@@ -38,11 +62,6 @@ final class HomeViewModel: HomeViewModelType, HomeViewModelInputs, HomeViewModel
 
     // MARK: - Inputs
 
-    private let projectClickedProperty: PublishRelay<Project> = PublishRelay()
-    func projectClicked(project: Project) {
-        projectClickedProperty.accept(project)
-    }
-
     private let viewWillAppearProperty: PublishRelay<Void> = PublishRelay()
     func viewWillAppear() {
         viewWillAppearProperty.accept(Void())
@@ -53,22 +72,27 @@ final class HomeViewModel: HomeViewModelType, HomeViewModelInputs, HomeViewModel
         refreshProperty.accept(Void())
     }
 
+    private let showProjectDetailProperty: PublishRelay<Project> = PublishRelay()
+    func showProjectDetail(project: Project) {
+        showProjectDetailProperty.accept(project)
+    }
+
     // MARK: - Outputs
 
-    private let showProjectDetailProperty: PublishRelay<Project> = PublishRelay()
-    func showProjectDetail() -> Signal<Project> {
-        return showProjectDetailProperty.asSignal()
+    private let projectSubjectsProperty: BehaviorRelay<[HomeProjectSubject]> = BehaviorRelay(value: [])
+    func projectSubjects() -> Driver<[HomeProjectSubject]> {
+        return projectSubjectsProperty.asDriver()
     }
 
-    private let projectsProperty: BehaviorRelay<[Project]> = BehaviorRelay(value: [])
-    func projects() -> Driver<[Project]> {
-        return projectsProperty.asDriver()
+    private let presentViewControllerProperty: PublishRelay<HomeViewControllerData> = PublishRelay()
+    func presentViewController() -> Signal<HomeViewControllerData> {
+        return presentViewControllerProperty.asSignal()
     }
 
-    private let showErrorMsgProperty: PublishRelay<String> = PublishRelay()
-    func showErrorMsg() -> Signal<String> {
-        return showErrorMsgProperty.asSignal()
-    }
+//    private let showErrorMsgProperty: PublishRelay<String> = PublishRelay()
+//    func showErrorMsg() -> Signal<String> {
+//        return showErrorMsgProperty.asSignal()
+//    }
 
     // MARK: - Lifecycle
 
@@ -83,20 +107,13 @@ final class HomeViewModel: HomeViewModelType, HomeViewModelInputs, HomeViewModel
         )
 
         request
-            .flatMap { networkService.projects() }
-            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .userInitiated))
-            .bind(onNext: { result in
-                switch result {
-                case .success(let projects):
-                    self.projectsProperty.accept(projects)
-                case .failure(let error):
-                    self.showErrorMsgProperty.accept(error.localizedDescription)
-                }
-            })
+            .map { _ in [HomeProjectSubject.popular, .popular] }
+            .bind(to: projectSubjectsProperty)
             .disposed(by: disposeBag)
 
-        projectClickedProperty
-            .bind(to: showProjectDetailProperty)
+        showProjectDetailProperty
+            .map(HomeViewControllerData.projectDatail(project:))
+            .bind(to: presentViewControllerProperty)
             .disposed(by: disposeBag)
     }
 

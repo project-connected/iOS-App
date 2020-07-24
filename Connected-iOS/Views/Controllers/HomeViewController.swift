@@ -14,45 +14,33 @@ final class HomeViewController: UITableViewController {
 
     // MARK: - UI Properties
 
-    private let collectionView: UICollectionView
-
     // MARK: - Properties
 
     private let disposeBag = DisposeBag()
     private let viewModel: HomeViewModelType
-    private let dataSource: BaseDataSource
+    private lazy var projectCollectionDataSource: BaseDataSource = {
+        return self.projectCollectionDataSourceFactory.create(payload: .init(cellDelegate: self))
+    }()
+    private let projectCollectionDataSourceFactory: ProjectCollectionDataSource.Factory
     private let projectDetailViewControllerFactory: ProjectDetailViewController.Factory
 
     // MARK: - Lifecycle
 
     init(
         viewModel: HomeViewModelType,
-        projectThumbnailDataSource: BaseDataSource,
+        projectCollectionDataSourceFactory: ProjectCollectionDataSource.Factory,
         projectDetailViewControllerFactory: ProjectDetailViewController.Factory
     ) {
         self.viewModel = viewModel
-        self.dataSource = projectThumbnailDataSource
+        self.projectCollectionDataSourceFactory = projectCollectionDataSourceFactory
         self.projectDetailViewControllerFactory = projectDetailViewControllerFactory
-
-        let layout = UICollectionViewFlowLayout()
-        self.collectionView = UICollectionView(frame: CGRect(), collectionViewLayout: layout)
 
         super.init(nibName: nil, bundle: nil)
 
+        configureTableView()
         setUpLayout()
         bindStyles()
         bindViewModel()
-        configureCollectionView()
-
-        let refresh = UIRefreshControl()
-        refresh.attributedTitle = NSAttributedString(string: "새로고침")
-        refresh.addTarget(self, action: #selector(pullToRefresh(refresh:)), for: .valueChanged)
-        tableView.refreshControl = refresh
-    }
-
-    @objc func pullToRefresh(refresh: UIRefreshControl) {
-        viewModel.inputs.refresh()
-        refresh.endRefreshing()
     }
 
     required init?(coder: NSCoder) {
@@ -64,65 +52,69 @@ final class HomeViewController: UITableViewController {
 
         viewModel.inputs.viewWillAppear()
     }
+
     // MARK: - Functions
 
     private func bindViewModel() {
-        viewModel.outputs.showProjectDetail()
-            .map { self.projectDetailViewControllerFactory.create(.init(project: $0)) }
-            .emit(onNext: { self.navigationController?.pushViewController($0, animated: true) })
-            .disposed(by: disposeBag)
 
-        viewModel.outputs.projects()
+        viewModel.outputs.projectSubjects()
             .drive(onNext: { items in
-                self.dataSource.set(items: items, cellClass: ProjectThumbnailCardCell.self, section: 0)
-                self.collectionView.reloadData()
+                self.projectCollectionDataSource.set(
+                    items: items,
+                    cellClass: ProjectCollectionCell.self,
+                    section: 0
+                )
+                self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.showErrorMsg()
-            .do(onNext: { print($0) })
-            .emit(onNext: { self.showAlert(title: "에러 발생", msg: $0, style: .alert) })
+        viewModel.outputs.presentViewController()
+            .map(viewController(from:))
+            .emit(onNext: { self.navigationController?.pushViewController($0, animated: true) })
             .disposed(by: disposeBag)
-
     }
 
     private func bindStyles() {
-        tableView.backgroundColor = .yellow
         view.backgroundColor = .white
-
-        collectionView.backgroundColor = .clear
-        collectionView.showsHorizontalScrollIndicator = false
-        if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.scrollDirection = .horizontal
-            layout.itemSize = CGSize(width: view.bounds.width - 50, height: 400)
-            layout.minimumLineSpacing = 50
-            layout.sectionInset = UIEdgeInsets(top: 10, left: 25, bottom: 35, right: 25)
-        }
     }
 
     private func setUpLayout() {
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(collectionView)
 
-        constraintViewToCenterInViewController(parent: self, child: collectionView)
-        NSLayoutConstraint.activate([
-            collectionView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
-            collectionView.heightAnchor.constraint(equalToConstant: 450)
-        ])
     }
 
-    private func configureCollectionView() {
-        collectionView.dataSource = dataSource
-        collectionView.delegate = self
-        collectionView.registerCell(ProjectThumbnailCardCell.self)
+    private func configureTableView() {
+        tableView.dataSource = projectCollectionDataSource
+        tableView.delegate = self
+        tableView.registerCell(ProjectCollectionCell.self)
+
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 500
+
+        let refresh = UIRefreshControl()
+        refresh.attributedTitle = NSAttributedString(string: "새로고침")
+        refresh.addTarget(self, action: #selector(pullToRefresh(refresh:)), for: .valueChanged)
+        tableView.refreshControl = refresh
     }
 
+    @objc func pullToRefresh(refresh: UIRefreshControl) {
+        viewModel.inputs.refresh()
+        tableView.reloadData()
+        refresh.endRefreshing()
+    }
+
+    private func viewController(from data: HomeViewControllerData) -> UIViewController {
+        switch data {
+        case .projectDatail(let project):
+            return projectDetailViewControllerFactory.create(payload: .init(project: project))
+        }
+    }
 }
 
-extension HomeViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let project = dataSource[indexPath] as? Project {
-            viewModel.inputs.projectClicked(project: project)
-        }
+// MARK: - ProjectCollectionCellDelegate
+
+extension HomeViewController: ProjectCollectionCellDelegate {
+    func showProjectDetail(project: Project) {
+        print("show project detail delegate")
+        viewModel.inputs.showProjectDetail(project: project)
     }
 }
