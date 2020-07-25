@@ -14,3 +14,8 @@ struct Project {
     let thumbnailImageUrl: String
     let categories: [String]
 }
+
+struct ThemedProjects {
+    let theme: String
+    let projects: [Project]
+}

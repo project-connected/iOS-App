@@ -10,26 +10,6 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-enum HomeProjectSubject {
-    case popular
-}
-
-extension HomeProjectSubject {
-    var title: String {
-        switch self {
-        case .popular:
-            return "인기 있는"
-        }
-    }
-
-    var url: String {
-        switch self {
-        case .popular:
-            return "popular"
-        }
-    }
-}
-
 enum HomeViewControllerData {
     case projectDatail(project: Project)
 }
@@ -42,8 +22,9 @@ protocol HomeViewModelInputs {
 
 protocol HomeViewModelOutputs {
     func presentViewController() -> Signal<HomeViewControllerData>
-    func projectSubjects() -> Driver<[HomeProjectSubject]>
-//    func showErrorMsg() -> Signal<String>
+    func themedProjects() -> Driver<[ThemedProjects]>
+    func loadingAnimated() -> Driver<Bool>
+    func showError() -> Signal<Error>
 }
 
 protocol HomeViewModelType {
@@ -79,9 +60,9 @@ final class HomeViewModel: HomeViewModelType, HomeViewModelInputs, HomeViewModel
 
     // MARK: - Outputs
 
-    private let projectSubjectsProperty: BehaviorRelay<[HomeProjectSubject]> = BehaviorRelay(value: [])
-    func projectSubjects() -> Driver<[HomeProjectSubject]> {
-        return projectSubjectsProperty.asDriver()
+    private let themedProjectsProperty: BehaviorRelay<[ThemedProjects]> = BehaviorRelay(value: [])
+    func themedProjects() -> Driver<[ThemedProjects]> {
+        return themedProjectsProperty.asDriver()
     }
 
     private let presentViewControllerProperty: PublishRelay<HomeViewControllerData> = PublishRelay()
@@ -89,10 +70,15 @@ final class HomeViewModel: HomeViewModelType, HomeViewModelInputs, HomeViewModel
         return presentViewControllerProperty.asSignal()
     }
 
-//    private let showErrorMsgProperty: PublishRelay<String> = PublishRelay()
-//    func showErrorMsg() -> Signal<String> {
-//        return showErrorMsgProperty.asSignal()
-//    }
+    private let loadingAnimatedProperty: BehaviorRelay<Bool> = BehaviorRelay(value: false)
+    func loadingAnimated() -> Driver<Bool> {
+        return loadingAnimatedProperty.asDriver()
+    }
+
+    private let showErrorProperty: PublishRelay<Error> = PublishRelay()
+    func showError() -> Signal<Error> {
+        return showErrorProperty.asSignal()
+    }
 
     // MARK: - Lifecycle
 
@@ -107,14 +93,25 @@ final class HomeViewModel: HomeViewModelType, HomeViewModelInputs, HomeViewModel
         )
 
         request
-            .map { _ in [HomeProjectSubject.popular, .popular] }
-            .bind(to: projectSubjectsProperty)
+            .do(onNext: { self.loadingAnimatedProperty.accept(true) })
+            .flatMap(networkService.themedProjects)
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            .bind(onNext: { result in
+                self.loadingAnimatedProperty.accept(false)
+                switch result {
+                case .success(let themedProjects):
+                    self.themedProjectsProperty.accept(themedProjects)
+                case .failure(let error):
+                    self.showErrorProperty.accept(error)
+                }
+            })
             .disposed(by: disposeBag)
 
         showProjectDetailProperty
             .map(HomeViewControllerData.projectDatail(project:))
             .bind(to: presentViewControllerProperty)
             .disposed(by: disposeBag)
+
     }
 
     // MARK: - Functions

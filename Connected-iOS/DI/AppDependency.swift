@@ -58,20 +58,16 @@ extension AppDependency {
                                 networkService: networkService
                             )
                         ),
-                        projectCollectionDataSourceFactory: .init(
+                        homeDataSourceFactory: .init(
                             dependency: .init(
-                                cellViewModelFactory: .init(
+                                errorCellConfigurator: .init(
                                     dependency: .init(
-                                        networkService: networkService
+                                        viewModelFactory: .init()
                                     )
                                 ),
-                                cellConfigurator: .init(
+                                projectCollectionCellConfigurator: .init(
                                     dependency: .init(
-                                        viewModelFactory: .init(
-                                            dependency: .init(
-                                                networkService: networkService
-                                            )
-                                        ),
+                                        viewModelFactory: .init(),
                                         projectThumbnailCellDataSource: .init(
                                             dependency: .init(
                                                 cellViewModelFactory: .init(),
@@ -136,25 +132,56 @@ extension AppDependency {
 
 }
 
-// MARK: - ProjectCollectionDataSource
+// MARK: - ErrorCellViewModel
 
-extension ProjectCollectionDataSource: FactoryModule {
-    struct Dependency {
-        let cellViewModelFactory: ProjectCollectionCellViewModel.Factory
-        let cellConfigurator: ProjectCollectionCell.Configurator
+extension ErrorCellViewModel: FactoryModule {
+    convenience init(dependency: (), payload: ()) {
+        self.init()
     }
 
-    struct Payload {
-        weak var cellDelegate: ProjectCollectionCellDelegate?
+}
+
+extension Factory where Module == ErrorCellViewModel {
+    func create() -> ErrorCellViewModelType {
+        let module = Module()
+        return module
     }
 }
 
-extension Factory where Module == ProjectCollectionDataSource {
-    func create(payload: Module.Payload) -> BaseDataSource {
+// MARK: - ErrorCell
+
+extension ErrorCell: ConfiguratorModule {
+    struct Dependency {
+        let viewModelFactory: ErrorCellViewModel.Factory
+    }
+
+    struct Payload {
+        let error: Error
+    }
+
+    func configure(dependency: Dependency, payload: Payload) {
+        if self.viewModel == nil {
+            self.viewModel = dependency.viewModelFactory.create()
+            self.bindViewModel()
+        }
+        configureWith(with: payload.error)
+    }
+}
+
+// MARK: - HomeDataSource
+
+extension HomeDataSource: FactoryModule {
+    struct Dependency {
+        let errorCellConfigurator: ErrorCell.Configurator
+        let projectCollectionCellConfigurator: ProjectCollectionCell.Configurator
+    }
+}
+
+extension Factory where Module == HomeDataSource {
+    func create() -> HomeDataSource {
         let module = Module(
-            cellViewModelFactory: dependency.cellViewModelFactory,
-            cellConfigurator: dependency.cellConfigurator,
-            cellDelegate: payload.cellDelegate
+            errorCellConfigurator: dependency.errorCellConfigurator,
+            projectCollectionCellConfigurator: dependency.projectCollectionCellConfigurator
         )
         return module
     }
@@ -163,20 +190,14 @@ extension Factory where Module == ProjectCollectionDataSource {
 // MARK: - ProjectCollectionCellViewModel
 
 extension ProjectCollectionCellViewModel: FactoryModule {
-    convenience init(dependency: Dependency, payload: ()) {
-        self.init(dependency: dependency)
-    }
-
-    struct Dependency {
-        let networkService: NetworkServiceType
+    convenience init(dependency: (), payload: ()) {
+        self.init()
     }
 }
 
 extension Factory where Module == ProjectCollectionCellViewModel {
     func create() -> ProjectCollectionCellViewModelType {
-        let module = Module(
-            networkService: dependency.networkService
-        )
+        let module = Module()
         return module
     }
 }
@@ -190,7 +211,7 @@ extension ProjectCollectionCell: ConfiguratorModule {
     }
 
     struct Payload {
-        let projectSubject: HomeProjectSubject
+        let themedProjects: ThemedProjects
     }
 
     func configure(dependency: Dependency, payload: Payload) {
@@ -199,7 +220,7 @@ extension ProjectCollectionCell: ConfiguratorModule {
             self.dataSource = dependency.projectThumbnailCellDataSource.create()
             self.bindViewModel()
         }
-        self.configureWith(with: payload.projectSubject)
+        self.configureWith(with: payload.themedProjects)
     }
 }
 
@@ -273,7 +294,7 @@ extension ProjectDetailViewController: FactoryModule {
 }
 
 extension Factory where Module == ProjectDetailViewController {
-    func create(_ payload: Module.Payload) -> ProjectDetailViewController {
+    func create(payload: Module.Payload) -> UIViewController {
         let module = Module(
             viewModel: dependency.viewModelFactory.create(),
             project: payload.project
@@ -344,7 +365,7 @@ extension Factory where Module == ProjectThumbnailDataSource {
 extension HomeViewController: FactoryModule {
     struct Dependency {
         let viewModelFactory: HomeViewModel.Factory
-        let projectCollectionDataSourceFactory: ProjectCollectionDataSource.Factory
+        let homeDataSourceFactory: HomeDataSource.Factory
         let projectDetailViewControllerFactory: ProjectDetailViewController.Factory
     }
 }
@@ -353,7 +374,7 @@ extension Factory where Module == HomeViewController {
     func create() -> UIViewController {
         let module = Module(
             viewModel: dependency.viewModelFactory.create(),
-            projectCollectionDataSourceFactory: dependency.projectCollectionDataSourceFactory,
+            homeDataSource: dependency.homeDataSourceFactory.create(),
             projectDetailViewControllerFactory: dependency.projectDetailViewControllerFactory
         )
         return module

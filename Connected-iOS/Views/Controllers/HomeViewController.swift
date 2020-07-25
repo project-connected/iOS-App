@@ -18,21 +18,18 @@ final class HomeViewController: UITableViewController {
 
     private let disposeBag = DisposeBag()
     private let viewModel: HomeViewModelType
-    private lazy var projectCollectionDataSource: BaseDataSource = {
-        return self.projectCollectionDataSourceFactory.create(payload: .init(cellDelegate: self))
-    }()
-    private let projectCollectionDataSourceFactory: ProjectCollectionDataSource.Factory
+    private let dataSource: HomeDataSource
     private let projectDetailViewControllerFactory: ProjectDetailViewController.Factory
 
     // MARK: - Lifecycle
 
     init(
         viewModel: HomeViewModelType,
-        projectCollectionDataSourceFactory: ProjectCollectionDataSource.Factory,
+        homeDataSource: HomeDataSource,
         projectDetailViewControllerFactory: ProjectDetailViewController.Factory
     ) {
         self.viewModel = viewModel
-        self.projectCollectionDataSourceFactory = projectCollectionDataSourceFactory
+        self.dataSource = homeDataSource
         self.projectDetailViewControllerFactory = projectDetailViewControllerFactory
 
         super.init(nibName: nil, bundle: nil)
@@ -57,11 +54,22 @@ final class HomeViewController: UITableViewController {
 
     private func bindViewModel() {
 
-        viewModel.outputs.projectSubjects()
+        viewModel.outputs.themedProjects()
             .drive(onNext: { items in
-                self.projectCollectionDataSource.set(
+                self.dataSource.set(
                     items: items,
                     cellClass: ProjectCollectionCell.self,
+                    section: 0
+                )
+                self.tableView.reloadData()
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.showError()
+            .emit(onNext: { error in
+                self.dataSource.set(
+                    items: [error],
+                    cellClass: ErrorCell.self,
                     section: 0
                 )
                 self.tableView.reloadData()
@@ -71,6 +79,10 @@ final class HomeViewController: UITableViewController {
         viewModel.outputs.presentViewController()
             .map(viewController(from:))
             .emit(onNext: { self.navigationController?.pushViewController($0, animated: true) })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.loadingAnimated()
+            .drive(refreshControl!.rx.isRefreshing)
             .disposed(by: disposeBag)
     }
 
@@ -83,9 +95,12 @@ final class HomeViewController: UITableViewController {
     }
 
     private func configureTableView() {
-        tableView.dataSource = projectCollectionDataSource
+        dataSource.cellDelegate = self
+        tableView.dataSource = dataSource
         tableView.delegate = self
+
         tableView.registerCell(ProjectCollectionCell.self)
+        tableView.registerCell(ErrorCell.self)
 
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 500
@@ -93,13 +108,11 @@ final class HomeViewController: UITableViewController {
         let refresh = UIRefreshControl()
         refresh.attributedTitle = NSAttributedString(string: "새로고침")
         refresh.addTarget(self, action: #selector(pullToRefresh(refresh:)), for: .valueChanged)
-        tableView.refreshControl = refresh
+        refreshControl = refresh
     }
 
     @objc func pullToRefresh(refresh: UIRefreshControl) {
         viewModel.inputs.refresh()
-        tableView.reloadData()
-        refresh.endRefreshing()
     }
 
     private func viewController(from data: HomeViewControllerData) -> UIViewController {
@@ -114,7 +127,6 @@ final class HomeViewController: UITableViewController {
 
 extension HomeViewController: ProjectCollectionCellDelegate {
     func showProjectDetail(project: Project) {
-        print("show project detail delegate")
         viewModel.inputs.showProjectDetail(project: project)
     }
 }

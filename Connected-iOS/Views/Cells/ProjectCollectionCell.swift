@@ -61,17 +61,13 @@ class ProjectCollectionCell: UITableViewCell, BaseCell {
             })
             .disposed(by: disposeBag)
 
-        viewModel?.outputs.showErrorMsg()
-            .emit(onNext: { self.delegate?.showAlert(title: "에러 발생", msg: $0, style: .alert) })
-            .disposed(by: disposeBag)
-
         viewModel?.outputs.collectionTitle()
             .drive(titleLabel.rx.text)
             .disposed(by: disposeBag)
     }
 
-    func configureWith(with projectSubject: HomeProjectSubject) {
-        viewModel?.inputs.configure(with: projectSubject)
+    func configureWith(with themedProjects: ThemedProjects) {
+        viewModel?.inputs.configure(with: themedProjects)
     }
 
     private func configureCollectionView() {

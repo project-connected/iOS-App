@@ -12,13 +12,12 @@ import RxSwift
 
 protocol ProjectCollectionCellViewModelInputs {
     func projectClicked(project: Project)
-    func configure(with projectSubject: HomeProjectSubject)
+    func configure(with themedProjects: ThemedProjects)
 }
 
 protocol ProjectCollectionCellViewModelOutputs {
     func showProjectDetail() -> Signal<Project>
     func projects() -> Driver<[Project]>
-    func showErrorMsg() -> Signal<String>
     func collectionTitle() -> Driver<String>
 }
 
@@ -35,7 +34,6 @@ ProjectCollectionCellViewModelInputs, ProjectCollectionCellViewModelOutputs {
     var inputs: ProjectCollectionCellViewModelInputs { return self }
     var outputs: ProjectCollectionCellViewModelOutputs { return self }
     private let disposeBag = DisposeBag()
-    private let networkService: NetworkServiceType
 
     // MARK: - Inputs
 
@@ -44,9 +42,9 @@ ProjectCollectionCellViewModelInputs, ProjectCollectionCellViewModelOutputs {
         projectClickedProperty.accept(project)
     }
 
-    private let configureProperty: PublishRelay<HomeProjectSubject> = PublishRelay()
-    func configure(with projectSubject: HomeProjectSubject) {
-        configureProperty.accept(projectSubject)
+    private let configureProperty: PublishRelay<ThemedProjects> = PublishRelay()
+    func configure(with themedProjects: ThemedProjects) {
+        configureProperty.accept(themedProjects)
     }
 
     // MARK: - Outputs
@@ -61,11 +59,6 @@ ProjectCollectionCellViewModelInputs, ProjectCollectionCellViewModelOutputs {
         return projectsProperty.asDriver()
     }
 
-    private let showErrorMsgProperty: PublishRelay<String> = PublishRelay()
-    func showErrorMsg() -> Signal<String> {
-        return showErrorMsgProperty.asSignal()
-    }
-
     private let collectionTitleProperty: BehaviorRelay<String> = BehaviorRelay(value: "")
     func collectionTitle() -> Driver<String> {
         return collectionTitleProperty.asDriver()
@@ -73,25 +66,17 @@ ProjectCollectionCellViewModelInputs, ProjectCollectionCellViewModelOutputs {
 
     // MARK: - Lifecycle
 
-    init(networkService: NetworkServiceType) {
-        self.networkService = networkService
+    init() {
 
-        configureProperty
-            .map { $0.url }
-            .flatMap { networkService.projectsWithSubject(subject: $0) }
-            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .userInitiated))
-            .bind(onNext: { result in
-                switch result {
-                case .success(let projects):
-                    self.projectsProperty.accept(projects)
-                case .failure(let error):
-                    self.showErrorMsgProperty.accept(error.localizedDescription)
-                }
-            })
+        let themedProjects = configureProperty
+
+        themedProjects
+            .map { $0.projects }
+            .bind(to: projectsProperty)
             .disposed(by: disposeBag)
 
-        configureProperty
-            .map { $0.title }
+        themedProjects
+            .map { $0.theme }
             .bind(to: collectionTitleProperty)
             .disposed(by: disposeBag)
 
