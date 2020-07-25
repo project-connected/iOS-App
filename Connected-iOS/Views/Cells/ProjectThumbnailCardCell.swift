@@ -17,13 +17,21 @@ class ProjectThumbnailCardCell: UICollectionViewCell, BaseCell {
     private let stackView: UIStackView = UIStackView()
     private let nameLabel: UILabel = UILabel()
     private let thumbnailImageView: UIImageView = UIImageView()
-    private let categoriesLabel: UILabel = UILabel()
+    private let categoryCollectionView: UICollectionView = UICollectionView(
+        frame: .zero,
+        collectionViewLayout: TagLayout(
+            minimumLineSpacing: 1000,
+            minimumInteritemSpacing: 10,
+            sectionInset: UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
+        )
+    )
 
     // MARK: - Properties
 
     private let disposeBag = DisposeBag()
     var viewModel: ProjectThumbnailCellViewModelType?
     var imageLoader: ImageLoaderType?
+    var dataSource: BaseDataSource?
 
     // MARK: - Lifecycle
 
@@ -40,14 +48,19 @@ class ProjectThumbnailCardCell: UICollectionViewCell, BaseCell {
 
     // MARK: - Functions
 
+    private func configureCollectionView() {
+        categoryCollectionView.registerCell(CategoryCell.self)
+        categoryCollectionView.dataSource = dataSource
+    }
+
     private func setUpLayout() {
-        [thumbnailImageView, nameLabel, categoriesLabel]
+        [thumbnailImageView, nameLabel, categoryCollectionView]
             .addArrangedSubviews(parent: stackView)
             .setTranslatesAutoresizingMaskIntoConstraints()
 
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-
         contentView.addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        constraintViewToCenterInParent(parent: contentView, child: stackView)
 
         NSLayoutConstraint.activate([
             thumbnailImageView.widthAnchor.constraint(equalTo: stackView.widthAnchor),
@@ -56,11 +69,11 @@ class ProjectThumbnailCardCell: UICollectionViewCell, BaseCell {
             nameLabel.widthAnchor.constraint(equalTo: stackView.widthAnchor),
             nameLabel.heightAnchor.constraint(equalToConstant: 50),
 
-            categoriesLabel.widthAnchor.constraint(equalTo: stackView.widthAnchor),
-            categoriesLabel.heightAnchor.constraint(equalToConstant: 50),
+            categoryCollectionView.widthAnchor.constraint(equalTo: stackView.widthAnchor),
+            categoryCollectionView.heightAnchor.constraint(equalToConstant: 50),
 
-            stackView.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -50),
-            stackView.heightAnchor.constraint(equalTo: contentView.heightAnchor, constant: -50)
+            stackView.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -10),
+            stackView.heightAnchor.constraint(equalTo: contentView.heightAnchor, constant: -10)
         ])
     }
 
@@ -87,14 +100,16 @@ class ProjectThumbnailCardCell: UICollectionViewCell, BaseCell {
         nameLabel.textColor = .black
         nameLabel.backgroundColor = .white
 
-        categoriesLabel.textColor = .black
-        categoriesLabel.backgroundColor = .white
+        categoryCollectionView.backgroundColor = .white
+        categoryCollectionView.showsHorizontalScrollIndicator = false
+        categoryCollectionView.isScrollEnabled = false
     }
 
     func bindViewModel() {
         guard let viewModel = viewModel else {
             return
         }
+        configureCollectionView()
 
         viewModel.outputs.projectName()
             .drive(nameLabel.rx.text)
@@ -105,8 +120,14 @@ class ProjectThumbnailCardCell: UICollectionViewCell, BaseCell {
             .disposed(by: disposeBag)
 
         viewModel.outputs.projectCategories()
-            .map { $0.joined() }
-            .drive(categoriesLabel.rx.text)
+            .drive(onNext: { categories in
+                self.dataSource?.set(
+                    items: categories,
+                    cellClass: CategoryCell.self,
+                    section: 0
+                )
+                self.categoryCollectionView.reloadData()
+            })
             .disposed(by: disposeBag)
     }
 

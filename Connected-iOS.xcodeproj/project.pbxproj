@@ -52,6 +52,10 @@
 		08DEA5AC24CAC4F800222A56 /* UITableView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5AB24CAC4F800222A56 /* UITableView+.swift */; };
 		08DEA5AE24CBE7A700222A56 /* ErrorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5AD24CBE7A700222A56 /* ErrorCell.swift */; };
 		08DEA5B024CBE8D200222A56 /* ErrorCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5AF24CBE8D200222A56 /* ErrorCellViewModel.swift */; };
+		08DEA5B224CBFA7000222A56 /* CategoryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5B124CBFA7000222A56 /* CategoryDataSource.swift */; };
+		08DEA5B424CBFB2900222A56 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5B324CBFB2900222A56 /* CategoryCell.swift */; };
+		08DEA5B624CBFB7A00222A56 /* CategoryCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5B524CBFB7A00222A56 /* CategoryCellViewModel.swift */; };
+		08DEA5B924CC408900222A56 /* TagLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5B824CC408900222A56 /* TagLayout.swift */; };
 		08E455BB24C6BB8700E3A4FF /* RootTabBarControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E455BA24C6BB8700E3A4FF /* RootTabBarControllerTests.swift */; };
 		08EDD0B324C2DCD90038D6B9 /* NetworkServiceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EDD0B224C2DCD90038D6B9 /* NetworkServiceType.swift */; };
 		08EDD0B724C2E3140038D6B9 /* RootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EDD0B624C2E3140038D6B9 /* RootViewModel.swift */; };
@@ -122,6 +126,10 @@
 		08DEA5AB24CAC4F800222A56 /* UITableView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+.swift"; sourceTree = "<group>"; };
 		08DEA5AD24CBE7A700222A56 /* ErrorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorCell.swift; sourceTree = "<group>"; };
 		08DEA5AF24CBE8D200222A56 /* ErrorCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorCellViewModel.swift; sourceTree = "<group>"; };
+		08DEA5B124CBFA7000222A56 /* CategoryDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryDataSource.swift; sourceTree = "<group>"; };
+		08DEA5B324CBFB2900222A56 /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
+		08DEA5B524CBFB7A00222A56 /* CategoryCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCellViewModel.swift; sourceTree = "<group>"; };
+		08DEA5B824CC408900222A56 /* TagLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagLayout.swift; sourceTree = "<group>"; };
 		08E455BA24C6BB8700E3A4FF /* RootTabBarControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabBarControllerTests.swift; sourceTree = "<group>"; };
 		08EDD0B224C2DCD90038D6B9 /* NetworkServiceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceType.swift; sourceTree = "<group>"; };
 		08EDD0B624C2E3140038D6B9 /* RootViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModel.swift; sourceTree = "<group>"; };
@@ -194,8 +202,8 @@
 				08DEA59E24C993D200222A56 /* DI */,
 				08EDD0BA24C2E9ED0038D6B9 /* Library */,
 				08D5698B24C2CE9B00171E63 /* Models */,
-				08D5698924C2CE0700171E63 /* ViewModels */,
 				08C79D6824C835EC00CBDF5F /* DataSources */,
+				08D5698924C2CE0700171E63 /* ViewModels */,
 				08D5698824C2CDFE00171E63 /* Views */,
 				0884DB8524BD92E000A2E471 /* Assets.xcassets */,
 				0884DB8724BD92E000A2E471 /* LaunchScreen.storyboard */,
@@ -223,6 +231,7 @@
 				08C79D6124C8139D00CBDF5F /* ProjectThumbnailCardCell.swift */,
 				08DEA5A324CA938000222A56 /* ProjectCollectionCell.swift */,
 				08DEA5AD24CBE7A700222A56 /* ErrorCell.swift */,
+				08DEA5B324CBFB2900222A56 /* CategoryCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -240,6 +249,7 @@
 			children = (
 				08C79D6924C8362600CBDF5F /* ProjectThumbnailDataSource.swift */,
 				08DEA5A924CABB3700222A56 /* HomeDataSource.swift */,
+				08DEA5B124CBFA7000222A56 /* CategoryDataSource.swift */,
 			);
 			path = DataSources;
 			sourceTree = "<group>";
@@ -264,6 +274,7 @@
 		08D5698824C2CDFE00171E63 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				08DEA5B724CC3FD400222A56 /* Layouts */,
 				08C79D6024C8138000CBDF5F /* Cells */,
 				08D5698A24C2CE4300171E63 /* Controllers */,
 			);
@@ -284,6 +295,7 @@
 				08DEA59C24C9930C00222A56 /* ProjectDetailViewModel.swift */,
 				08DEA5A524CA98BA00222A56 /* ProjectCollectionCellViewModel.swift */,
 				08DEA5AF24CBE8D200222A56 /* ErrorCellViewModel.swift */,
+				08DEA5B524CBFB7A00222A56 /* CategoryCellViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -328,6 +340,14 @@
 				0850430824C0505300C672C1 /* AppDependency.swift */,
 			);
 			path = DI;
+			sourceTree = "<group>";
+		};
+		08DEA5B724CC3FD400222A56 /* Layouts */ = {
+			isa = PBXGroup;
+			children = (
+				08DEA5B824CC408900222A56 /* TagLayout.swift */,
+			);
+			path = Layouts;
 			sourceTree = "<group>";
 		};
 		08E455B824C6BB4800E3A4FF /* Views */ = {
@@ -633,18 +653,21 @@
 				08C79D7224C8530A00CBDF5F /* BaseCell.swift in Sources */,
 				08DEA59B24C98EF500222A56 /* ProjectDetailViewController.swift in Sources */,
 				08DEA5AA24CABB3700222A56 /* HomeDataSource.swift in Sources */,
+				08DEA5B624CBFB7A00222A56 /* CategoryCellViewModel.swift in Sources */,
 				08CD578924C469FF0066AD1B /* SignUpViewModel.swift in Sources */,
 				08C79D6E24C849D000CBDF5F /* UICollectionView+.swift in Sources */,
 				08C79D6224C8139D00CBDF5F /* ProjectThumbnailCardCell.swift in Sources */,
 				08EDD0B924C2E5BF0038D6B9 /* RootTabBarController.swift in Sources */,
 				08DEA5AC24CAC4F800222A56 /* UITableView+.swift in Sources */,
 				08C79D5724C7FFD300CBDF5F /* SignInViewModel.swift in Sources */,
+				08DEA5B424CBFB2900222A56 /* CategoryCell.swift in Sources */,
 				08EDD0BE24C406D40038D6B9 /* LogInViewController.swift in Sources */,
 				08C79D5D24C810A800CBDF5F /* HomeViewController.swift in Sources */,
 				08EDD0B724C2E3140038D6B9 /* RootViewModel.swift in Sources */,
 				08C79D5B24C808F100CBDF5F /* UIButton+.swift in Sources */,
 				08C79D6524C829E300CBDF5F /* ImageLoaderType.swift in Sources */,
 				08A1809024C7418800EADCE0 /* Result+.swift in Sources */,
+				08DEA5B224CBFA7000222A56 /* CategoryDataSource.swift in Sources */,
 				085A523924C2BE77009990D5 /* AnalyticsServiceType.swift in Sources */,
 				08C79D5F24C810D500CBDF5F /* HomeViewModel.swift in Sources */,
 				08DEA59D24C9930C00222A56 /* ProjectDetailViewModel.swift in Sources */,
@@ -662,6 +685,7 @@
 				08CD578524C463E40066AD1B /* Array+UIView.swift in Sources */,
 				08DEA5A024CA884300222A56 /* HomeContainerViewController.swift in Sources */,
 				08CD579024C5B87E0066AD1B /* AutoLayout.swift in Sources */,
+				08DEA5B924CC408900222A56 /* TagLayout.swift in Sources */,
 				08C79D5424C7F20600CBDF5F /* UIViewController+Alert.swift in Sources */,
 				08C79D7424C853F600CBDF5F /* Project.swift in Sources */,
 				08DEA5B024CBE8D200222A56 /* ErrorCellViewModel.swift in Sources */,
