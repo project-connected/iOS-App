@@ -60,17 +60,19 @@ class MockNetworkService: NetworkServiceType {
             Project(id: 4, name: "name project4", thumbnailImageUrl: "", categories: ["디자인", "고리"])
         ]
 
-        let isSuccess: Bool = Int.random(in: 1...10) % 2 == 0
+        let isSuccess: Bool = Int.random(in: 1...100) <= 70
         if isSuccess { return Single.just(.success(items)) }
         return Single.just(.failure(NetworkError.just))
     }
 
     func themedProjects() -> Single<Result<[ThemedProjects], NetworkError>> {
         let items = [
-            Project(id: 1, name: "project name1", thumbnailImageUrl: "", categories: ["개발", "카테"]),
-            Project(id: 2, name: "name project2", thumbnailImageUrl: "", categories: ["디자인", "고리"]),
+            Project(id: 1, name: "project name1", thumbnailImageUrl: "",
+                    categories: ["개발", "카테고리", "123", "abcdef", "개발", "카테고리", "123", "abcdef"]),
+            Project(id: 2, name: "name project2", thumbnailImageUrl: "", categories: ["디자인", "카테고리", "123", "abcdef"]),
             Project(id: 3, name: "project name3", thumbnailImageUrl: "", categories: ["개발", "카테"]),
-            Project(id: 4, name: "name project4", thumbnailImageUrl: "", categories: ["디자인", "고리"])
+            Project(id: 4, name: "name project4", thumbnailImageUrl: "",
+                    categories: ["디자인 dj2ioxamjicmewoafjioewcfmoiwefjewafjieowfaiwejiowmj", "고리"])
         ]
 
         let themedProjects = [
@@ -78,7 +80,7 @@ class MockNetworkService: NetworkServiceType {
             ThemedProjects(theme: "마감 임박", projects: items)
         ]
 
-        let isSuccess: Bool = Int.random(in: 1...10) % 2 == 0
+        let isSuccess: Bool = Int.random(in: 1...100) <= 70
         if isSuccess { return Single.just(.success(themedProjects)) }
         return Single.just(.failure(NetworkError.just))
     }

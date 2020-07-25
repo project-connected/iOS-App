@@ -74,7 +74,18 @@ extension AppDependency {
                                                 cellConfigurator: .init(
                                                     dependency: .init(
                                                         viewModelFactory: .init(),
-                                                        imageLoader: imageLoader
+                                                        imageLoader: imageLoader,
+                                                        categoryDataSourceFactory: .init(
+                                                            dependency: .init(
+                                                                categoryCellConfigurator: .init(
+                                                                    dependency: .init(
+                                                                        viewModelFactory: .init(
+                                                                            dependency: .init()
+                                                                        )
+                                                                    )
+                                                                )
+                                                            )
+                                                        )
                                                     )
                                                 )
                                             )
@@ -130,6 +141,62 @@ extension AppDependency {
         )
     }
 
+}
+
+// MARK: - CategoryDataSource
+
+extension CategoryDataSource: FactoryModule {
+    struct Dependency {
+        let categoryCellConfigurator: CategoryCell.Configurator
+    }
+}
+
+extension Factory where Module == CategoryDataSource {
+    func create() -> CategoryDataSource {
+        let module = Module(
+            categoryCellConfigurator: dependency.categoryCellConfigurator
+        )
+        return module
+    }
+}
+
+// MARK: - CategoryCellViewModel
+
+extension CategoryCellViewModel: FactoryModule {
+    convenience init(dependency: Dependency, payload: ()) {
+        self.init(dependency: dependency)
+    }
+
+    struct Dependency {
+
+    }
+}
+
+extension Factory where Module == CategoryCellViewModel {
+    func create() -> CategoryCellViewModel {
+        let module = Module()
+        return module
+    }
+}
+
+// MARK: - CategoryCell
+
+extension CategoryCell: ConfiguratorModule {
+    struct Dependency {
+        let viewModelFactory: CategoryCellViewModel.Factory
+    }
+
+    struct Payload {
+        let category: String
+    }
+
+    func configure(dependency: Dependency, payload: Payload) {
+        if self.viewModel == nil {
+            self.viewModel = dependency.viewModelFactory.create()
+            self.bindViewModel()
+        }
+        self.configureWith(with: payload.category)
+    }
 }
 
 // MARK: - ErrorCellViewModel
@@ -309,6 +376,7 @@ extension ProjectThumbnailCardCell: ConfiguratorModule {
     struct Dependency {
         let viewModelFactory: ProjectThumbnailCellViewModel.Factory
         let imageLoader: ImageLoaderType
+        let categoryDataSourceFactory: CategoryDataSource.Factory
     }
 
     struct Payload {
@@ -319,6 +387,7 @@ extension ProjectThumbnailCardCell: ConfiguratorModule {
         if self.viewModel == nil {
             self.viewModel = dependency.viewModelFactory.create()
             self.imageLoader = dependency.imageLoader
+            self.dataSource = dependency.categoryDataSourceFactory.create()
             self.bindViewModel()
         }
         self.configureWith(with: payload.project)

@@ -85,7 +85,7 @@ class ProjectCollectionCell: UITableViewCell, BaseCell {
         collectionView.showsHorizontalScrollIndicator = false
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .horizontal
-            layout.itemSize = CGSize(width: contentView.bounds.width - 50, height: 400)
+            layout.itemSize = CGSize(width: contentView.bounds.width, height: 400)
             layout.minimumLineSpacing = 50
             layout.sectionInset = UIEdgeInsets(top: 10, left: 25, bottom: 35, right: 25)
         }
