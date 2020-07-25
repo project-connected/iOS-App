@@ -14,3 +14,10 @@ protocol AnalyticsServiceType {
 }
 
 extension FirebaseApp: AnalyticsServiceType { }
+
+class MockAnalyticsService: AnalyticsServiceType {
+    static func configure() {
+        print("MockAnalyticsService configure")
+    }
+
+}

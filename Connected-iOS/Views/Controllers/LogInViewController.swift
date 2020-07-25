@@ -38,7 +38,7 @@ final class LogInViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
 
         setUpLayout()
-        bindStyle()
+        bindStyles()
         bindViewModel()
     }
 
@@ -74,7 +74,7 @@ final class LogInViewController: UIViewController {
             .disposed(by: disposeBag)
     }
 
-    private func bindStyle() {
+    private func bindStyles() {
         self.view.backgroundColor = .white
 
         logo.text = "Connected"

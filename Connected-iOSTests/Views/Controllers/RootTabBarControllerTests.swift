@@ -39,6 +39,7 @@ class RootTabBarControllerTests: XCTestCase {
     func testViewControllers() {
         _ = RootTabBarController(
             viewModel: MockViewModel(),
+            homeViewControllerFactory: HomeViewController.Factory.stub(),
             logInViewControllerFactory: LogInViewController.Factory.stub()
         )
 
