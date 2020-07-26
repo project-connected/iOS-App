@@ -16,9 +16,46 @@ extension AppDependency {
     ) -> MyProjectContainerViewController.Factory {
         return .init(
             dependency: .init(
-                viewModelFactory: .init()
+                viewModelFactory: .init(),
+                topTabBarViewControllerFactory: .init(
+                    dependency: .init(
+                        viewModelFactory: .init()
+                    )
+                )
             )
         )
+    }
+}
+
+// MARK: - TopTabBarViewController
+
+extension TopTabBarViewController: FactoryModule {
+    struct Dependency {
+        let viewModelFactory: TopTabBarViewModel.Factory
+    }
+}
+
+extension Factory where Module == TopTabBarViewController {
+    func create() -> TopTabBarViewController {
+        let module = Module(
+            viewModel: dependency.viewModelFactory.create()
+        )
+        return module
+    }
+}
+
+// MARK: - TopTabBarViewModel
+
+extension TopTabBarViewModel: FactoryModule {
+    convenience init(dependency: Dependency, payload: ()) {
+        self.init()
+    }
+}
+
+extension Factory where Module == TopTabBarViewModel {
+    func create() -> TopTabBarViewModel {
+        let module = Module()
+        return module
     }
 }
 
@@ -42,13 +79,15 @@ extension Factory where Module == MyProjectContainerViewModel {
 extension MyProjectContainerViewController: FactoryModule {
     struct Dependency {
         let viewModelFactory: MyProjectContainerViewModel.Factory
+        let topTabBarViewControllerFactory: TopTabBarViewController.Factory
     }
 }
 
 extension Factory where Module == MyProjectContainerViewController {
     func create() -> MyProjectContainerViewController {
         let module = Module(
-            viewModel: dependency.viewModelFactory.create()
+            viewModel: dependency.viewModelFactory.create(),
+            topTabBarViewController: dependency.topTabBarViewControllerFactory.create()
         )
         return module
     }

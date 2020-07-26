@@ -11,7 +11,7 @@ import RxCocoa
 import RxSwift
 
 protocol MyProjectContainerViewModelInputs {
-
+    func topTabBarItemClicked(item: TopTabBarItem)
 }
 
 protocol MyProjectContainerViewModelOutputs {
@@ -33,6 +33,11 @@ MyProjectContainerViewModelInputs, MyProjectContainerViewModelOutputs {
     private let disposeBag = DisposeBag()
 
     // MARK: - Inputs
+
+    private let topTabBarItemClickedProperty: PublishRelay<TopTabBarItem> = PublishRelay()
+    func topTabBarItemClicked(item: TopTabBarItem) {
+        topTabBarItemClickedProperty.accept(item)
+    }
 
     // MARK: - Outputs
 

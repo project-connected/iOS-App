@@ -18,11 +18,16 @@ final class MyProjectContainerViewController: UIViewController {
 
     private let disposeBag = DisposeBag()
     private let viewModel: MyProjectContainerViewModelType
+    private let topTabBarViewController: TopTabBarViewController
 
     // MARK: - Lifecycle
 
-    init(viewModel: MyProjectContainerViewModelType) {
+    init(
+        viewModel: MyProjectContainerViewModelType,
+        topTabBarViewController: TopTabBarViewController
+    ) {
         self.viewModel = viewModel
+        self.topTabBarViewController = topTabBarViewController
 
         super.init(nibName: nil, bundle: nil)
 
@@ -47,10 +52,28 @@ final class MyProjectContainerViewController: UIViewController {
     }
 
     private func setUpLayout() {
+        [topTabBarViewController.view]
+            .compactMap { $0 }
+            .addSubviews(parent: self.view)
+            .setTranslatesAutoresizingMaskIntoConstraints()
 
+        NSLayoutConstraint.activate([
+            topTabBarViewController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            topTabBarViewController.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            topTabBarViewController.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            topTabBarViewController.view.heightAnchor.constraint(equalToConstant: 100)
+        ])
     }
 
     private func setUpChildViewController() {
+        topTabBarViewController.delegate = self
+        addChild(topTabBarViewController)
+        topTabBarViewController.didMove(toParent: self)
+    }
+}
 
+extension MyProjectContainerViewController: TopTabBarDelegate {
+    func topTabBarItemClicked(item: TopTabBarItem) {
+        viewModel.inputs.topTabBarItemClicked(item: item)
     }
 }
