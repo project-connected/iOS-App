@@ -14,20 +14,23 @@ final class RootTabBarController: UITabBarController {
 
     // MARK: - Properties
 
+    private let disposeBag = DisposeBag()
     private let viewModel: RootViewModelType
     private let homeContainerViewControllerFactory: HomeContainerViewController.Factory
+    private let myProjectContainerViewControllerFactory: MyProjectContainerViewController.Factory
     private let logInViewControllerFactory: LogInViewController.Factory
-    private let disposeBag = DisposeBag()
 
     // MARK: - Lifecycle
 
     init(
         viewModel: RootViewModelType,
         homeContainerViewControllerFactory: HomeContainerViewController.Factory,
+        myProjectContainerViewControllerFactory: MyProjectContainerViewController.Factory,
         logInViewControllerFactory: LogInViewController.Factory
     ) {
         self.viewModel = viewModel
         self.homeContainerViewControllerFactory = homeContainerViewControllerFactory
+        self.myProjectContainerViewControllerFactory = myProjectContainerViewControllerFactory
         self.logInViewControllerFactory = logInViewControllerFactory
 
         super.init(nibName: nil, bundle: nil)
@@ -75,6 +78,8 @@ final class RootTabBarController: UITabBarController {
         switch data {
         case .home:
             return homeContainerViewControllerFactory.create()
+        case .myProject:
+            return myProjectContainerViewControllerFactory.create()
         case .profile(let isLoggedIn):
             return isLoggedIn ? ViewController2() : logInViewControllerFactory.create()
         }
@@ -85,6 +90,8 @@ final class RootTabBarController: UITabBarController {
             switch item {
             case .home(let index):
                 tabBarItem(at: index)?.image = #imageLiteral(resourceName: "outline_home_black_36pt").withRenderingMode(.alwaysTemplate)
+            case .myProject(let index):
+                tabBarItem(at: index)?.image = #imageLiteral(resourceName: "round_menu_book_black_36pt").withRenderingMode(.alwaysTemplate)
             case .profile(let index):
                 tabBarItem(at: index)?.image = #imageLiteral(resourceName: "baseline_person_black_36pt").withRenderingMode(.alwaysTemplate)
             }

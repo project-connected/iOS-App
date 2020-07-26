@@ -56,6 +56,11 @@
 		08DEA5B424CBFB2900222A56 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5B324CBFB2900222A56 /* CategoryCell.swift */; };
 		08DEA5B624CBFB7A00222A56 /* CategoryCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5B524CBFB7A00222A56 /* CategoryCellViewModel.swift */; };
 		08DEA5B924CC408900222A56 /* TagLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5B824CC408900222A56 /* TagLayout.swift */; };
+		08DEA5BB24CD4EAD00222A56 /* MyProjectContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5BA24CD4EAD00222A56 /* MyProjectContainerViewController.swift */; };
+		08DEA5BD24CD547D00222A56 /* MyProjectContainerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5BC24CD547D00222A56 /* MyProjectContainerViewModel.swift */; };
+		08DEA5BF24CD54CD00222A56 /* MyProjectDependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5BE24CD54CD00222A56 /* MyProjectDependency.swift */; };
+		08DEA5C124CD58F800222A56 /* ProfileDependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5C024CD58F800222A56 /* ProfileDependency.swift */; };
+		08DEA5C324CD599500222A56 /* HomeDependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5C224CD599500222A56 /* HomeDependency.swift */; };
 		08E455BB24C6BB8700E3A4FF /* RootTabBarControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E455BA24C6BB8700E3A4FF /* RootTabBarControllerTests.swift */; };
 		08EDD0B324C2DCD90038D6B9 /* NetworkServiceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EDD0B224C2DCD90038D6B9 /* NetworkServiceType.swift */; };
 		08EDD0B724C2E3140038D6B9 /* RootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EDD0B624C2E3140038D6B9 /* RootViewModel.swift */; };
@@ -130,6 +135,11 @@
 		08DEA5B324CBFB2900222A56 /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
 		08DEA5B524CBFB7A00222A56 /* CategoryCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCellViewModel.swift; sourceTree = "<group>"; };
 		08DEA5B824CC408900222A56 /* TagLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagLayout.swift; sourceTree = "<group>"; };
+		08DEA5BA24CD4EAD00222A56 /* MyProjectContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectContainerViewController.swift; sourceTree = "<group>"; };
+		08DEA5BC24CD547D00222A56 /* MyProjectContainerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectContainerViewModel.swift; sourceTree = "<group>"; };
+		08DEA5BE24CD54CD00222A56 /* MyProjectDependency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectDependency.swift; sourceTree = "<group>"; };
+		08DEA5C024CD58F800222A56 /* ProfileDependency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDependency.swift; sourceTree = "<group>"; };
+		08DEA5C224CD599500222A56 /* HomeDependency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDependency.swift; sourceTree = "<group>"; };
 		08E455BA24C6BB8700E3A4FF /* RootTabBarControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabBarControllerTests.swift; sourceTree = "<group>"; };
 		08EDD0B224C2DCD90038D6B9 /* NetworkServiceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceType.swift; sourceTree = "<group>"; };
 		08EDD0B624C2E3140038D6B9 /* RootViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModel.swift; sourceTree = "<group>"; };
@@ -296,6 +306,7 @@
 				08DEA5A524CA98BA00222A56 /* ProjectCollectionCellViewModel.swift */,
 				08DEA5AF24CBE8D200222A56 /* ErrorCellViewModel.swift */,
 				08DEA5B524CBFB7A00222A56 /* CategoryCellViewModel.swift */,
+				08DEA5BC24CD547D00222A56 /* MyProjectContainerViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -311,6 +322,7 @@
 				08DEA59F24CA884300222A56 /* HomeContainerViewController.swift */,
 				08C79D5C24C810A800CBDF5F /* HomeViewController.swift */,
 				08DEA59A24C98EF500222A56 /* ProjectDetailViewController.swift */,
+				08DEA5BA24CD4EAD00222A56 /* MyProjectContainerViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -338,6 +350,9 @@
 			isa = PBXGroup;
 			children = (
 				0850430824C0505300C672C1 /* AppDependency.swift */,
+				08DEA5BE24CD54CD00222A56 /* MyProjectDependency.swift */,
+				08DEA5C024CD58F800222A56 /* ProfileDependency.swift */,
+				08DEA5C224CD599500222A56 /* HomeDependency.swift */,
 			);
 			path = DI;
 			sourceTree = "<group>";
@@ -648,6 +663,7 @@
 				08CD578D24C53BA30066AD1B /* AppDelegateViewModel.swift in Sources */,
 				0850430924C0505300C672C1 /* AppDependency.swift in Sources */,
 				08DEA5AE24CBE7A700222A56 /* ErrorCell.swift in Sources */,
+				08DEA5C324CD599500222A56 /* HomeDependency.swift in Sources */,
 				08C79D6A24C8362600CBDF5F /* ProjectThumbnailDataSource.swift in Sources */,
 				08C79D7024C84E3C00CBDF5F /* BaseDataSource.swift in Sources */,
 				08C79D7224C8530A00CBDF5F /* BaseCell.swift in Sources */,
@@ -673,12 +689,16 @@
 				08DEA59D24C9930C00222A56 /* ProjectDetailViewModel.swift in Sources */,
 				08CD578B24C53B130066AD1B /* User.swift in Sources */,
 				08DEA5A424CA938000222A56 /* ProjectCollectionCell.swift in Sources */,
+				08DEA5BD24CD547D00222A56 /* MyProjectContainerViewModel.swift in Sources */,
 				0884DB8124BD92DF00A2E471 /* ViewController.swift in Sources */,
 				08CD579324C5BC740066AD1B /* BorderStyles.swift in Sources */,
 				08CD578724C468290066AD1B /* SignUpViewController.swift in Sources */,
 				08DEA5A224CA887B00222A56 /* HomeContainerViewModel.swift in Sources */,
+				08DEA5BB24CD4EAD00222A56 /* MyProjectContainerViewController.swift in Sources */,
 				08DEA5A624CA98BA00222A56 /* ProjectCollectionCellViewModel.swift in Sources */,
+				08DEA5C124CD58F800222A56 /* ProfileDependency.swift in Sources */,
 				08EDD0C024C409650038D6B9 /* LogInViewModel.swift in Sources */,
+				08DEA5BF24CD54CD00222A56 /* MyProjectDependency.swift in Sources */,
 				08C79D5924C8013700CBDF5F /* SignInViewController.swift in Sources */,
 				0839A11C24C208CA00A15253 /* main.swift in Sources */,
 				08C79D6724C8337500CBDF5F /* ProjectThumbnailCellViewModel.swift in Sources */,
