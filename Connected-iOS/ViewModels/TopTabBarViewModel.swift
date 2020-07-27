@@ -11,6 +11,7 @@ import RxSwift
 import RxCocoa
 
 enum TopTabBarItem {
+    case recruiting
     case progress
     case complete
 }
@@ -18,6 +19,8 @@ enum TopTabBarItem {
 extension TopTabBarItem {
     var title: String {
         switch self {
+        case .recruiting:
+            return "모집 중"
         case .progress:
             return "진행 중"
         case .complete:
@@ -28,7 +31,7 @@ extension TopTabBarItem {
 
 protocol TopTabBarViewModelInputs {
     func viewDidLoad()
-    func itemClicked(index: Int, item: TopTabBarItem)
+    func itemClicked(index: Int)
 }
 
 protocol TopTabBarViewModelOutputs {
@@ -58,9 +61,9 @@ TopTabBarViewModelInputs, TopTabBarViewModelOutputs {
         self.viewDidLoadProperty.accept(Void())
     }
 
-    private let itemClickedProperty: PublishRelay<(Int, TopTabBarItem)> = PublishRelay()
-    func itemClicked(index: Int, item: TopTabBarItem) {
-        itemClickedProperty.accept((index, item))
+    private let itemClickedProperty: PublishRelay<Int> = PublishRelay()
+    func itemClicked(index: Int) {
+        itemClickedProperty.accept(index)
     }
 
     // MARK: - Outputs
@@ -85,16 +88,21 @@ TopTabBarViewModelInputs, TopTabBarViewModelOutputs {
     init() {
 
         viewDidLoadProperty
-            .map { [TopTabBarItem.progress, .complete, .progress, .complete] }
+            .map { [TopTabBarItem.recruiting, .progress, .complete] }
             .map { Array($0.enumerated()) }
             .bind(to: tabBarItemsProperty)
             .disposed(by: disposeBag)
 
-        itemClickedProperty.map { $0.0 }
+        itemClickedProperty
             .bind(to: selectedItemProperty)
             .disposed(by: disposeBag)
 
-        itemClickedProperty
+        Observable
+            .combineLatest(
+                itemClickedProperty.asObservable(),
+                tabBarItemsProperty.asObservable()
+            )
+            .map { clicked, items in items[clicked] }
             .bind(to: notifyClickedItemProperty)
             .disposed(by: disposeBag)
     }

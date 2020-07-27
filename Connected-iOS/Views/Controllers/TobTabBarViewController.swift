@@ -17,31 +17,31 @@ protocol TopTabBarDelegate: class {
 final class TopTabBarViewController: UIViewController {
 
     // MARK: - UI Properties
-
-    private let collectionView: UICollectionView = UICollectionView(
-        frame: .zero,
-        collectionViewLayout: UICollectionViewFlowLayout()
-    )
+    private let scrollView: UIScrollView = UIScrollView()
+    private let stackView: UIStackView = UIStackView()
+    private let indicatorView: UIView = UIView()
+    private lazy var indicatorLeadingConstraint: NSLayoutConstraint = {
+        return self.indicatorView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor)
+    }()
+    private lazy var indicatorTrailingConstraint: NSLayoutConstraint = {
+        return self.indicatorView.trailingAnchor.constraint(equalTo: self.indicatorView.leadingAnchor)
+    }()
 
     // MARK: - Properties
 
     private let disposeBag = DisposeBag()
     private let viewModel: TopTabBarViewModelType
     weak var delegate: TopTabBarDelegate?
-    private let dataSource: BaseDataSource
 
     // MARK: - Lifecycle
 
     init(
-        viewModel: TopTabBarViewModelType,
-        dataSource: BaseDataSource
+        viewModel: TopTabBarViewModelType
     ) {
         self.viewModel = viewModel
-        self.dataSource = dataSource
 
         super.init(nibName: nil, bundle: nil)
 
-        configureCollectionView()
         setUpLayout()
         bindStyles()
         bindViewModel()
@@ -58,14 +58,7 @@ final class TopTabBarViewController: UIViewController {
     private func bindViewModel() {
 
         viewModel.outputs.tabBarItems()
-            .drive(onNext: { items in
-                self.dataSource.set(
-                    items: items,
-                    cellClass: TopTabBarCell.self,
-                    section: 0
-                )
-                self.collectionView.reloadData()
-            })
+            .drive(onNext: createButtons)
             .disposed(by: disposeBag)
 
         viewModel.outputs.notifyClickedItem()
@@ -77,57 +70,110 @@ final class TopTabBarViewController: UIViewController {
             .disposed(by: disposeBag)
     }
 
-    private func configureCollectionView() {
-        collectionView.dataSource = dataSource
-        collectionView.delegate = self
-        collectionView.registerCell(TopTabBarCell.self)
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.allowsMultipleSelection = false
-        if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.scrollDirection = .horizontal
-            layout.itemSize = UICollectionViewFlowLayout.automaticSize
-            let width = UIScreen.main.bounds.width / 2
-            layout.estimatedItemSize = CGSize(width: width, height: 55)
-            layout.minimumLineSpacing = 1
-            layout.minimumInteritemSpacing = 1
-        }
-    }
-
     private func bindStyles() {
-        view.backgroundColor = .white
+        scrollView.backgroundColor = .white
 
-        collectionView.backgroundColor = .white
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        stackView.axis = .horizontal
+        scrollView.showsHorizontalScrollIndicator = false
 
+        indicatorView.backgroundColor = .black
     }
 
     private func setUpLayout() {
-        [collectionView]
-            .addSubviews(parent: view)
+        [stackView, indicatorView]
+            .addSubviews(parent: scrollView)
             .setTranslatesAutoresizingMaskIntoConstraints()
 
+        view.addSubview(scrollView)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -2),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+
+            indicatorView.topAnchor.constraint(equalTo: stackView.bottomAnchor),
+            indicatorView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            indicatorLeadingConstraint,
+            indicatorTrailingConstraint,
+
+            scrollView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            scrollView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            scrollView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            scrollView.heightAnchor.constraint(equalTo: view.heightAnchor)
         ])
     }
 
     private func updateSelectedItem(index: Int) {
-        (0..<dataSource.itemCountInSection(section: 0))
-            .map { IndexPath(item: $0, section: 0) }
-            .forEach { indexPath in
-                let temp = self.collectionView.cellForItem(at: indexPath)
-                guard let cell = temp as? TopTabBarCell else { return }
-                cell.itemSelected(index: index)
-            }
-    }
-}
-
-extension TopTabBarViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let item = dataSource[indexPath] as? (Int, TopTabBarItem) {
-            viewModel.inputs.itemClicked(index: indexPath.item, item: item.1)
+        guard index < stackView.arrangedSubviews.count else {
+            return
         }
+
+        stackView.arrangedSubviews
+            .forEach { view in
+                guard let btn = view as? UIButton else { return }
+                btn.isSelected = (btn.tag == index)
+            }
+
+        let frame = stackView.arrangedSubviews[index].frame
+        let leading = frame.origin.x + stackView.frame.origin.x
+        let trailing = frame.width
+        indicatorLeadingConstraint.constant = leading
+        indicatorTrailingConstraint.constant = trailing
+
+        UIView.animate(withDuration: 0.2) { [weak self] in
+            guard let `self` = self else { return }
+
+            self.scrollView.layoutIfNeeded()
+
+            if leading < self.scrollView.contentOffset.x {
+                self.scrollView.contentOffset.x -= self.scrollView.contentOffset.x - leading
+            } else {
+                let left = leading + trailing
+                let width = self.scrollView.contentOffset.x + self.scrollView.bounds.width
+                if left > width {
+                    self.scrollView.contentOffset.x += left - width
+                }
+            }
+        }
+    }
+
+    private func createButtons(items: [(Int, TopTabBarItem)]) {
+        items.map { index, item in
+            let btn = UIButton()
+            btn.tag = index
+            btn.sizeToFit()
+            btn.setTitle(item.title, for: .normal)
+            btn.setTitleColor(.gray, for: .normal)
+            btn.setTitleColor(.black, for: .selected)
+            btn.backgroundColor = .white
+            btn.addTarget(self, action: #selector(itemClicked), for: .touchUpInside)
+            return btn
+        }
+        .addArrangedSubviews(parent: stackView)
+        .setTranslatesAutoresizingMaskIntoConstraints()
+        .forEach { btn in
+            NSLayoutConstraint.activate([
+                btn.widthAnchor.constraint(
+                    greaterThanOrEqualTo: view.widthAnchor,
+                    multiplier: 1.0/CGFloat(stackView.arrangedSubviews.count),
+                    constant: 10
+                ),
+                btn.widthAnchor.constraint(
+                    lessThanOrEqualTo: view.widthAnchor,
+                    multiplier: 0.5
+                ),
+                btn.topAnchor.constraint(equalTo: scrollView.topAnchor),
+                btn.heightAnchor.constraint(equalTo: scrollView.heightAnchor, constant: -2)
+            ])
+        }
+    }
+
+    @objc
+    private func itemClicked(_ sender: UIButton) {
+        viewModel.inputs.itemClicked(index: sender.tag)
     }
 }
