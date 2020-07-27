@@ -11,36 +11,37 @@ import RxSwift
 import RxCocoa
 
 protocol TopTabBarDelegate: class {
-    func topTabBarItemClicked(item: TopTabBarItem)
+    func topTabBarItemClicked(index: Int, item: TopTabBarItem)
 }
 
 final class TopTabBarViewController: UIViewController {
 
     // MARK: - UI Properties
 
-    private let scrollView: UIScrollView = UIScrollView()
-    private let buttonStackView: UIStackView = UIStackView()
-    private let indicatorView: UIView = UIView()
-    private lazy var indicatorViewLeadingConstraint: NSLayoutConstraint = {
-        return self.indicatorView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor, constant: 0)
-    }()
-    private lazy var indicatorViewTrailingingConstraint: NSLayoutConstraint = {
-        return self.indicatorView.trailingAnchor.constraint(equalTo: self.indicatorView.leadingAnchor, constant: 0)
-    }()
+    private let collectionView: UICollectionView = UICollectionView(
+        frame: .zero,
+        collectionViewLayout: UICollectionViewFlowLayout()
+    )
 
     // MARK: - Properties
 
     private let disposeBag = DisposeBag()
     private let viewModel: TopTabBarViewModelType
     weak var delegate: TopTabBarDelegate?
+    private let dataSource: BaseDataSource
 
     // MARK: - Lifecycle
 
-    init(viewModel: TopTabBarViewModelType) {
+    init(
+        viewModel: TopTabBarViewModelType,
+        dataSource: BaseDataSource
+    ) {
         self.viewModel = viewModel
+        self.dataSource = dataSource
 
         super.init(nibName: nil, bundle: nil)
 
+        configureCollectionView()
         setUpLayout()
         bindStyles()
         bindViewModel()
@@ -57,77 +58,76 @@ final class TopTabBarViewController: UIViewController {
     private func bindViewModel() {
 
         viewModel.outputs.tabBarItems()
-            .drive(onNext: createButtons(items:))
+            .drive(onNext: { items in
+                self.dataSource.set(
+                    items: items,
+                    cellClass: TopTabBarCell.self,
+                    section: 0
+                )
+                self.collectionView.reloadData()
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.notifyClickedItem()
-            .emit(onNext: delegate?.topTabBarItemClicked(item:))
+            .emit(onNext: { self.delegate?.topTabBarItemClicked(index: $0.0, item: $0.1) })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.selectedItem()
+            .drive(onNext: updateSelectedItem(index:))
             .disposed(by: disposeBag)
     }
 
+    private func configureCollectionView() {
+        collectionView.dataSource = dataSource
+        collectionView.delegate = self
+        collectionView.registerCell(TopTabBarCell.self)
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.allowsMultipleSelection = false
+        if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            layout.scrollDirection = .horizontal
+            layout.itemSize = UICollectionViewFlowLayout.automaticSize
+            let width = UIScreen.main.bounds.width / 2
+            layout.estimatedItemSize = CGSize(width: width, height: 55)
+            layout.minimumLineSpacing = 1
+            layout.minimumInteritemSpacing = 1
+        }
+    }
+
     private func bindStyles() {
-        view.backgroundColor = .yellow
+        view.backgroundColor = .white
 
-        buttonStackView.axis = .horizontal
-        buttonStackView.distribution = .fillProportionally
-        buttonStackView.alignment = .fill
+        collectionView.backgroundColor = .white
 
-        indicatorView.backgroundColor = .black
     }
 
     private func setUpLayout() {
-        [buttonStackView, indicatorView]
-            .addSubviews(parent: scrollView)
+        [collectionView]
+            .addSubviews(parent: view)
             .setTranslatesAutoresizingMaskIntoConstraints()
 
-        self.view.addSubview(scrollView)
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-
         NSLayoutConstraint.activate([
-            buttonStackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            buttonStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            buttonStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-//            buttonStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            buttonStackView.widthAnchor.constraint(greaterThanOrEqualToConstant: UIScreen.main.bounds.width),
-
-            indicatorView.heightAnchor.constraint(equalToConstant: 2),
-            indicatorView.topAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            indicatorViewLeadingConstraint,
-            indicatorViewTrailingingConstraint,
-
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
     }
 
-    private func createButtons(items: [TopTabBarItem]) {
-        items.enumerated().map { (index, item) in
-            let btn = UIButton()
-            btn.tag = index
-            btn.setTitle(item.title, for: .normal)
-            btn.addTarget(self, action: #selector(itemClicked(_:)), for: .touchUpInside)
-            btn.backgroundColor = .white
-            btn.setTitleColor(.black, for: .normal)
-            return btn
-        }.addArrangedSubviews(parent: buttonStackView)
+    private func updateSelectedItem(index: Int) {
+        (0..<dataSource.itemCountInSection(section: 0))
+            .map { IndexPath(item: $0, section: 0) }
+            .forEach { indexPath in
+                let temp = self.collectionView.cellForItem(at: indexPath)
+                guard let cell = temp as? TopTabBarCell else { return }
+                cell.itemSelected(index: index)
+            }
     }
+}
 
-    @objc
-    private func itemClicked(_ button: UIButton) {
-        viewModel.inputs.itemClicked(index: button.tag)
-        moveIndicator(index: button.tag)
-    }
-
-    private func moveIndicator(index: Int) {
-        print("move indicator")
-        let button = buttonStackView.arrangedSubviews[index]
-
-        let leading = button.frame.origin.x
-        let width = button.frame.width
-        indicatorViewLeadingConstraint.constant = leading
-        indicatorViewTrailingingConstraint.constant = width
-
+extension TopTabBarViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let item = dataSource[indexPath] as? (Int, TopTabBarItem) {
+            viewModel.inputs.itemClicked(index: indexPath.item, item: item.1)
+        }
     }
 }

@@ -28,12 +28,13 @@ extension TopTabBarItem {
 
 protocol TopTabBarViewModelInputs {
     func viewDidLoad()
-    func itemClicked(index: Int)
+    func itemClicked(index: Int, item: TopTabBarItem)
 }
 
 protocol TopTabBarViewModelOutputs {
-    func tabBarItems() -> Driver<[TopTabBarItem]>
-    func notifyClickedItem() -> Signal<TopTabBarItem>
+    func tabBarItems() -> Driver<[(Int, TopTabBarItem)]>
+    func notifyClickedItem() -> Signal<(Int, TopTabBarItem)>
+    func selectedItem() -> Driver<Int>
 }
 
 protocol TopTabBarViewModelType {
@@ -57,21 +58,26 @@ TopTabBarViewModelInputs, TopTabBarViewModelOutputs {
         self.viewDidLoadProperty.accept(Void())
     }
 
-    private let itemClickedProperty: PublishRelay<Int> = PublishRelay()
-    func itemClicked(index: Int) {
-        itemClickedProperty.accept(index)
+    private let itemClickedProperty: PublishRelay<(Int, TopTabBarItem)> = PublishRelay()
+    func itemClicked(index: Int, item: TopTabBarItem) {
+        itemClickedProperty.accept((index, item))
     }
 
     // MARK: - Outputs
 
-    private let tabBarItemsProperty: BehaviorRelay<[TopTabBarItem]> = BehaviorRelay(value: [])
-    func tabBarItems() -> Driver<[TopTabBarItem]> {
+    private let tabBarItemsProperty: BehaviorRelay<[(Int, TopTabBarItem)]> = BehaviorRelay(value: [])
+    func tabBarItems() -> Driver<[(Int, TopTabBarItem)]> {
         return tabBarItemsProperty.asDriver()
     }
 
-    private let notifyClickedItemProperty: PublishRelay<TopTabBarItem> = PublishRelay()
-    func notifyClickedItem() -> Signal<TopTabBarItem> {
+    private let notifyClickedItemProperty: PublishRelay<(Int, TopTabBarItem)> = PublishRelay()
+    func notifyClickedItem() -> Signal<(Int, TopTabBarItem)> {
         return notifyClickedItemProperty.asSignal()
+    }
+
+    private let selectedItemProperty: BehaviorRelay<Int> = BehaviorRelay(value: 0)
+    func selectedItem() -> Driver<Int> {
+        return selectedItemProperty.asDriver()
     }
 
     // MARK: - Lifecycle
@@ -79,12 +85,16 @@ TopTabBarViewModelInputs, TopTabBarViewModelOutputs {
     init() {
 
         viewDidLoadProperty
-            .map { [.progress, .complete, .progress, .complete, .progress, .complete] }
+            .map { [TopTabBarItem.progress, .complete, .progress, .complete] }
+            .map { Array($0.enumerated()) }
             .bind(to: tabBarItemsProperty)
             .disposed(by: disposeBag)
 
+        itemClickedProperty.map { $0.0 }
+            .bind(to: selectedItemProperty)
+            .disposed(by: disposeBag)
+
         itemClickedProperty
-            .withLatestFrom(tabBarItemsProperty) { (index, items) in items[index] }
             .bind(to: notifyClickedItemProperty)
             .disposed(by: disposeBag)
     }

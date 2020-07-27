@@ -61,7 +61,7 @@ final class MyProjectContainerViewController: UIViewController {
             topTabBarViewController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             topTabBarViewController.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             topTabBarViewController.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            topTabBarViewController.view.heightAnchor.constraint(equalToConstant: 100)
+            topTabBarViewController.view.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
 
@@ -73,7 +73,7 @@ final class MyProjectContainerViewController: UIViewController {
 }
 
 extension MyProjectContainerViewController: TopTabBarDelegate {
-    func topTabBarItemClicked(item: TopTabBarItem) {
+    func topTabBarItemClicked(index: Int, item: TopTabBarItem) {
         viewModel.inputs.topTabBarItemClicked(item: item)
     }
 }

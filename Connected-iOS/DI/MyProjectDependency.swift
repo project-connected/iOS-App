@@ -19,11 +19,73 @@ extension AppDependency {
                 viewModelFactory: .init(),
                 topTabBarViewControllerFactory: .init(
                     dependency: .init(
-                        viewModelFactory: .init()
+                        viewModelFactory: .init(),
+                        topTabBarDataSourceFactory: .init(
+                            dependency: .init(
+                                cellConfigurator: .init(
+                                    dependency: .init(
+                                        viewModelFactory: .init()
+                                    )
+                                )
+                            )
+                        )
                     )
                 )
             )
         )
+    }
+}
+
+// MARK: - TopTabBarCellViewModel
+
+extension TopTabBarCellViewModel: FactoryModule {
+    convenience init(dependency: (), payload: ()) {
+        self.init()
+    }
+}
+
+extension Factory where Module == TopTabBarCellViewModel {
+    func create() -> TopTabBarCellViewModelType {
+        let module = Module()
+        return module
+    }
+}
+
+// MARK: - TopTabBarCell
+
+extension TopTabBarCell: ConfiguratorModule {
+    struct Dependency {
+        let viewModelFactory: TopTabBarCellViewModel.Factory
+    }
+
+    struct Payload {
+        let index: Int
+        let topTabBarItem: TopTabBarItem
+    }
+
+    func configure(dependency: Dependency, payload: Payload) {
+        if self.viewModel == nil {
+            self.viewModel = dependency.viewModelFactory.create()
+            self.bindViewModel()
+        }
+        configureWith(with: (payload.index, payload.topTabBarItem))
+    }
+}
+
+// MARK: - TopTabBarDataSource
+
+extension TopTabBarDataSource: FactoryModule {
+    struct Dependency {
+        let cellConfigurator: TopTabBarCell.Configurator
+    }
+}
+
+extension Factory where Module == TopTabBarDataSource {
+    func create() -> TopTabBarDataSource {
+        let module = Module(
+            cellConfigurator: dependency.cellConfigurator
+        )
+        return module
     }
 }
 
@@ -32,13 +94,15 @@ extension AppDependency {
 extension TopTabBarViewController: FactoryModule {
     struct Dependency {
         let viewModelFactory: TopTabBarViewModel.Factory
+        let topTabBarDataSourceFactory: TopTabBarDataSource.Factory
     }
 }
 
 extension Factory where Module == TopTabBarViewController {
     func create() -> TopTabBarViewController {
         let module = Module(
-            viewModel: dependency.viewModelFactory.create()
+            viewModel: dependency.viewModelFactory.create(),
+            dataSource: dependency.topTabBarDataSourceFactory.create()
         )
         return module
     }
