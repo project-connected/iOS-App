@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0811A51224CF319400314F0C /* MyProjectPageDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0811A51124CF319400314F0C /* MyProjectPageDataSource.swift */; };
 		0839A11824C1FB5300A15253 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 087CAE7624C01B1700C2A1C4 /* GoogleService-Info.plist */; };
 		0839A11A24C2058100A15253 /* AppDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0839A11924C2058100A15253 /* AppDelegateTests.swift */; };
 		0839A11C24C208CA00A15253 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0839A11B24C208CA00A15253 /* main.swift */; };
@@ -84,6 +85,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0811A51124CF319400314F0C /* MyProjectPageDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectPageDataSource.swift; sourceTree = "<group>"; };
 		0839A11924C2058100A15253 /* AppDelegateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateTests.swift; sourceTree = "<group>"; };
 		0839A11B24C208CA00A15253 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		0850430624C04A8800C672C1 /* .swiftlint.autocorrect.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.autocorrect.yml; sourceTree = "<group>"; };
@@ -264,6 +266,7 @@
 				08C79D6924C8362600CBDF5F /* ProjectThumbnailDataSource.swift */,
 				08DEA5A924CABB3700222A56 /* HomeDataSource.swift */,
 				08DEA5B124CBFA7000222A56 /* CategoryDataSource.swift */,
+				0811A51124CF319400314F0C /* MyProjectPageDataSource.swift */,
 			);
 			path = DataSources;
 			sourceTree = "<group>";
@@ -708,6 +711,7 @@
 				08DEA5BF24CD54CD00222A56 /* MyProjectDependency.swift in Sources */,
 				08C79D5924C8013700CBDF5F /* SignInViewController.swift in Sources */,
 				0839A11C24C208CA00A15253 /* main.swift in Sources */,
+				0811A51224CF319400314F0C /* MyProjectPageDataSource.swift in Sources */,
 				08C79D6724C8337500CBDF5F /* ProjectThumbnailCellViewModel.swift in Sources */,
 				08CD578524C463E40066AD1B /* Array+UIView.swift in Sources */,
 				08DEA5C724CD768700222A56 /* TopTabBarViewModel.swift in Sources */,

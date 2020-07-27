@@ -19,15 +19,19 @@ final class MyProjectContainerViewController: UIViewController {
     private let disposeBag = DisposeBag()
     private let viewModel: MyProjectContainerViewModelType
     private let topTabBarViewController: TopTabBarViewController
+    private let pageViewController: UIPageViewController = UIPageViewController()
+    private let dataSource: MyProjectPageDataSource
 
     // MARK: - Lifecycle
 
     init(
         viewModel: MyProjectContainerViewModelType,
-        topTabBarViewController: TopTabBarViewController
+        topTabBarViewController: TopTabBarViewController,
+        pageDataSource: MyProjectPageDataSource
     ) {
         self.viewModel = viewModel
         self.topTabBarViewController = topTabBarViewController
+        self.dataSource = pageDataSource
 
         super.init(nibName: nil, bundle: nil)
 
@@ -52,7 +56,7 @@ final class MyProjectContainerViewController: UIViewController {
     }
 
     private func setUpLayout() {
-        [topTabBarViewController.view]
+        [topTabBarViewController.view, pageViewController.view]
             .compactMap { $0 }
             .addSubviews(parent: self.view)
             .setTranslatesAutoresizingMaskIntoConstraints()
@@ -61,7 +65,12 @@ final class MyProjectContainerViewController: UIViewController {
             topTabBarViewController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             topTabBarViewController.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             topTabBarViewController.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            topTabBarViewController.view.heightAnchor.constraint(equalToConstant: 60)
+            topTabBarViewController.view.heightAnchor.constraint(equalToConstant: 60),
+
+            pageViewController.view.topAnchor.constraint(equalTo: topTabBarViewController.view.bottomAnchor),
+            pageViewController.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            pageViewController.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            pageViewController.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
     }
 
@@ -69,6 +78,14 @@ final class MyProjectContainerViewController: UIViewController {
         topTabBarViewController.delegate = self
         addChild(topTabBarViewController)
         topTabBarViewController.didMove(toParent: self)
+
+        pageViewController.delegate = self
+        pageViewController.dataSource = dataSource
+        addChild(pageViewController)
+        pageViewController.didMove(toParent: self)
+
+        // FIXME: - 테스트용 페이지 뷰컨 설정
+        pageViewController.setViewControllers([ViewController2()], direction: .forward, animated: true, completion: nil)
     }
 }
 
@@ -76,4 +93,8 @@ extension MyProjectContainerViewController: TopTabBarDelegate {
     func topTabBarItemClicked(index: Int, item: TopTabBarItem) {
         viewModel.inputs.topTabBarItemClicked(item: item)
     }
+}
+
+extension MyProjectContainerViewController: UIPageViewControllerDelegate {
+
 }

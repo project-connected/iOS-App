@@ -21,6 +21,9 @@ extension AppDependency {
                     dependency: .init(
                         viewModelFactory: .init()
                     )
+                ),
+                pageDataSourceFactory: .init(
+                    dependency: .init()
                 )
             )
         )
@@ -80,6 +83,7 @@ extension MyProjectContainerViewController: FactoryModule {
     struct Dependency {
         let viewModelFactory: MyProjectContainerViewModel.Factory
         let topTabBarViewControllerFactory: TopTabBarViewController.Factory
+        let pageDataSourceFactory: MyProjectPageDataSource.Factory
     }
 }
 
@@ -87,8 +91,24 @@ extension Factory where Module == MyProjectContainerViewController {
     func create() -> MyProjectContainerViewController {
         let module = Module(
             viewModel: dependency.viewModelFactory.create(),
-            topTabBarViewController: dependency.topTabBarViewControllerFactory.create()
+            topTabBarViewController: dependency.topTabBarViewControllerFactory.create(),
+            pageDataSource: dependency.pageDataSourceFactory.create()
         )
+        return module
+    }
+}
+
+// MARK: - MyProjectPageDataSource
+
+extension MyProjectPageDataSource: FactoryModule {
+    struct Dependency {
+
+    }
+}
+
+extension Factory where Module == MyProjectPageDataSource {
+    func create() -> MyProjectPageDataSource {
+        let module = Module()
         return module
     }
 }

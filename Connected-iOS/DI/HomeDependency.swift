@@ -100,8 +100,7 @@ extension CategoryCellViewModel: FactoryModule {
         self.init(dependency: dependency)
     }
 
-    struct Dependency {
-    }
+    struct Dependency { }
 }
 
 extension Factory where Module == CategoryCellViewModel {
@@ -137,7 +136,6 @@ extension ErrorCellViewModel: FactoryModule {
     convenience init(dependency: (), payload: ()) {
         self.init()
     }
-
 }
 
 extension Factory where Module == ErrorCellViewModel {
@@ -249,8 +247,7 @@ extension HomeContainerViewModel: FactoryModule {
         self.init(dependency: dependency)
     }
 
-    struct Dependency {
-    }
+    struct Dependency { }
 }
 
 extension Factory where Module == HomeContainerViewModel {
@@ -267,8 +264,7 @@ extension ProjectDetailViewModel: FactoryModule {
         self.init(dependency: dependency)
     }
 
-    struct Dependency {
-    }
+    struct Dependency { }
 }
 
 extension Factory where Module == ProjectDetailViewModel {
