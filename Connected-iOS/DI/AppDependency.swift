@@ -29,7 +29,14 @@ extension AppDependency {
             imageLoader: imageLoader
         )
 
-        let loginViewControllerFactory = resolveLogInDependencies(networkService: networkService)
+        let chattingLobbyViewControllerFactory = resolveChattingDependencies(
+            networkService: networkService,
+            imageLoader: imageLoader
+        )
+
+        let loginViewControllerFactory = resolveLogInDependencies(
+            networkService: networkService
+        )
 
         let rootTabBarControllerFactory: RootTabBarController.Factory = .init(
             dependency: .init(
@@ -38,6 +45,7 @@ extension AppDependency {
                 ),
                 homeContainerViewControllerFactory: homeContainerViewControllerFactory,
                 myProjectContainerViewControllerFactory: myProjectContainerViewControllerFactory,
+                chattingLobbyViewControllerFactory: chattingLobbyViewControllerFactory,
                 loginViewControllerFactory: loginViewControllerFactory
             )
         )
@@ -108,6 +116,7 @@ extension RootTabBarController: FactoryModule {
         let viewModelFactory: RootViewModel.Factory
         let homeContainerViewControllerFactory: HomeContainerViewController.Factory
         let myProjectContainerViewControllerFactory: MyProjectContainerViewController.Factory
+        let chattingLobbyViewControllerFactory: ChattingLobbyViewController.Factory
         let loginViewControllerFactory: LogInViewController.Factory
     }
 }
@@ -118,6 +127,7 @@ extension Factory where Module == RootTabBarController {
             viewModel: dependency.viewModelFactory.create(),
             homeContainerViewControllerFactory: dependency.homeContainerViewControllerFactory,
             myProjectContainerViewControllerFactory: dependency.myProjectContainerViewControllerFactory,
+            chattingLobbyViewControllerFactory: dependency.chattingLobbyViewControllerFactory,
             logInViewControllerFactory: dependency.loginViewControllerFactory
         )
         return module

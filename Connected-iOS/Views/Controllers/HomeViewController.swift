@@ -88,6 +88,8 @@ final class HomeViewController: UITableViewController {
 
     private func bindStyles() {
         view.backgroundColor = .white
+
+        _ = baseRefreshControlStyle(refresh: refreshControl)
     }
 
     private func setUpLayout() {
@@ -106,7 +108,6 @@ final class HomeViewController: UITableViewController {
         tableView.estimatedRowHeight = 500
 
         let refresh = UIRefreshControl()
-        refresh.attributedTitle = NSAttributedString(string: "새로고침")
         refresh.addTarget(self, action: #selector(pullToRefresh(refresh:)), for: .valueChanged)
         refreshControl = refresh
     }

@@ -66,7 +66,7 @@ final class MyProjectPageViewController: UITableViewController {
     }
 
     private func bindStyles() {
-
+        _ = baseRefreshControlStyle(refresh: refreshControl)
     }
 
     private func setUpLayout() {
@@ -79,7 +79,6 @@ final class MyProjectPageViewController: UITableViewController {
         tableView.registerCell(MyProjectCell.self)
 
         let refresh = UIRefreshControl()
-        refresh.attributedTitle = NSAttributedString(string: "새로고침")
         refresh.addTarget(self, action: #selector(pullToRefresh(_:)), for: .valueChanged)
         self.refreshControl = refresh
     }
