@@ -16,7 +16,9 @@ protocol ChattingLobbyViewModelInputs {
 }
 
 protocol ChattingLobbyViewModelOutputs {
-
+    func chattingRooms() -> Driver<[ChattingRoom]>
+    func showErrorMsg() -> Signal<Error>
+    func isRefreshing() -> Driver<Bool>
 }
 
 protocol ChattingLobbyViewModelType {
@@ -48,6 +50,21 @@ ChattingLobbyViewModelInputs, ChattingLobbyViewModelOutputs {
 
     // MARK: - Outputs
 
+    private let chattingRoomsProperty: BehaviorRelay<[ChattingRoom]> = BehaviorRelay(value: [])
+    func chattingRooms() -> Driver<[ChattingRoom]> {
+        return chattingRoomsProperty.asDriver()
+    }
+
+    private let showErrorMsgProperty: PublishRelay<Error> = PublishRelay()
+    func showErrorMsg() -> Signal<Error> {
+        return showErrorMsgProperty.asSignal()
+    }
+
+    private let isRefreshingProperty: BehaviorRelay<Bool> = BehaviorRelay(value: false)
+    func isRefreshing() -> Driver<Bool> {
+        return isRefreshingProperty.asDriver()
+    }
+
     // MARK: - Lifecycle
 
     init(
@@ -55,6 +72,24 @@ ChattingLobbyViewModelInputs, ChattingLobbyViewModelOutputs {
     ) {
         self.networkService = networkService
 
+        let request = Observable
+            .of(viewDidLoadProperty, pullToRefreshProperty)
+            .merge()
+
+        request
+            .do(onNext: { self.isRefreshingProperty.accept(true) })
+            .flatMap { networkService.chattingRooms() }
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            .bind(onNext: { result in
+                self.isRefreshingProperty.accept(false)
+                switch result {
+                case .success(let rooms):
+                    self.chattingRoomsProperty.accept(rooms)
+                case .failure(let error):
+                    self.showErrorMsgProperty.accept(error)
+                }
+            })
+            .disposed(by: disposeBag)
     }
 
     // MARK: - Functions

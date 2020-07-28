@@ -12,12 +12,17 @@ class ChattingRoomDataSource: BaseDataSource {
 
     // MARK: - Properties
 
+    private let cellConfigurator: ChattingRoomCell.Configurator
+    private let errorCellConfigurator: ErrorCell.Configurator
+
     // MARK: - Lifecycle
 
-    override init(
-
+    init(
+        cellConfigurator: ChattingRoomCell.Configurator,
+        errorCellConfigurator: ErrorCell.Configurator
     ) {
-
+        self.cellConfigurator = cellConfigurator
+        self.errorCellConfigurator = errorCellConfigurator
     }
 
     required init(dependency: Dependency, payload: ()) {
@@ -28,9 +33,10 @@ class ChattingRoomDataSource: BaseDataSource {
 
     override func configureCell(tableCell cell: UITableViewCell, with item: Any) {
         switch (cell, item) {
-//        case let (cell as Cell, item as ):
-//            cellConfigurator.configure(cell, payload: .init())
-
+        case let (cell as ChattingRoomCell, item as ChattingRoom):
+            cellConfigurator.configure(cell, payload: .init(chattingRoom: item))
+        case let (cell as ErrorCell, item as Error):
+            errorCellConfigurator.configure(cell, payload: .init(error: item))
         default:
             fatalError("Unrecognized set : \(cell), \(item)")
         }

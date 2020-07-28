@@ -14,6 +14,8 @@ final class ChattingLobbyViewController: UITableViewController {
 
     // MARK: - UI Properties
 
+    private let refresh: UIRefreshControl = UIRefreshControl()
+
     // MARK: - Properties
 
     private let disposeBag = DisposeBag()
@@ -53,18 +55,42 @@ final class ChattingLobbyViewController: UITableViewController {
         tableView.dataSource = dataSource
         tableView.delegate = self
         tableView.registerCell(ChattingRoomCell.self)
+        tableView.registerCell(ErrorCell.self)
 
-        let refresh = UIRefreshControl()
         refresh.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
         refreshControl = refresh
     }
 
     private func bindViewModel() {
+        viewModel.outputs.chattingRooms()
+            .drive(onNext: { rooms in
+                self.dataSource.set(
+                    items: rooms,
+                    cellClass: ChattingRoomCell.self,
+                    section: 0
+                )
+                self.tableView.reloadData()
+            })
+            .disposed(by: disposeBag)
 
+        viewModel.outputs.showErrorMsg()
+            .emit(onNext: { error in
+                self.dataSource.set(
+                    items: [error],
+                    cellClass: ErrorCell.self,
+                    section: 0
+                )
+                self.tableView.reloadData()
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.isRefreshing()
+            .drive(refresh.rx.isRefreshing)
+            .disposed(by: disposeBag)
     }
 
     private func bindStyles() {
-        _ = baseRefreshControlStyle(refresh: refreshControl)
+        _ = baseRefreshControlStyle(refresh: refresh)
     }
 
     private func setUpLayout() {

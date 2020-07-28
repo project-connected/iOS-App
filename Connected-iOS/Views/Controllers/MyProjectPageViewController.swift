@@ -14,6 +14,8 @@ final class MyProjectPageViewController: UITableViewController {
 
     // MARK: - UI Properties
 
+    private let refresh: UIRefreshControl = UIRefreshControl()
+
     // MARK: - Properties
 
     private let disposeBag = DisposeBag()
@@ -47,6 +49,8 @@ final class MyProjectPageViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        viewModel.inputs.viewDidLoad()
+
         self.view.backgroundColor = .white
         let label = UILabel()
         label.text = "PageViewController \(Self.pageindex)"
@@ -62,11 +66,13 @@ final class MyProjectPageViewController: UITableViewController {
     // MARK: - Functions
 
     private func bindViewModel() {
-
+        viewModel.outputs.isRefreshing()
+            .drive(refresh.rx.isRefreshing)
+            .disposed(by: disposeBag)
     }
 
     private func bindStyles() {
-        _ = baseRefreshControlStyle(refresh: refreshControl)
+        _ = baseRefreshControlStyle(refresh: refresh)
     }
 
     private func setUpLayout() {
@@ -78,7 +84,6 @@ final class MyProjectPageViewController: UITableViewController {
         tableView.dataSource = dataSource
         tableView.registerCell(MyProjectCell.self)
 
-        let refresh = UIRefreshControl()
         refresh.addTarget(self, action: #selector(pullToRefresh(_:)), for: .valueChanged)
         self.refreshControl = refresh
     }

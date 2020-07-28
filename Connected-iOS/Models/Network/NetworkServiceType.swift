@@ -26,6 +26,7 @@ enum NetworkService {
     case signIn(email: String, password: String)
     case projects
     case themedProjects
+    case chattingRooms
 }
 
 protocol NetworkServiceType {
@@ -33,6 +34,7 @@ protocol NetworkServiceType {
     func signIn(email: String, password: String) -> Single<Result<User, NetworkError>>
     func projects() -> Single<Result<[Project], NetworkError>>
     func themedProjects() -> Single<Result<[ThemedProjects], NetworkError>>
+    func chattingRooms() -> Single<Result<[ChattingRoom], NetworkError>>
 }
 
 class MockNetworkService: NetworkServiceType {
@@ -83,5 +85,10 @@ class MockNetworkService: NetworkServiceType {
         let isSuccess: Bool = Int.random(in: 1...100) <= 70
         if isSuccess { return Single.just(.success(themedProjects)) }
         return Single.just(.failure(NetworkError.just))
+    }
+
+    func chattingRooms() -> Single<Result<[ChattingRoom], NetworkError>> {
+        let rooms = [ChattingRoom(), ChattingRoom()]
+        return Single.just(.success(rooms))
     }
 }
