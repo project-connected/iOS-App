@@ -10,16 +10,17 @@ import UIKit
 
 class MyProjectPageDataSource: NSObject, UIPageViewControllerDataSource {
 
-    // MARK: - UI Properties
-
     // MARK: - Properties
 
-    private let configurator: Int
+    private var pages: [(ProjectState, UIViewController)] = []
+    private let pageViewControllerFactory: MyProjectPageViewController.Factory
 
     // MARK: - Lifecycle
 
-    override init() {
-        configurator = 1
+    init(
+        myProjectPageViewControllerFactory: MyProjectPageViewController.Factory
+    ) {
+        self.pageViewControllerFactory = myProjectPageViewControllerFactory
     }
 
     required init(dependency: Dependency, payload: ()) {
@@ -32,14 +33,48 @@ class MyProjectPageDataSource: NSObject, UIPageViewControllerDataSource {
         _ pageViewController: UIPageViewController,
         viewControllerBefore viewController: UIViewController
     ) -> UIViewController? {
-        return ViewController()
+        guard let beforeIndex = self.indexAt(viewController) else {
+            fatalError("Couldn't find \(viewController) in \(self.pages)")
+        }
+
+        guard beforeIndex > 0 else {
+            return nil
+        }
+
+        return pages[beforeIndex - 1].1
     }
 
     func pageViewController(
         _ pageViewController: UIPageViewController,
         viewControllerAfter viewController: UIViewController
     ) -> UIViewController? {
-        return ViewController2()
+        guard let afterIndex = self.indexAt(viewController) else {
+            fatalError("Couldn't find \(viewController) in \(self.pages)")
+        }
+
+        guard afterIndex + 1 < pages.count else {
+            return nil
+        }
+
+        return pages[afterIndex + 1].1
     }
 
+    final func indexAt(_ viewController: UIViewController) -> Int? {
+        guard let index = pages.firstIndex(where: { $0.1 == viewController }) else {
+            return nil
+        }
+        return index
+    }
+
+    final func getViewController(at index: Int) -> UIViewController? {
+        guard index < pages.count else {
+            return nil
+        }
+        return pages[index].1
+    }
+
+    final func setProjectStates(projectStates: [ProjectState]) {
+        let pages = projectStates.map { ($0, pageViewControllerFactory.create()) }
+        self.pages = pages
+    }
 }

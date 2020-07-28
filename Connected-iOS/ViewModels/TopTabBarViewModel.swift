@@ -10,33 +10,15 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-enum TopTabBarItem {
-    case recruiting
-    case progress
-    case complete
-}
-
-extension TopTabBarItem {
-    var title: String {
-        switch self {
-        case .recruiting:
-            return "모집 중"
-        case .progress:
-            return "진행 중"
-        case .complete:
-            return "완료"
-        }
-    }
-}
-
 protocol TopTabBarViewModelInputs {
-    func viewDidLoad()
+    func projectStates(states: [ProjectState])
     func itemClicked(index: Int)
+    func selectItem(index: Int)
 }
 
 protocol TopTabBarViewModelOutputs {
-    func tabBarItems() -> Driver<[(Int, TopTabBarItem)]>
-    func notifyClickedItem() -> Signal<(Int, TopTabBarItem)>
+    func tabBarItems() -> Driver<[(Int, ProjectState)]>
+    func notifyClickedItem() -> Signal<(Int, ProjectState)>
     func selectedItem() -> Driver<Int>
 }
 
@@ -56,9 +38,9 @@ TopTabBarViewModelInputs, TopTabBarViewModelOutputs {
 
     // MARK: - Inputs
 
-    private let viewDidLoadProperty: PublishRelay<Void> = PublishRelay()
-    func viewDidLoad() {
-        self.viewDidLoadProperty.accept(Void())
+    private let projectStatesProperty: PublishRelay<[ProjectState]> = PublishRelay()
+    func projectStates(states: [ProjectState]) {
+        self.projectStatesProperty.accept(states)
     }
 
     private let itemClickedProperty: PublishRelay<Int> = PublishRelay()
@@ -66,15 +48,20 @@ TopTabBarViewModelInputs, TopTabBarViewModelOutputs {
         itemClickedProperty.accept(index)
     }
 
+    private let selectItemProperty: PublishRelay<Int> = PublishRelay()
+    func selectItem(index: Int) {
+        selectItemProperty.accept(index)
+    }
+
     // MARK: - Outputs
 
-    private let tabBarItemsProperty: BehaviorRelay<[(Int, TopTabBarItem)]> = BehaviorRelay(value: [])
-    func tabBarItems() -> Driver<[(Int, TopTabBarItem)]> {
+    private let tabBarItemsProperty: BehaviorRelay<[(Int, ProjectState)]> = BehaviorRelay(value: [])
+    func tabBarItems() -> Driver<[(Int, ProjectState)]> {
         return tabBarItemsProperty.asDriver()
     }
 
-    private let notifyClickedItemProperty: PublishRelay<(Int, TopTabBarItem)> = PublishRelay()
-    func notifyClickedItem() -> Signal<(Int, TopTabBarItem)> {
+    private let notifyClickedItemProperty: PublishRelay<(Int, ProjectState)> = PublishRelay()
+    func notifyClickedItem() -> Signal<(Int, ProjectState)> {
         return notifyClickedItemProperty.asSignal()
     }
 
@@ -87,13 +74,13 @@ TopTabBarViewModelInputs, TopTabBarViewModelOutputs {
 
     init() {
 
-        viewDidLoadProperty
-            .map { [TopTabBarItem.recruiting, .progress, .complete] }
+        projectStatesProperty
             .map { Array($0.enumerated()) }
             .bind(to: tabBarItemsProperty)
             .disposed(by: disposeBag)
 
-        itemClickedProperty
+        Observable.of(itemClickedProperty, selectItemProperty)
+            .merge()
             .bind(to: selectedItemProperty)
             .disposed(by: disposeBag)
 

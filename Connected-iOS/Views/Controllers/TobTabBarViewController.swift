@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 protocol TopTabBarDelegate: class {
-    func topTabBarItemClicked(index: Int, item: TopTabBarItem)
+    func topTabBarItemClicked(index: Int, item: ProjectState)
 }
 
 final class TopTabBarViewController: UIViewController {
@@ -45,8 +45,6 @@ final class TopTabBarViewController: UIViewController {
         setUpLayout()
         bindStyles()
         bindViewModel()
-
-        viewModel.inputs.viewDidLoad()
     }
 
     required init?(coder: NSCoder) {
@@ -141,12 +139,12 @@ final class TopTabBarViewController: UIViewController {
         }
     }
 
-    private func createButtons(items: [(Int, TopTabBarItem)]) {
+    private func createButtons(items: [(Int, ProjectState)]) {
         items.map { index, item in
             let btn = UIButton()
             btn.tag = index
             btn.sizeToFit()
-            btn.setTitle(item.title, for: .normal)
+            btn.setTitle(item.string, for: .normal)
             btn.setTitleColor(.gray, for: .normal)
             btn.setTitleColor(.black, for: .selected)
             btn.backgroundColor = .white
@@ -175,5 +173,14 @@ final class TopTabBarViewController: UIViewController {
     @objc
     private func itemClicked(_ sender: UIButton) {
         viewModel.inputs.itemClicked(index: sender.tag)
+    }
+
+    func selectItem(index: Int) {
+        viewModel.inputs.selectItem(index: index)
+    }
+
+    func setProjectStates(projectStates: [ProjectState]) {
+        print(projectStates)
+        viewModel.inputs.projectStates(states: projectStates)
     }
 }

@@ -23,7 +23,20 @@ extension AppDependency {
                     )
                 ),
                 pageDataSourceFactory: .init(
-                    dependency: .init()
+                    dependency: .init(
+                        pageViewControllerFactory: .init(
+                            dependency: .init(
+                                viewModelFactory: .init(
+                                    dependency: .init(
+                                        networkService: networkService
+                                    )
+                                ),
+                                myProjectDataSourceFactory: .init(
+                                    dependency: .init()
+                                )
+                            )
+                        )
+                    )
                 )
             )
         )
@@ -102,12 +115,69 @@ extension Factory where Module == MyProjectContainerViewController {
 
 extension MyProjectPageDataSource: FactoryModule {
     struct Dependency {
-
+        let pageViewControllerFactory: MyProjectPageViewController.Factory
     }
 }
 
 extension Factory where Module == MyProjectPageDataSource {
     func create() -> MyProjectPageDataSource {
+        let module = Module(
+            myProjectPageViewControllerFactory: dependency.pageViewControllerFactory
+        )
+        return module
+    }
+}
+
+// MARK: - MyProjectPageViewModel
+
+extension MyProjectPageViewModel: FactoryModule {
+    convenience init(dependency: Dependency, payload: ()) {
+        self.init(dependency: dependency)
+    }
+
+    struct Dependency {
+        let networkService: NetworkServiceType
+    }
+}
+
+extension Factory where Module == MyProjectPageViewModel {
+    func create() -> MyProjectPageViewModel {
+        let module = Module(
+            networkService: dependency.networkService
+        )
+        return module
+    }
+}
+
+// MARK: - MyProjectPageViewController
+
+extension MyProjectPageViewController: FactoryModule {
+    struct Dependency {
+        let viewModelFactory: MyProjectPageViewModel.Factory
+        let myProjectDataSourceFactory: MyProjectDataSource.Factory
+    }
+}
+
+extension Factory where Module == MyProjectPageViewController {
+    func create() -> MyProjectPageViewController {
+        let module = Module(
+            viewModel: dependency.viewModelFactory.create(),
+            dataSource: dependency.myProjectDataSourceFactory.create()
+        )
+        return module
+    }
+}
+
+// MARK: - MyProjectDataSource
+
+extension MyProjectDataSource: FactoryModule {
+    struct Dependency {
+
+    }
+}
+
+extension Factory where Module == MyProjectDataSource {
+    func create() -> MyProjectDataSource {
         let module = Module()
         return module
     }

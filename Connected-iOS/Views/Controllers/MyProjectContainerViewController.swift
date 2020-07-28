@@ -19,7 +19,11 @@ final class MyProjectContainerViewController: UIViewController {
     private let disposeBag = DisposeBag()
     private let viewModel: MyProjectContainerViewModelType
     private let topTabBarViewController: TopTabBarViewController
-    private let pageViewController: UIPageViewController = UIPageViewController()
+    private let pageViewController: UIPageViewController = UIPageViewController(
+        transitionStyle: .scroll,
+        navigationOrientation: .horizontal,
+        options: nil
+    )
     private let dataSource: MyProjectPageDataSource
 
     // MARK: - Lifecycle
@@ -39,6 +43,8 @@ final class MyProjectContainerViewController: UIViewController {
         setUpLayout()
         bindStyles()
         bindViewModel()
+
+        viewModel.inputs.viewDidLoad()
     }
 
     required init?(coder: NSCoder) {
@@ -49,10 +55,32 @@ final class MyProjectContainerViewController: UIViewController {
 
     private func bindViewModel() {
 
+        viewModel.outputs.projectStates()
+            .drive(onNext: { states in
+                self.topTabBarViewController.setProjectStates(projectStates: states)
+                self.dataSource.setProjectStates(projectStates: states)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.pageToIndex()
+            .emit(onNext: { (index, direction) in
+                guard let viewController = self.dataSource.getViewController(at: index) else { return }
+                self.pageViewController.setViewControllers(
+                    [viewController],
+                    direction: direction ? .forward : .reverse,
+                    animated: true,
+                    completion: nil
+                )
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.selectTopTabBarItem()
+            .emit(onNext: topTabBarViewController.selectItem(index:))
+            .disposed(by: disposeBag)
     }
 
     private func bindStyles() {
-        view.backgroundColor = .green
+        view.backgroundColor = .white
     }
 
     private func setUpLayout() {
@@ -83,18 +111,25 @@ final class MyProjectContainerViewController: UIViewController {
         pageViewController.dataSource = dataSource
         addChild(pageViewController)
         pageViewController.didMove(toParent: self)
-
-        // FIXME: - 테스트용 페이지 뷰컨 설정
-        pageViewController.setViewControllers([ViewController2()], direction: .forward, animated: true, completion: nil)
     }
 }
 
 extension MyProjectContainerViewController: TopTabBarDelegate {
-    func topTabBarItemClicked(index: Int, item: TopTabBarItem) {
-        viewModel.inputs.topTabBarItemClicked(item: item)
+    func topTabBarItemClicked(index: Int, item: ProjectState) {
+        viewModel.inputs.topTabBarItemClicked(index: index, item: item)
     }
 }
 
 extension MyProjectContainerViewController: UIPageViewControllerDelegate {
+    func pageViewController(
+        _ pageViewController: UIPageViewController,
+        didFinishAnimating finished: Bool,
+        previousViewControllers: [UIViewController],
+        transitionCompleted completed: Bool
+    ) {
+        guard let viewController = pageViewController.viewControllers?.first else { return }
+        guard let index = dataSource.indexAt(viewController) else { return }
+        viewModel.inputs.pageTransition(to: index)
+    }
 
 }
