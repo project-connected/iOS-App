@@ -14,6 +14,19 @@ open class BaseDataSource: NSObject, UICollectionViewDataSource, UITableViewData
 
     // MARK: - Functions
 
+    public final func itemCountInSection(section: Int) -> Int {
+        guard section < items.count else { return 0 }
+        return items[section].count
+    }
+
+    public final func itemCount() -> Int {
+        return items.map { $0.count }.reduce(0, +)
+    }
+
+    public final func sectionCount() -> Int {
+        return items.count
+    }
+
     public final func clearItems() {
         items = []
     }
