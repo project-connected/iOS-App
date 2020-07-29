@@ -19,17 +19,20 @@ final class ChatLobbyViewController: UITableViewController {
     // MARK: - Properties
 
     private let disposeBag = DisposeBag()
-    private let viewModel: ChattingLobbyViewModelType
+    private let viewModel: ChatLobbyViewModelType
     private let dataSource: BaseDataSource
+    private let chatRoomViewControllerFactory: ChatRoomViewController.Factory
 
     // MARK: - Lifecycle
 
     init(
-        viewModel: ChattingLobbyViewModelType,
-        dataSource: BaseDataSource
+        viewModel: ChatLobbyViewModelType,
+        dataSource: BaseDataSource,
+        chatRoomViewControllerFactory: ChatRoomViewController.Factory
     ) {
         self.viewModel = viewModel
         self.dataSource = dataSource
+        self.chatRoomViewControllerFactory = chatRoomViewControllerFactory
 
         super.init(nibName: nil, bundle: nil)
 
@@ -54,19 +57,20 @@ final class ChatLobbyViewController: UITableViewController {
     private func configureTableView() {
         tableView.dataSource = dataSource
         tableView.delegate = self
-        tableView.registerCell(ChattingRoomCell.self)
+        tableView.registerCell(ChatRoomCell.self)
         tableView.registerCell(ErrorCell.self)
+        tableView.rowHeight = 80
 
         refresh.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
         refreshControl = refresh
     }
 
     private func bindViewModel() {
-        viewModel.outputs.chattingRooms()
+        viewModel.outputs.chatRooms()
             .drive(onNext: { rooms in
                 self.dataSource.set(
                     items: rooms,
-                    cellClass: ChattingRoomCell.self,
+                    cellClass: ChatRoomCell.self,
                     section: 0
                 )
                 self.tableView.reloadData()
@@ -87,6 +91,15 @@ final class ChatLobbyViewController: UITableViewController {
         viewModel.outputs.isRefreshing()
             .drive(refresh.rx.isRefreshing)
             .disposed(by: disposeBag)
+
+        viewModel.outputs.showChatRoom()
+            .emit(onNext: { chatRoom in
+                let viewController = self.chatRoomViewControllerFactory.create(
+                    payload: .init(chatRoom: chatRoom)
+                )
+                self.navigationController?.pushViewController(viewController, animated: true)
+            })
+            .disposed(by: disposeBag)
     }
 
     private func bindStyles() {
@@ -100,5 +113,10 @@ final class ChatLobbyViewController: UITableViewController {
     @objc
     private func pullToRefresh(_ sender: UIRefreshControl) {
         viewModel.inputs.pullToRefresh()
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let room = dataSource[indexPath] as? ChatRoom else { return }
+        viewModel.inputs.chatRoomClicked(chatRoom: room)
     }
 }

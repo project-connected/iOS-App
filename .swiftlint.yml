@@ -14,3 +14,7 @@ analyzer_rules: # Rules run by `swiftlint analyze` (experimental)
 identifier_name:
     excluded:
         - id
+
+type_name:
+    excluded:
+        - Id

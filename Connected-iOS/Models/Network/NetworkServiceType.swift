@@ -26,7 +26,7 @@ enum NetworkService {
     case signIn(email: String, password: String)
     case projects
     case themedProjects
-    case chattingRooms
+    case chatRooms
 }
 
 protocol NetworkServiceType {
@@ -34,13 +34,13 @@ protocol NetworkServiceType {
     func signIn(email: String, password: String) -> Single<Result<User, NetworkError>>
     func projects() -> Single<Result<[Project], NetworkError>>
     func themedProjects() -> Single<Result<[ThemedProjects], NetworkError>>
-    func chattingRooms() -> Single<Result<[ChattingRoom], NetworkError>>
+    func chatRooms() -> Single<Result<[ChatRoom], NetworkError>>
 }
 
 class MockNetworkService: NetworkServiceType {
     func signIn(email: String, password: String) -> Single<Result<User, NetworkError>> {
         if email == "1" {
-            return Single.just(.success(User(authToken: "auth-token-string")))
+            return Single.just(.success(User(id: 1, authToken: "auth-token-string")))
         } else {
             return Single.just(.failure(.just))
         }
@@ -48,7 +48,7 @@ class MockNetworkService: NetworkServiceType {
 
     func signUp(email: String, password: String, nickname: String) -> Single<Result<User, NetworkError>> {
         if email == "1" {
-            return Single.just(.success(User(authToken: "auth-token-string")))
+            return Single.just(.success(User(id: 1, authToken: "auth-token-string")))
         } else {
             return Single.just(.failure(.just))
         }
@@ -87,8 +87,8 @@ class MockNetworkService: NetworkServiceType {
         return Single.just(.failure(NetworkError.just))
     }
 
-    func chattingRooms() -> Single<Result<[ChattingRoom], NetworkError>> {
-        let rooms = [ChattingRoom(), ChattingRoom()]
+    func chatRooms() -> Single<Result<[ChatRoom], NetworkError>> {
+        let rooms = [ChatRoom(id: 1), ChatRoom(id: 2)]
         return Single.just(.success(rooms))
     }
 }

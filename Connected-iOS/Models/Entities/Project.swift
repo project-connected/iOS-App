@@ -9,10 +9,15 @@
 import Foundation
 
 struct Project {
-    let id: Int
+    let id: Id
     let name: String
     let thumbnailImageUrl: String
-    let categories: [String]
+    let categories: [Category]
+}
+
+extension Project {
+    typealias Id = Int
+    typealias Category = String
 }
 
 struct ThemedProjects {

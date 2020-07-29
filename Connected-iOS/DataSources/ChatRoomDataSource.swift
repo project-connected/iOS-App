@@ -1,5 +1,5 @@
 //
-//  ChattingRoomDataSource.swift
+//  ChatRoomDataSource.swift
 //  Connected-iOS
 //
 //  Created by Jaedoo Ko on 2020/07/28.
@@ -8,17 +8,17 @@
 
 import UIKit
 
-class ChattingRoomDataSource: BaseDataSource {
+class ChatRoomDataSource: BaseDataSource {
 
     // MARK: - Properties
 
-    private let cellConfigurator: ChattingRoomCell.Configurator
+    private let cellConfigurator: ChatRoomCell.Configurator
     private let errorCellConfigurator: ErrorCell.Configurator
 
     // MARK: - Lifecycle
 
     init(
-        cellConfigurator: ChattingRoomCell.Configurator,
+        cellConfigurator: ChatRoomCell.Configurator,
         errorCellConfigurator: ErrorCell.Configurator
     ) {
         self.cellConfigurator = cellConfigurator
@@ -33,8 +33,8 @@ class ChattingRoomDataSource: BaseDataSource {
 
     override func configureCell(tableCell cell: UITableViewCell, with item: Any) {
         switch (cell, item) {
-        case let (cell as ChattingRoomCell, item as ChattingRoom):
-            cellConfigurator.configure(cell, payload: .init(chattingRoom: item))
+        case let (cell as ChatRoomCell, item as ChatRoom):
+            cellConfigurator.configure(cell, payload: .init(chatRoom: item))
         case let (cell as ErrorCell, item as Error):
             errorCellConfigurator.configure(cell, payload: .init(error: item))
         default:

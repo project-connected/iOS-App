@@ -180,7 +180,6 @@ final class TopTabBarViewController: UIViewController {
     }
 
     func setProjectStates(projectStates: [ProjectState]) {
-        print(projectStates)
         viewModel.inputs.projectStates(states: projectStates)
     }
 }

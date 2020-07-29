@@ -29,7 +29,7 @@ extension AppDependency {
             imageLoader: imageLoader
         )
 
-        let chattingLobbyViewControllerFactory = resolveChattingDependencies(
+        let chatLobbyViewControllerFactory = resolveChatDependencies(
             networkService: networkService,
             imageLoader: imageLoader
         )
@@ -45,7 +45,7 @@ extension AppDependency {
                 ),
                 homeContainerViewControllerFactory: homeContainerViewControllerFactory,
                 myProjectContainerViewControllerFactory: myProjectContainerViewControllerFactory,
-                chattingLobbyViewControllerFactory: chattingLobbyViewControllerFactory,
+                chatLobbyViewControllerFactory: chatLobbyViewControllerFactory,
                 loginViewControllerFactory: loginViewControllerFactory
             )
         )
@@ -116,7 +116,7 @@ extension RootTabBarController: FactoryModule {
         let viewModelFactory: RootViewModel.Factory
         let homeContainerViewControllerFactory: HomeContainerViewController.Factory
         let myProjectContainerViewControllerFactory: MyProjectContainerViewController.Factory
-        let chattingLobbyViewControllerFactory: ChattingLobbyViewController.Factory
+        let chatLobbyViewControllerFactory: ChatLobbyViewController.Factory
         let loginViewControllerFactory: LogInViewController.Factory
     }
 }
@@ -127,7 +127,7 @@ extension Factory where Module == RootTabBarController {
             viewModel: dependency.viewModelFactory.create(),
             homeContainerViewControllerFactory: dependency.homeContainerViewControllerFactory,
             myProjectContainerViewControllerFactory: dependency.myProjectContainerViewControllerFactory,
-            chattingLobbyViewControllerFactory: dependency.chattingLobbyViewControllerFactory,
+            chatLobbyViewControllerFactory: dependency.chatLobbyViewControllerFactory,
             logInViewControllerFactory: dependency.loginViewControllerFactory
         )
         return module

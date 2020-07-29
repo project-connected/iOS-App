@@ -1,5 +1,5 @@
 //
-//  ChattingRoom.swift
+//  ChatRoom.swift
 //  Connected-iOS
 //
 //  Created by Jaedoo Ko on 2020/07/28.
@@ -8,6 +8,11 @@
 
 import Foundation
 
-struct ChattingRoom {
+struct ChatRoom {
+    let id: Id
+}
+
+extension ChatRoom {
+    typealias Id = Int
 
 }

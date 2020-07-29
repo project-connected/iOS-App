@@ -13,12 +13,14 @@ import RxCocoa
 protocol ChatLobbyViewModelInputs {
     func viewDidLoad()
     func pullToRefresh()
+    func chatRoomClicked(chatRoom: ChatRoom)
 }
 
 protocol ChatLobbyViewModelOutputs {
-    func chattingRooms() -> Driver<[ChatRoom]>
+    func chatRooms() -> Driver<[ChatRoom]>
     func showErrorMsg() -> Signal<Error>
     func isRefreshing() -> Driver<Bool>
+    func showChatRoom() -> Signal<ChatRoom>
 }
 
 protocol ChatLobbyViewModelType {
@@ -48,11 +50,16 @@ ChatLobbyViewModelInputs, ChatLobbyViewModelOutputs {
         pullToRefreshProperty.accept(Void())
     }
 
+    private let chatRoomClickedProperty: PublishRelay<ChatRoom> = PublishRelay()
+    func chatRoomClicked(chatRoom: ChatRoom) {
+        chatRoomClickedProperty.accept(chatRoom)
+    }
+
     // MARK: - Outputs
 
-    private let chattingRoomsProperty: BehaviorRelay<[ChatRoom]> = BehaviorRelay(value: [])
-    func chattingRooms() -> Driver<[ChatRoom]> {
-        return chattingRoomsProperty.asDriver()
+    private let chatRoomsProperty: BehaviorRelay<[ChatRoom]> = BehaviorRelay(value: [])
+    func chatRooms() -> Driver<[ChatRoom]> {
+        return chatRoomsProperty.asDriver()
     }
 
     private let showErrorMsgProperty: PublishRelay<Error> = PublishRelay()
@@ -63,6 +70,11 @@ ChatLobbyViewModelInputs, ChatLobbyViewModelOutputs {
     private let isRefreshingProperty: BehaviorRelay<Bool> = BehaviorRelay(value: false)
     func isRefreshing() -> Driver<Bool> {
         return isRefreshingProperty.asDriver()
+    }
+
+    private let showChatRoomProperty: PublishRelay<ChatRoom> = PublishRelay()
+    func showChatRoom() -> Signal<ChatRoom> {
+        return showChatRoomProperty.asSignal()
     }
 
     // MARK: - Lifecycle
@@ -78,17 +90,21 @@ ChatLobbyViewModelInputs, ChatLobbyViewModelOutputs {
 
         request
             .do(onNext: { self.isRefreshingProperty.accept(true) })
-            .flatMap { networkService.chattingRooms() }
+            .flatMap { networkService.chatRooms() }
             .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .userInitiated))
             .bind(onNext: { result in
                 self.isRefreshingProperty.accept(false)
                 switch result {
                 case .success(let rooms):
-                    self.chattingRoomsProperty.accept(rooms)
+                    self.chatRoomsProperty.accept(rooms)
                 case .failure(let error):
                     self.showErrorMsgProperty.accept(error)
                 }
             })
+            .disposed(by: disposeBag)
+
+        chatRoomClickedProperty
+            .bind(to: showChatRoomProperty)
             .disposed(by: disposeBag)
     }
 
