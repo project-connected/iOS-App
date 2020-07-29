@@ -13,9 +13,9 @@ final class LogInViewController: UIViewController {
 
     // MARK: - UI Properties
 
-    private let logo: UILabel = UILabel()
+    private let logoImageView: UIImageView = UIImageView()
     private let signUpBtn: UIButton = UIButton()
-    private let logInBtn: UIButton = UIButton()
+    private let signInBtn: UIButton = UIButton()
 
     // MARK: - Properties
 
@@ -64,7 +64,7 @@ final class LogInViewController: UIViewController {
             .drive(onNext: viewModel.inputs.signUpClicked)
             .disposed(by: disposeBag)
 
-        logInBtn.rx.tap.asDriver()
+        signInBtn.rx.tap.asDriver()
             .drive(onNext: viewModel.inputs.logInClicked)
             .disposed(by: disposeBag)
 
@@ -77,33 +77,41 @@ final class LogInViewController: UIViewController {
     private func bindStyles() {
         self.view.backgroundColor = .white
 
-        logo.text = "Connected"
+        logoImageView.contentMode = .scaleAspectFit
+        logoImageView.image = #imageLiteral(resourceName: "Swift_logo_440px")
 
-        logInBtn.setTitle("Sign In", for: .normal)
-        logInBtn.setTitleColor(.black, for: .normal)
-        logInBtn.layer.borderColor = UIColor.black.cgColor
-        logInBtn.layer.borderWidth = 1
+        signUpBtn.backgroundColor = .systemBlue
+        signUpBtn.setTitle("SIGN UP", for: .normal)
+        signUpBtn.setTitleColor(.white, for: .normal)
+        signUpBtn.layer.cornerRadius = 12
 
-        signUpBtn.setTitle("Sign Up", for: .normal)
-        signUpBtn.setTitleColor(.black, for: .normal)
-        signUpBtn.layer.borderColor = UIColor.black.cgColor
-        signUpBtn.layer.borderWidth = 1
+        signInBtn.setTitle("SIGN IN", for: .normal)
+        signInBtn.setTitleColor(.black, for: .normal)
+        signInBtn.layer.borderColor = UIColor.black.cgColor
+        signInBtn.layer.borderWidth = 1
+        signInBtn.layer.cornerRadius = 12
     }
 
     private func setUpLayout() {
-        [logo, signUpBtn, logInBtn]
+        [logoImageView, signUpBtn, signInBtn]
             .addSubviews(parent: self.view)
             .setTranslatesAutoresizingMaskIntoConstraints()
 
         NSLayoutConstraint.activate([
-            logo.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            logo.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 100),
+            logoImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 50),
+            logoImageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -50),
+            logoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 90),
 
-            logInBtn.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            logInBtn.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: 30),
+            signUpBtn.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 50),
+            signUpBtn.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -50),
+            signUpBtn.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 90),
+            signUpBtn.heightAnchor.constraint(equalToConstant: 80),
 
-            signUpBtn.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            signUpBtn.topAnchor.constraint(equalTo: logInBtn.bottomAnchor, constant: 30)
+            signInBtn.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 50),
+            signInBtn.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -50),
+            signInBtn.topAnchor.constraint(equalTo: signUpBtn.bottomAnchor, constant: 30),
+            signInBtn.heightAnchor.constraint(equalToConstant: 80)
+
         ])
     }
 
