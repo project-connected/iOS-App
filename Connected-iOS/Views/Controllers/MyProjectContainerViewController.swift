@@ -43,12 +43,22 @@ final class MyProjectContainerViewController: UIViewController {
         setUpLayout()
         bindStyles()
         bindViewModel()
-
-        viewModel.inputs.viewDidLoad()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        viewModel.inputs.viewDidLoad()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        viewModel.inputs.viewDidAppear()
     }
 
     // MARK: - Functions

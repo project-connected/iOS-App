@@ -23,7 +23,7 @@ protocol HomeViewModelInputs {
 protocol HomeViewModelOutputs {
     func presentViewController() -> Signal<HomeViewControllerData>
     func themedProjects() -> Driver<[ThemedProjects]>
-    func loadingAnimated() -> Driver<Bool>
+    func isRefreshing() -> Driver<Bool>
     func showError() -> Signal<Error>
 }
 
@@ -70,9 +70,9 @@ final class HomeViewModel: HomeViewModelType, HomeViewModelInputs, HomeViewModel
         return presentViewControllerProperty.asSignal()
     }
 
-    private let loadingAnimatedProperty: BehaviorRelay<Bool> = BehaviorRelay(value: false)
-    func loadingAnimated() -> Driver<Bool> {
-        return loadingAnimatedProperty.asDriver()
+    private let isRefreshingProperty: BehaviorRelay<Bool> = BehaviorRelay(value: false)
+    func isRefreshing() -> Driver<Bool> {
+        return isRefreshingProperty.asDriver()
     }
 
     private let showErrorProperty: PublishRelay<Error> = PublishRelay()
@@ -93,11 +93,11 @@ final class HomeViewModel: HomeViewModelType, HomeViewModelInputs, HomeViewModel
         )
 
         request
-            .do(onNext: { self.loadingAnimatedProperty.accept(true) })
+            .do(onNext: { self.isRefreshingProperty.accept(true) })
             .flatMap(networkService.themedProjects)
             .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .userInitiated))
             .bind(onNext: { result in
-                self.loadingAnimatedProperty.accept(false)
+                self.isRefreshingProperty.accept(false)
                 switch result {
                 case .success(let themedProjects):
                     self.themedProjectsProperty.accept(themedProjects)

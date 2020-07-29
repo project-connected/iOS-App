@@ -31,6 +31,7 @@ extension ProjectState {
 
 protocol MyProjectContainerViewModelInputs {
     func viewDidLoad()
+    func viewDidAppear()
     func topTabBarItemClicked(index: Int, item: ProjectState)
     func pageTransition(to index: Int)
 }
@@ -60,6 +61,11 @@ MyProjectContainerViewModelInputs, MyProjectContainerViewModelOutputs {
     private let viewDidLoadProperty: PublishRelay<Void> = PublishRelay()
     func viewDidLoad() {
         viewDidLoadProperty.accept(Void())
+    }
+
+    private let viewDidAppearProperty: PublishRelay<Void> = PublishRelay()
+    func viewDidAppear() {
+        viewDidAppearProperty.accept(Void())
     }
 
     private let topTabBarItemClickedProperty: PublishRelay<(Int, ProjectState)> = PublishRelay()
@@ -99,17 +105,17 @@ MyProjectContainerViewModelInputs, MyProjectContainerViewModelOutputs {
             .disposed(by: disposeBag)
 
         let index = Observable.merge(
+            viewDidAppearProperty.take(1).map { 0 },
             topTabBarItemClickedProperty.map { $0.0 },
             pageTransitionProperty.asObservable()
-        )
+        ).distinctUntilChanged()
 
         index
-            .distinctUntilChanged()
             .scan((0, true)) { before, index in (index, before.0 < index) }
             .bind(to: pageToIndexProperty)
             .disposed(by: disposeBag)
 
-        pageTransitionProperty
+        index
             .bind(to: selectTopTabBarItemProperty)
             .disposed(by: disposeBag)
     }

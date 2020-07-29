@@ -14,6 +14,8 @@ final class HomeViewController: UITableViewController {
 
     // MARK: - UI Properties
 
+    private let refresh: UIRefreshControl = UIRefreshControl()
+
     // MARK: - Properties
 
     private let disposeBag = DisposeBag()
@@ -81,13 +83,15 @@ final class HomeViewController: UITableViewController {
             .emit(onNext: { self.navigationController?.pushViewController($0, animated: true) })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.loadingAnimated()
-            .drive(refreshControl!.rx.isRefreshing)
+        viewModel.outputs.isRefreshing()
+            .drive(refresh.rx.isRefreshing)
             .disposed(by: disposeBag)
     }
 
     private func bindStyles() {
         view.backgroundColor = .white
+
+        _ = baseRefreshControlStyle(refresh: refresh)
     }
 
     private func setUpLayout() {
@@ -105,8 +109,6 @@ final class HomeViewController: UITableViewController {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 500
 
-        let refresh = UIRefreshControl()
-        refresh.attributedTitle = NSAttributedString(string: "새로고침")
         refresh.addTarget(self, action: #selector(pullToRefresh(refresh:)), for: .valueChanged)
         refreshControl = refresh
     }

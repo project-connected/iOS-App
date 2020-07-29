@@ -13,12 +13,14 @@ import RxCocoa
 enum RootViewControllerData {
     case home
     case myProject
+    case chat
     case profile(isLoggedIn: Bool)
 }
 
 enum TabBarItem {
     case home(index: Int)
     case myProject(index: Int)
+    case chat(index: Int)
     case profile(index: Int)
 }
 
@@ -104,10 +106,10 @@ final class RootViewModel: RootViewModelType, RootViewModelInputs, RootViewModel
     }
 
     private func generatePersonalizedViewControllers(isLoggedIn: Bool) -> [RootViewControllerData] {
-        return [.myProject, .profile(isLoggedIn: isLoggedIn)]
+        return [.myProject, .chat, .profile(isLoggedIn: isLoggedIn)]
     }
 
     private func tabData() -> [TabBarItem] {
-        return [.home(index: 0), .myProject(index: 1), .profile(index: 2)]
+        return [.home(index: 0), .myProject(index: 1), .chat(index: 2), .profile(index: 3)]
     }
 }

@@ -11,11 +11,12 @@ import RxSwift
 import RxCocoa
 
 protocol MyProjectPageViewModelInputs {
+    func viewDidLoad()
     func refresh()
 }
 
 protocol MyProjectPageViewModelOutputs {
-
+    func isRefreshing() -> Driver<Bool>
 }
 
 protocol MyProjectPageViewModelType {
@@ -35,6 +36,11 @@ MyProjectPageViewModelInputs, MyProjectPageViewModelOutputs {
 
     // MARK: - Inputs
 
+    private let viewDidLoadProperty: PublishRelay<Void> = PublishRelay()
+    func viewDidLoad() {
+        viewDidLoadProperty.accept(Void())
+    }
+
     private let refreshProperty: PublishRelay<Void> = PublishRelay()
     func refresh() {
         refreshProperty.accept(Void())
@@ -42,11 +48,34 @@ MyProjectPageViewModelInputs, MyProjectPageViewModelOutputs {
 
     // MARK: - Outputs
 
+    private let isRefreshingProperty: BehaviorRelay<Bool> = BehaviorRelay(value: false)
+    func isRefreshing() -> Driver<Bool> {
+        return isRefreshingProperty.asDriver()
+    }
+
     // MARK: - Lifecycle
 
     init(networkService: NetworkServiceType) {
         self.networkService = networkService
 
+        let request = Observable
+            .of(viewDidLoadProperty, refreshProperty)
+            .merge()
+
+        request
+            .do(onNext: { self.isRefreshingProperty.accept(true) })
+            .map { Result<Int, Error>.success(1) }
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            .bind(onNext: { result in
+                self.isRefreshingProperty.accept(false)
+                switch result {
+                case .success(let item):
+                    print(item)
+                case .failure(let error):
+                    print(error)
+                }
+            })
+            .disposed(by: disposeBag)
     }
 
     // MARK: - Functions

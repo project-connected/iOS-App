@@ -8,10 +8,15 @@
 
 import Foundation
 
-typealias AuthToken = String
-
 struct User {
+    let id: Id
     let authToken: AuthToken?
+}
+
+extension User {
+    typealias AuthToken = String
+    typealias Id = Int
+
 }
 
 struct SignUpInfo {
