@@ -36,6 +36,7 @@ final class SignUpViewModel: SignUpViewModelType, SignUpViewModelInputs, SignUpV
     var outputs: SignUpViewModelOutputs { return self }
     private let disposeBag = DisposeBag()
     private let networkService: NetworkServiceType
+    private let validator: UserInfoValidatorType
 
     // MARK: - Inputs
 
@@ -78,17 +79,21 @@ final class SignUpViewModel: SignUpViewModelType, SignUpViewModelInputs, SignUpV
 
     // MARK: - Lifecycle
 
-    init(networkService: NetworkServiceType) {
+    init(
+        networkService: NetworkServiceType,
+        userInfoValidator: UserInfoValidatorType
+    ) {
         self.networkService = networkService
+        self.validator = userInfoValidator
 
         let isEmailValid = emailTextProperty
-            .map(validateEmail(email:))
+            .map(validator.validateEmail(email:))
 
         let isPasswordValid = passwordTextProperty
-            .map(validatePassword(password:))
+            .map(validator.validatePassword(password:))
 
         let isNicknameValid = nicknameTextProperty
-            .map(validateNickname(nickname:))
+            .map(validator.validateNickname(nickname:))
 
         Observable.combineLatest(isEmailValid, isPasswordValid, isNicknameValid)
             .map { $0.0 && $0.1 && $0.2 }
@@ -118,18 +123,4 @@ final class SignUpViewModel: SignUpViewModelType, SignUpViewModelInputs, SignUpV
 
     // MARK: - Functions
 
-    // TODO: 이메일 유효성 검사 만들기
-    private func validateEmail(email: String) -> Bool {
-        return true
-    }
-
-    // TODO: 비밀번호 유효성 검사 만들기
-    private func validatePassword(password: String) -> Bool {
-        return true
-    }
-
-    // TODO: 닉네임 유효성 검사 만들기
-    private func validateNickname(nickname: String) -> Bool {
-        return true
-    }
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		080496A924D2739500F9894C /* UserInfoValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080496A824D2739500F9894C /* UserInfoValidator.swift */; };
 		0811A51224CF319400314F0C /* MyProjectPageDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0811A51124CF319400314F0C /* MyProjectPageDataSource.swift */; };
 		0839A11824C1FB5300A15253 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 087CAE7624C01B1700C2A1C4 /* GoogleService-Info.plist */; };
 		0839A11A24C2058100A15253 /* AppDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0839A11924C2058100A15253 /* AppDelegateTests.swift */; };
@@ -29,6 +30,7 @@
 		0873E45F24D0649D00BFC4B5 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873E45E24D0649D00BFC4B5 /* ChatMessage.swift */; };
 		087AC07424D16D8700CAAF9E /* ChatRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087AC07324D16D8700CAAF9E /* ChatRoomViewController.swift */; };
 		087AC07624D16DB600CAAF9E /* ChatRoomViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087AC07524D16DB600CAAF9E /* ChatRoomViewModel.swift */; };
+		087AC07824D1B0A000CAAF9E /* UITextField+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087AC07724D1B0A000CAAF9E /* UITextField+.swift */; };
 		087CAE7924C0319400C2A1C4 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 087CAE7824C0319400C2A1C4 /* .swiftlint.yml */; };
 		0884DB7D24BD92DF00A2E471 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0884DB7C24BD92DF00A2E471 /* AppDelegate.swift */; };
 		0884DB8124BD92DF00A2E471 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0884DB8024BD92DF00A2E471 /* ViewController.swift */; };
@@ -100,6 +102,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		080496A824D2739500F9894C /* UserInfoValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoValidator.swift; sourceTree = "<group>"; };
 		0811A51124CF319400314F0C /* MyProjectPageDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectPageDataSource.swift; sourceTree = "<group>"; };
 		0839A11924C2058100A15253 /* AppDelegateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateTests.swift; sourceTree = "<group>"; };
 		0839A11B24C208CA00A15253 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -121,6 +124,7 @@
 		0873E45E24D0649D00BFC4B5 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
 		087AC07324D16D8700CAAF9E /* ChatRoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomViewController.swift; sourceTree = "<group>"; };
 		087AC07524D16DB600CAAF9E /* ChatRoomViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomViewModel.swift; sourceTree = "<group>"; };
+		087AC07724D1B0A000CAAF9E /* UITextField+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+.swift"; sourceTree = "<group>"; };
 		087CAE7624C01B1700C2A1C4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		087CAE7824C0319400C2A1C4 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		0884DB7924BD92DF00A2E471 /* Connected-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Connected-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -387,6 +391,7 @@
 				08C79D6324C829B500CBDF5F /* ImageLoader */,
 				08EDD0B124C2DCBD0038D6B9 /* Network */,
 				085A523724C2BE30009990D5 /* AnalyticsService */,
+				080496A824D2739500F9894C /* UserInfoValidator.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -464,6 +469,7 @@
 				08C79D6F24C84E3C00CBDF5F /* BaseDataSource.swift */,
 				08C79D7124C8530A00CBDF5F /* BaseCell.swift */,
 				08DEA5AB24CAC4F800222A56 /* UITableView+.swift */,
+				087AC07724D1B0A000CAAF9E /* UITextField+.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -745,9 +751,11 @@
 				08C79D5B24C808F100CBDF5F /* UIButton+.swift in Sources */,
 				08C79D6524C829E300CBDF5F /* ImageLoaderType.swift in Sources */,
 				08A1809024C7418800EADCE0 /* Result+.swift in Sources */,
+				087AC07824D1B0A000CAAF9E /* UITextField+.swift in Sources */,
 				0873E44524CFCF4C00BFC4B5 /* MyProjectPageViewController.swift in Sources */,
 				08DEA5B224CBFA7000222A56 /* CategoryDataSource.swift in Sources */,
 				085A523924C2BE77009990D5 /* AnalyticsServiceType.swift in Sources */,
+				080496A924D2739500F9894C /* UserInfoValidator.swift in Sources */,
 				08C79D5F24C810D500CBDF5F /* HomeViewModel.swift in Sources */,
 				0873E45524D01D4900BFC4B5 /* ChatRoomCell.swift in Sources */,
 				08DEA59D24C9930C00222A56 /* ProjectDetailViewModel.swift in Sources */,

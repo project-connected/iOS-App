@@ -14,6 +14,9 @@ extension AppDependency {
     static func resolveLogInDependencies(
         networkService: NetworkServiceType
     ) -> LogInViewController.Factory {
+
+        let userInfoValidator = UserInfoValidator()
+
         return LogInViewController.Factory(
             dependency: .init(
                 viewModelFactory: .init(
@@ -23,7 +26,8 @@ extension AppDependency {
                     dependency: .init(
                         viewModelFactory: .init(
                             dependency: .init(
-                                networkService: networkService
+                                networkService: networkService,
+                                userInfoValidator: userInfoValidator
                             )
                         )
                     )
@@ -85,13 +89,15 @@ extension SignUpViewModel: FactoryModule {
 
     struct Dependency {
         let networkService: NetworkServiceType
+        let userInfoValidator: UserInfoValidatorType
     }
 }
 
 extension Factory where Module == SignUpViewModel {
     func create() -> SignUpViewModelType {
         let module = Module(
-            networkService: dependency.networkService
+            networkService: dependency.networkService,
+            userInfoValidator: dependency.userInfoValidator
         )
         return module
     }

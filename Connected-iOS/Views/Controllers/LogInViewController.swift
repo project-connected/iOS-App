@@ -100,17 +100,17 @@ final class LogInViewController: UIViewController {
         NSLayoutConstraint.activate([
             logoImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 50),
             logoImageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -50),
-            logoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 90),
+            logoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 110),
 
             signUpBtn.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 50),
             signUpBtn.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -50),
-            signUpBtn.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 90),
-            signUpBtn.heightAnchor.constraint(equalToConstant: 80),
+            signUpBtn.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 110),
+            signUpBtn.heightAnchor.constraint(equalToConstant: 60),
 
             signInBtn.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 50),
             signInBtn.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -50),
-            signInBtn.topAnchor.constraint(equalTo: signUpBtn.bottomAnchor, constant: 30),
-            signInBtn.heightAnchor.constraint(equalToConstant: 80)
+            signInBtn.topAnchor.constraint(equalTo: signUpBtn.bottomAnchor, constant: 15),
+            signInBtn.heightAnchor.constraint(equalToConstant: 60)
 
         ])
     }
