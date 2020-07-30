@@ -138,7 +138,7 @@ final class SignUpViewController: UIViewController {
         nicknameTextField.placeholder = "Nickname"
         nicknameTextField.font = UIFont.systemFont(ofSize: 20)
         nicknameTextField.setHorizontalPadding(10)
-        nicknameTextField.returnKeyType = .done
+        nicknameTextField.returnKeyType = .next
         _ = baseBorderStyle(view: nicknameTextField)
 
         signUpButton.setTitle("SIGN UP", for: .normal)
