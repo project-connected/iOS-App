@@ -19,17 +19,24 @@ final class SignUpViewController: UIViewController {
     private let emailTextField: UITextField = UITextField()
     private let passwordTextField: UITextField = UITextField()
     private let nicknameTextField: UITextField = UITextField()
+    private let termsAndPoliciesButton: UIButton = UIButton()
+    private let agreeSwitch: UISwitch = UISwitch()
     private let signUpButton: UIButton = UIButton(type: .system)
 
     // MARK: - Properties
 
-    private let viewModel: SignUpViewModelType
     private let disposeBag = DisposeBag()
+    private let viewModel: SignUpViewModelType
+    private let webViewControllerFactory: WebViewController.Factory
 
     // MARK: - Lifecycle
 
-    init(viewModel: SignUpViewModelType) {
+    init(
+        viewModel: SignUpViewModelType,
+        webViewControllerFactory: WebViewController.Factory
+    ) {
         self.viewModel = viewModel
+        self.webViewControllerFactory = webViewControllerFactory
 
         super.init(nibName: nil, bundle: nil)
 
@@ -75,6 +82,16 @@ final class SignUpViewController: UIViewController {
             .drive(onNext: { self.viewModel.inputs.signUpButtonClicked() })
             .disposed(by: disposeBag)
 
+        agreeSwitch.rx.isOn
+            .asDriver()
+            .drive(onNext: self.viewModel.inputs.termsAndPoliciesAgree(_:))
+            .disposed(by: disposeBag)
+
+        termsAndPoliciesButton.rx.tap
+            .asDriver()
+            .drive(onNext: { self.viewModel.inputs.termsAndPoliciesClicked() })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.isSignUpButtonEnabled()
             .drive(signUpButton.rx.isEnabled)
             .disposed(by: disposeBag)
@@ -89,6 +106,13 @@ final class SignUpViewController: UIViewController {
                 self.signUpButton.setTitle("sign in - \(user)", for: .normal)
             })
             .disposed(by: disposeBag)
+
+        viewModel.outputs.presentTermsAndPolicies()
+            .emit(onNext: {
+                let viewController = self.webViewControllerFactory.create()
+                self.present(viewController, animated: true, completion: nil)
+            })
+            .disposed(by: disposeBag)
     }
 
     private func bindStyles() {
@@ -98,7 +122,6 @@ final class SignUpViewController: UIViewController {
         emailTextField.placeholder = "E-Mail"
         emailTextField.font = UIFont.systemFont(ofSize: 20)
         emailTextField.setHorizontalPadding(10)
-        emailTextField.layer.cornerRadius = 12
         emailTextField.keyboardType = .emailAddress
         emailTextField.returnKeyType = .next
         _ = baseBorderStyle(view: emailTextField)
@@ -108,7 +131,6 @@ final class SignUpViewController: UIViewController {
         passwordTextField.placeholder = "Password"
         passwordTextField.font = UIFont.systemFont(ofSize: 20)
         passwordTextField.setHorizontalPadding(10)
-        passwordTextField.layer.cornerRadius = 12
         passwordTextField.returnKeyType = .next
         _ = baseBorderStyle(view: passwordTextField)
 
@@ -116,7 +138,6 @@ final class SignUpViewController: UIViewController {
         nicknameTextField.placeholder = "Nickname"
         nicknameTextField.font = UIFont.systemFont(ofSize: 20)
         nicknameTextField.setHorizontalPadding(10)
-        nicknameTextField.layer.cornerRadius = 12
         nicknameTextField.returnKeyType = .done
         _ = baseBorderStyle(view: nicknameTextField)
 
@@ -127,21 +148,33 @@ final class SignUpViewController: UIViewController {
         signUpButton.layer.cornerRadius = 12
         signUpButton.clipsToBounds = true
 
+        let text = "I agree to terms and policies"
+        let termsAndPoliciesText = NSMutableAttributedString(string: text)
+        termsAndPoliciesText.addAttribute(
+            NSAttributedString.Key.foregroundColor,
+            value: UIColor.systemBlue,
+            range: (text as NSString).range(of: "terms and policies")
+        )
+
+        termsAndPoliciesButton.setAttributedTitle(termsAndPoliciesText, for: .normal)
+        termsAndPoliciesButton.contentHorizontalAlignment = .trailing
+
         formStackView.axis = .vertical
-        formStackView.distribution = .fillEqually
-        formStackView.alignment = .center
-        formStackView.spacing = 10
+        formStackView.distribution = .fill
+        formStackView.alignment = .trailing
+        formStackView.spacing = -1
     }
 
     private func setUpLayout() {
-        [emailTextField, passwordTextField, nicknameTextField, signUpButton]
+        [emailTextField, passwordTextField, nicknameTextField, termsAndPoliciesButton, agreeSwitch]
             .addArrangedSubviews(parent: formStackView)
             .setTranslatesAutoresizingMaskIntoConstraints()
 
-        [formStackView, contentView, scrollView]
+        [formStackView, signUpButton, contentView, scrollView]
             .setTranslatesAutoresizingMaskIntoConstraints()
 
         contentView.addSubview(formStackView)
+        contentView.addSubview(signUpButton)
         scrollView.addSubview(contentView)
         view.addSubview(scrollView)
 
@@ -158,13 +191,18 @@ final class SignUpViewController: UIViewController {
             nicknameTextField.trailingAnchor.constraint(equalTo: formStackView.trailingAnchor),
             nicknameTextField.heightAnchor.constraint(equalToConstant: 60),
 
-            signUpButton.leadingAnchor.constraint(equalTo: formStackView.leadingAnchor),
-            signUpButton.trailingAnchor.constraint(equalTo: formStackView.trailingAnchor),
-            signUpButton.heightAnchor.constraint(equalToConstant: 60),
+            termsAndPoliciesButton.leadingAnchor.constraint(equalTo: formStackView.leadingAnchor),
+            termsAndPoliciesButton.trailingAnchor.constraint(equalTo: formStackView.trailingAnchor),
+            termsAndPoliciesButton.heightAnchor.constraint(equalToConstant: 60),
 
             formStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 50),
             formStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -50),
             formStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30),
+
+            signUpButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 50),
+            signUpButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -50),
+            signUpButton.topAnchor.constraint(equalTo: formStackView.bottomAnchor, constant: 30),
+            signUpButton.heightAnchor.constraint(equalToConstant: 60),
 
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),

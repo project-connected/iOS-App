@@ -90,7 +90,6 @@ final class SignInViewController: UIViewController {
         emailTextField.placeholder = "E-Mail"
         emailTextField.font = UIFont.systemFont(ofSize: 20)
         emailTextField.setHorizontalPadding(10)
-        emailTextField.layer.cornerRadius = 12
         emailTextField.keyboardType = .emailAddress
         emailTextField.returnKeyType = .next
         _ = baseBorderStyle(view: emailTextField)
@@ -100,7 +99,6 @@ final class SignInViewController: UIViewController {
         passwordTextField.placeholder = "Password"
         passwordTextField.font = UIFont.systemFont(ofSize: 20)
         passwordTextField.setHorizontalPadding(10)
-        passwordTextField.layer.cornerRadius = 12
         passwordTextField.returnKeyType = .done
         _ = baseBorderStyle(view: passwordTextField)
 
@@ -114,18 +112,19 @@ final class SignInViewController: UIViewController {
         formStackView.axis = .vertical
         formStackView.distribution = .fillEqually
         formStackView.alignment = .center
-        formStackView.spacing = 10
+        formStackView.spacing = -1
     }
 
     private func setUpLayout() {
-        [emailTextField, passwordTextField, signInButton]
+        [emailTextField, passwordTextField]
             .addArrangedSubviews(parent: formStackView)
             .setTranslatesAutoresizingMaskIntoConstraints()
 
-        [formStackView, contentView, scrollView]
+        [formStackView, signInButton, contentView, scrollView]
             .setTranslatesAutoresizingMaskIntoConstraints()
 
         contentView.addSubview(formStackView)
+        contentView.addSubview(signInButton)
         scrollView.addSubview(contentView)
         view.addSubview(scrollView)
 
@@ -139,13 +138,14 @@ final class SignInViewController: UIViewController {
             passwordTextField.trailingAnchor.constraint(equalTo: formStackView.trailingAnchor),
             passwordTextField.heightAnchor.constraint(equalToConstant: 60),
 
-            signInButton.leadingAnchor.constraint(equalTo: formStackView.leadingAnchor),
-            signInButton.trailingAnchor.constraint(equalTo: formStackView.trailingAnchor),
-            signInButton.heightAnchor.constraint(equalToConstant: 60),
-
             formStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 50),
             formStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -50),
             formStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30),
+
+            signInButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 50),
+            signInButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -50),
+            signInButton.topAnchor.constraint(equalTo: formStackView.bottomAnchor, constant: 10),
+            signInButton.heightAnchor.constraint(equalToConstant: 60),
 
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),

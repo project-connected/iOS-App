@@ -29,6 +29,13 @@ extension AppDependency {
                                 networkService: networkService,
                                 userInfoValidator: userInfoValidator
                             )
+                        ),
+                        webViewControllerFactory: .init(
+                            dependency: .init(
+                                viewModelFactory: .init(
+                                    dependency: .init()
+                                )
+                            )
                         )
                     )
                 ),
@@ -108,13 +115,15 @@ extension Factory where Module == SignUpViewModel {
 extension SignUpViewController: FactoryModule {
     struct Dependency {
         let viewModelFactory: SignUpViewModel.Factory
+        let webViewControllerFactory: WebViewController.Factory
     }
 }
 
 extension Factory where Module == SignUpViewController {
     func create() -> UIViewController {
         let module = Module(
-            viewModel: dependency.viewModelFactory.create()
+            viewModel: dependency.viewModelFactory.create(),
+            webViewControllerFactory: dependency.webViewControllerFactory
         )
         return module
     }
@@ -155,6 +164,42 @@ extension Factory where Module == LogInViewController {
             viewModel: dependency.viewModelFactory.create(),
             signUpViewControllerFactory: dependency.signUpViewControllerFactory,
             signInViewControllerFactory: dependency.signInViewControllerFactory
+        )
+        return module
+    }
+}
+
+// MARK: - WebViewModel
+
+extension WebViewModel: FactoryModule {
+    convenience init(dependency: Dependency, payload: ()) {
+        self.init(dependency: dependency)
+    }
+
+    struct Dependency {
+
+    }
+}
+
+extension Factory where Module == WebViewModel {
+    func create() -> WebViewModel {
+        let module = Module()
+        return module
+    }
+}
+
+// MARK: - WebViewController
+
+extension WebViewController: FactoryModule {
+    struct Dependency {
+        let viewModelFactory: WebViewModel.Factory
+    }
+}
+
+extension Factory where Module == WebViewController {
+    func create() -> WebViewController {
+        let module = Module(
+            viewModel: dependency.viewModelFactory.create()
         )
         return module
     }
