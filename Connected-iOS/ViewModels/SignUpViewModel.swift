@@ -14,13 +14,16 @@ protocol SignUpViewModelInputs {
     func emailText(email: String)
     func passwordText(password: String)
     func nicknameText(nickname: String)
+    func termsAndPoliciesAgree(_ agree: Bool)
     func signUpButtonClicked()
+    func termsAndPoliciesClicked()
 }
 
 protocol SignUpViewModelOutputs {
     func isSignUpButtonEnabled() -> Driver<Bool>
     func showSignUpErrorMsg() -> Signal<String>
     func signIn() -> Signal<User>
+    func presentTermsAndPolicies() -> Signal<Void>
 }
 
 protocol SignUpViewModelType {
@@ -36,6 +39,7 @@ final class SignUpViewModel: SignUpViewModelType, SignUpViewModelInputs, SignUpV
     var outputs: SignUpViewModelOutputs { return self }
     private let disposeBag = DisposeBag()
     private let networkService: NetworkServiceType
+    private let validator: UserInfoValidatorType
 
     // MARK: - Inputs
 
@@ -59,6 +63,16 @@ final class SignUpViewModel: SignUpViewModelType, SignUpViewModelInputs, SignUpV
         signUpButtonClickedProperty.accept(Void())
     }
 
+    private let termsAndPoliciesAgreeProperty: PublishRelay<Bool> = PublishRelay()
+    func termsAndPoliciesAgree(_ agree: Bool) {
+        termsAndPoliciesAgreeProperty.accept(agree)
+    }
+
+    private let termsAndPoliciesClickedProperty: PublishRelay<Void> = PublishRelay()
+    func termsAndPoliciesClicked() {
+        termsAndPoliciesClickedProperty.accept(Void())
+    }
+
     // MARK: - Outputs
 
     private let isSignUpButtonEnabledProperty: BehaviorRelay<Bool> = BehaviorRelay(value: false)
@@ -76,22 +90,38 @@ final class SignUpViewModel: SignUpViewModelType, SignUpViewModelInputs, SignUpV
         signInProperty.asSignal()
     }
 
+    private let presentTermsAndPoliciesProperty: PublishRelay<Void> = PublishRelay()
+    func presentTermsAndPolicies() -> Signal<Void> {
+        return presentTermsAndPoliciesProperty.asSignal()
+    }
+
     // MARK: - Lifecycle
 
-    init(networkService: NetworkServiceType) {
+    init(
+        networkService: NetworkServiceType,
+        userInfoValidator: UserInfoValidatorType
+    ) {
         self.networkService = networkService
+        self.validator = userInfoValidator
 
         let isEmailValid = emailTextProperty
-            .map(validateEmail(email:))
+            .map(validator.validateEmail(email:))
 
         let isPasswordValid = passwordTextProperty
-            .map(validatePassword(password:))
+            .map(validator.validatePassword(password:))
 
         let isNicknameValid = nicknameTextProperty
-            .map(validateNickname(nickname:))
+            .map(validator.validateNickname(nickname:))
 
-        Observable.combineLatest(isEmailValid, isPasswordValid, isNicknameValid)
-            .map { $0.0 && $0.1 && $0.2 }
+        let validatedInputs = Observable.combineLatest(
+            isEmailValid,
+            isPasswordValid,
+            isNicknameValid,
+            termsAndPoliciesAgreeProperty
+        )
+
+        validatedInputs
+            .map { $0.0 && $0.1 && $0.2 && $0.3 }
             .bind(to: isSignUpButtonEnabledProperty)
             .disposed(by: disposeBag)
 
@@ -114,22 +144,12 @@ final class SignUpViewModel: SignUpViewModelType, SignUpViewModelInputs, SignUpV
                 self.showSignUpErrorMsgProperty.accept(error.localizedDescription)
             }
         }).disposed(by: disposeBag)
+
+        termsAndPoliciesClickedProperty
+            .bind(to: presentTermsAndPoliciesProperty)
+            .disposed(by: disposeBag)
     }
 
     // MARK: - Functions
 
-    // TODO: 이메일 유효성 검사 만들기
-    private func validateEmail(email: String) -> Bool {
-        return true
-    }
-
-    // TODO: 비밀번호 유효성 검사 만들기
-    private func validatePassword(password: String) -> Bool {
-        return true
-    }
-
-    // TODO: 닉네임 유효성 검사 만들기
-    private func validateNickname(nickname: String) -> Bool {
-        return true
-    }
 }

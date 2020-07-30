@@ -103,6 +103,8 @@ class ProjectThumbnailCardCell: UICollectionViewCell, BaseCell {
         categoryCollectionView.backgroundColor = .white
         categoryCollectionView.showsHorizontalScrollIndicator = false
         categoryCollectionView.isScrollEnabled = false
+
+        thumbnailImageView.contentMode = .scaleAspectFit
     }
 
     func bindViewModel() {
@@ -136,6 +138,6 @@ class ProjectThumbnailCardCell: UICollectionViewCell, BaseCell {
     }
 
     private func loadImage(with url: String) {
-        imageLoader?.setImage(imageView: thumbnailImageView, with: url, placeholder: #imageLiteral(resourceName: "outline_home_black_36pt"))
+        imageLoader?.setImage(imageView: thumbnailImageView, with: url, placeholder: #imageLiteral(resourceName: "Swift_logo_440px"))
     }
 }

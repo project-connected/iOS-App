@@ -19,7 +19,6 @@ final class SignInViewController: UIViewController {
     private let formStackView: UIStackView = UIStackView()
     private let emailTextField: UITextField = UITextField()
     private let passwordTextField: UITextField = UITextField()
-    private let nicknameTextField: UITextField = UITextField()
     private let signInButton: UIButton = UIButton(type: .system)
 
     // MARK: - Properties
@@ -88,57 +87,72 @@ final class SignInViewController: UIViewController {
         view.backgroundColor = .white
 
         emailTextField.backgroundColor = .white
-        passwordTextField.backgroundColor = .white
-        nicknameTextField.backgroundColor = .white
+        emailTextField.placeholder = "E-Mail"
+        emailTextField.font = UIFont.systemFont(ofSize: 20)
+        emailTextField.setHorizontalPadding(10)
+        emailTextField.keyboardType = .emailAddress
+        emailTextField.returnKeyType = .next
         _ = baseBorderStyle(view: emailTextField)
-        _ = baseBorderStyle(view: passwordTextField)
-        _ = baseBorderStyle(view: nicknameTextField)
 
-        signInButton.setTitle("Sign In", for: .normal)
+        passwordTextField.isSecureTextEntry = true
+        passwordTextField.backgroundColor = .white
+        passwordTextField.placeholder = "Password"
+        passwordTextField.font = UIFont.systemFont(ofSize: 20)
+        passwordTextField.setHorizontalPadding(10)
+        passwordTextField.returnKeyType = .done
+        _ = baseBorderStyle(view: passwordTextField)
+
+        signInButton.setTitle("SIGN IN", for: .normal)
         signInButton.setTitleColor(.white, for: .normal)
         signInButton.setBackgroundColorWithState(.systemBlue, for: .normal)
         signInButton.setBackgroundColorWithState(.systemGray, for: .disabled)
+        signInButton.layer.cornerRadius = 12
+        signInButton.clipsToBounds = true
 
         formStackView.axis = .vertical
         formStackView.distribution = .fillEqually
         formStackView.alignment = .center
-        formStackView.spacing = 10
+        formStackView.spacing = -1
     }
 
     private func setUpLayout() {
-        [emailTextField, passwordTextField, signInButton]
+        [emailTextField, passwordTextField]
             .addArrangedSubviews(parent: formStackView)
             .setTranslatesAutoresizingMaskIntoConstraints()
 
-        [formStackView, contentView, scrollView]
+        [formStackView, signInButton, contentView, scrollView]
             .setTranslatesAutoresizingMaskIntoConstraints()
 
         contentView.addSubview(formStackView)
+        contentView.addSubview(signInButton)
         scrollView.addSubview(contentView)
         view.addSubview(scrollView)
 
         NSLayoutConstraint.activate([
-            emailTextField.leadingAnchor.constraint(equalTo: formStackView.leadingAnchor, constant: 10),
-            emailTextField.trailingAnchor.constraint(equalTo: formStackView.trailingAnchor, constant: -10),
-            emailTextField.heightAnchor.constraint(equalToConstant: 100),
 
-            passwordTextField.leadingAnchor.constraint(equalTo: formStackView.leadingAnchor, constant: 10),
-            passwordTextField.trailingAnchor.constraint(equalTo: formStackView.trailingAnchor, constant: -10),
-            passwordTextField.heightAnchor.constraint(equalToConstant: 100),
+            emailTextField.leadingAnchor.constraint(equalTo: formStackView.leadingAnchor),
+            emailTextField.trailingAnchor.constraint(equalTo: formStackView.trailingAnchor),
+            emailTextField.heightAnchor.constraint(equalToConstant: 60),
 
-            signInButton.leadingAnchor.constraint(equalTo: formStackView.leadingAnchor, constant: 10),
-            signInButton.trailingAnchor.constraint(equalTo: formStackView.trailingAnchor, constant: -10),
-            signInButton.heightAnchor.constraint(equalToConstant: 100),
+            passwordTextField.leadingAnchor.constraint(equalTo: formStackView.leadingAnchor),
+            passwordTextField.trailingAnchor.constraint(equalTo: formStackView.trailingAnchor),
+            passwordTextField.heightAnchor.constraint(equalToConstant: 60),
 
-            formStackView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            formStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            formStackView.widthAnchor.constraint(equalTo: contentView.widthAnchor),
+            formStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 50),
+            formStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -50),
+            formStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30),
 
-            contentView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
-            contentView.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor, constant: 500),
-            contentView.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.heightAnchor),
+            signInButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 50),
+            signInButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -50),
+            signInButton.topAnchor.constraint(equalTo: formStackView.bottomAnchor, constant: 10),
+            signInButton.heightAnchor.constraint(equalToConstant: 60),
+
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
+            contentView.heightAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.heightAnchor),
 
             scrollView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             scrollView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
