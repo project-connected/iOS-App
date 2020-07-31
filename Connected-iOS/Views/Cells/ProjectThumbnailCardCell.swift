@@ -29,9 +29,13 @@ class ProjectThumbnailCardCell: UICollectionViewCell, BaseCell {
     // MARK: - Properties
 
     private let disposeBag = DisposeBag()
-    var viewModel: ProjectThumbnailCellViewModelType?
+    var viewModel: ProjectThumbnailCellViewModelType? {
+        didSet { bindViewModel() }
+    }
     var imageLoader: ImageLoaderType?
-    var dataSource: BaseDataSource?
+    var dataSource: BaseDataSource? {
+        didSet { configureCollectionView() }
+    }
 
     // MARK: - Lifecycle
 
@@ -44,6 +48,10 @@ class ProjectThumbnailCardCell: UICollectionViewCell, BaseCell {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        viewModel?.inputs.deinited()
     }
 
     // MARK: - Functions
@@ -107,28 +115,23 @@ class ProjectThumbnailCardCell: UICollectionViewCell, BaseCell {
         thumbnailImageView.contentMode = .scaleAspectFit
     }
 
-    func bindViewModel() {
-        guard let viewModel = viewModel else {
-            return
-        }
-        configureCollectionView()
-
-        viewModel.outputs.projectName()
+    private func bindViewModel() {
+        viewModel?.outputs.projectName()
             .drive(nameLabel.rx.text)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.projectThumbnailImageUrl()
+        viewModel?.outputs.projectThumbnailImageUrl()
             .drive(onNext: loadImage(with:))
             .disposed(by: disposeBag)
 
-        viewModel.outputs.projectCategories()
-            .drive(onNext: { categories in
-                self.dataSource?.set(
+        viewModel?.outputs.projectCategories()
+            .drive(onNext: { [weak self] categories in
+                self?.dataSource?.set(
                     items: categories,
                     cellClass: CategoryCell.self,
                     section: 0
                 )
-                self.categoryCollectionView.reloadData()
+                self?.categoryCollectionView.reloadData()
             })
             .disposed(by: disposeBag)
     }

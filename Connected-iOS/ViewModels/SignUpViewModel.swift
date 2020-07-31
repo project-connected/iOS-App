@@ -17,6 +17,7 @@ protocol SignUpViewModelInputs {
     func termsAndPoliciesAgree(_ agree: Bool)
     func signUpButtonClicked()
     func termsAndPoliciesClicked()
+    func deinited()
 }
 
 protocol SignUpViewModelOutputs {
@@ -37,7 +38,7 @@ final class SignUpViewModel: SignUpViewModelType, SignUpViewModelInputs, SignUpV
 
     var inputs: SignUpViewModelInputs { return self }
     var outputs: SignUpViewModelOutputs { return self }
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
     private let networkService: NetworkServiceType
     private let validator: UserInfoValidatorType
 
@@ -71,6 +72,11 @@ final class SignUpViewModel: SignUpViewModelType, SignUpViewModelInputs, SignUpV
     private let termsAndPoliciesClickedProperty: PublishRelay<Void> = PublishRelay()
     func termsAndPoliciesClicked() {
         termsAndPoliciesClickedProperty.accept(Void())
+    }
+
+    private let deinitedProperty: PublishRelay<Void> = PublishRelay()
+    func deinited() {
+        deinitedProperty.accept(Void())
     }
 
     // MARK: - Outputs
@@ -133,20 +139,26 @@ final class SignUpViewModel: SignUpViewModelType, SignUpViewModelInputs, SignUpV
 
         signUpButtonClickedProperty
             .withLatestFrom(signUpData)
-            .flatMap { (email, password, nickname) in
-                return self.networkService.signUp(email: email, password: password, nickname: nickname)
-        }.subscribeOn(ConcurrentDispatchQueueScheduler(qos: .userInitiated))
-        .bind(onNext: { result in
-            switch result {
-            case .success(let user):
-                self.signInProperty.accept(user)
-            case .failure(let error):
-                self.showSignUpErrorMsgProperty.accept(error.localizedDescription)
-            }
-        }).disposed(by: disposeBag)
+            .flatMap({ (email, password, nickname) in
+                self.networkService.signUp(email: email, password: password, nickname: nickname)
+            })
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            .bind(onNext: { result in
+                switch result {
+                case .success(let user):
+                    self.signInProperty.accept(user)
+                case .failure(let error):
+                    self.showSignUpErrorMsgProperty.accept(error.localizedDescription)
+                }
+            })
+            .disposed(by: disposeBag)
 
         termsAndPoliciesClickedProperty
             .bind(to: presentTermsAndPoliciesProperty)
+            .disposed(by: disposeBag)
+
+        deinitedProperty
+            .bind(onNext: { self.disposeBag = DisposeBag() })
             .disposed(by: disposeBag)
     }
 

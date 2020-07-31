@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 protocol ProjectDetailViewModelInputs {
-
+    func deinited()
 }
 
 protocol ProjectDetailViewModelOutputs {
@@ -24,21 +24,30 @@ protocol ProjectDetailViewModelType {
 }
 
 final class ProjectDetailViewModel: ProjectDetailViewModelType,
-    ProjectDetailViewModelInputs, ProjectDetailViewModelOutputs {
+ProjectDetailViewModelInputs, ProjectDetailViewModelOutputs {
 
     // MARK: - Properties
 
     var inputs: ProjectDetailViewModelInputs { return self }
     var outputs: ProjectDetailViewModelOutputs { return self }
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
 
     // MARK: - Inputs
+
+    private let deinitedProperty: PublishRelay<Void> = PublishRelay()
+    func deinited() {
+        deinitedProperty.accept(Void())
+    }
 
     // MARK: - Outputs
 
     // MARK: - Lifecycle
 
     init() {
+
+        deinitedProperty
+            .bind(onNext: { self.disposeBag = DisposeBag() })
+            .disposed(by: disposeBag)
 
     }
 

@@ -12,12 +12,14 @@ import RxCocoa
 
 enum HomeViewControllerData {
     case projectDatail(project: Project)
+
 }
 
 protocol HomeViewModelInputs {
     func showProjectDetail(project: Project)
     func viewWillAppear()
     func refresh()
+    func deinited()
 }
 
 protocol HomeViewModelOutputs {
@@ -38,7 +40,7 @@ final class HomeViewModel: HomeViewModelType, HomeViewModelInputs, HomeViewModel
 
     var inputs: HomeViewModelInputs { return self }
     var outputs: HomeViewModelOutputs { return self }
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
     private let networkService: NetworkServiceType
 
     // MARK: - Inputs
@@ -56,6 +58,11 @@ final class HomeViewModel: HomeViewModelType, HomeViewModelInputs, HomeViewModel
     private let showProjectDetailProperty: PublishRelay<Project> = PublishRelay()
     func showProjectDetail(project: Project) {
         showProjectDetailProperty.accept(project)
+    }
+
+    private let deinitedProperty: PublishRelay<Void> = PublishRelay()
+    func deinited() {
+        deinitedProperty.accept(Void())
     }
 
     // MARK: - Outputs
@@ -112,6 +119,9 @@ final class HomeViewModel: HomeViewModelType, HomeViewModelInputs, HomeViewModel
             .bind(to: presentViewControllerProperty)
             .disposed(by: disposeBag)
 
+        deinitedProperty
+            .bind(onNext: { self.disposeBag = DisposeBag() })
+            .disposed(by: disposeBag)
     }
 
     // MARK: - Functions

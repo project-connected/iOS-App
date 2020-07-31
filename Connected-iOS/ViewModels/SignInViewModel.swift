@@ -14,6 +14,7 @@ protocol SignInViewModelInputs {
     func emailText(email: String)
     func passwordText(password: String)
     func signInButtonClicked()
+    func deinited()
 }
 
 protocol SignInViewModelOutputs {
@@ -33,7 +34,7 @@ final class SignInViewModel: SignInViewModelType, SignInViewModelInputs, SignInV
 
     var inputs: SignInViewModelInputs { return self }
     var outputs: SignInViewModelOutputs { return self }
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
     private let networkService: NetworkServiceType
 
     // MARK: - Inputs
@@ -51,6 +52,11 @@ final class SignInViewModel: SignInViewModelType, SignInViewModelInputs, SignInV
     private let signInButtonClickedProperty: PublishRelay<Void> = PublishRelay()
     func signInButtonClicked() {
         signInButtonClickedProperty.accept(Void())
+    }
+
+    private let deinitedProperty: PublishRelay<Void> = PublishRelay()
+    func deinited() {
+        deinitedProperty.accept(Void())
     }
 
     // MARK: - Outputs
@@ -105,6 +111,9 @@ final class SignInViewModel: SignInViewModelType, SignInViewModelInputs, SignInV
                 }
             }).disposed(by: disposeBag)
 
+        deinitedProperty
+            .bind(onNext: { self.disposeBag = DisposeBag() })
+            .disposed(by: disposeBag)
     }
 
     // MARK: - Functions

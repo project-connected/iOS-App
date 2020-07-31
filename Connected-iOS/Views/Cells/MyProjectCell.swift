@@ -11,7 +11,24 @@ import RxSwift
 import RxCocoa
 
 class MyProjectCell: UITableViewCell, BaseCell {
-    func bindViewModel() {
+
+    // MARK: - UI Properties
+
+    // MARK: - Properties
+
+    var viewModel: ViewModelType? {
+        didSet { bindViewModel() }
+    }
+
+    // MARK: - Lifecycle
+
+    deinit {
+//        viewModel?.inputs.deinited()
+    }
+
+    // MARK: - Functions
+
+    private func bindViewModel() {
 
     }
 
@@ -20,5 +37,6 @@ class MyProjectCell: UITableViewCell, BaseCell {
     }
 
     typealias Item = Int
+    typealias ViewModelType = Int
 
 }

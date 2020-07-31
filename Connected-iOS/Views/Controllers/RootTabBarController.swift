@@ -14,7 +14,7 @@ final class RootTabBarController: UITabBarController {
 
     // MARK: - Properties
 
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
     private let viewModel: RootViewModelType
     private let homeContainerViewControllerFactory: HomeContainerViewController.Factory
     private let myProjectContainerViewControllerFactory: MyProjectContainerViewController.Factory
@@ -54,6 +54,10 @@ final class RootTabBarController: UITabBarController {
         viewModel.inputs.viewDidLoad()
     }
 
+    deinit {
+        viewModel.inputs.deinited()
+    }
+
     // MARK: - Functions
 
     private func setUpLayout() {
@@ -63,9 +67,9 @@ final class RootTabBarController: UITabBarController {
     private func bindViewModel() {
 
         viewModel.outputs.setViewControllers()
-            .map { $0.map(self.viewController(from:)) }
+            .map(viewControllers(from:))
             .map { $0.map(UINavigationController.init(rootViewController:)) }
-            .drive(onNext: { self.setViewControllers($0, animated: false) })
+            .drive(onNext: { [weak self] in self?.setViewControllers($0, animated: false) })
             .disposed(by: disposeBag)
 
         viewModel.outputs.tabBarItems()
@@ -75,6 +79,10 @@ final class RootTabBarController: UITabBarController {
 
     private func bindStyles() {
 
+    }
+
+    private func viewControllers(from data: [RootViewControllerData]) -> [UIViewController] {
+        return data.map(viewController(from:))
     }
 
     private func viewController(from data: RootViewControllerData) -> UIViewController {

@@ -12,6 +12,7 @@ import RxCocoa
 
 protocol ChatRoomCellViewModelInputs {
     func configure(with room: ChatRoom)
+    func deinited()
 }
 
 protocol ChatRoomCellViewModelOutputs {
@@ -33,13 +34,18 @@ ChatRoomCellViewModelInputs, ChatRoomCellViewModelOutputs {
 
     var inputs: ChatRoomCellViewModelInputs { return self }
     var outputs: ChatRoomCellViewModelOutputs { return self }
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
 
     // MARK: - Inputs
 
     private let configureProperty: PublishRelay<ChatRoom> = PublishRelay()
     func configure(with room: ChatRoom) {
         configureProperty.accept(room)
+    }
+
+    private let deinitedProperty: PublishRelay<Void> = PublishRelay()
+    func deinited() {
+        deinitedProperty.accept(Void())
     }
 
     // MARK: - Outputs
@@ -72,6 +78,10 @@ ChatRoomCellViewModelInputs, ChatRoomCellViewModelOutputs {
         chatRoom
             .map { "\($0.id) 일단 방 아이디" }
             .bind(to: roomNameProperty)
+            .disposed(by: disposeBag)
+
+        deinitedProperty
+            .bind(onNext: { self.disposeBag = DisposeBag() })
             .disposed(by: disposeBag)
     }
 

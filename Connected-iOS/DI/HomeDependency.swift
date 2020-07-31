@@ -124,7 +124,6 @@ extension CategoryCell: ConfiguratorModule {
     func configure(dependency: Dependency, payload: Payload) {
         if self.viewModel == nil {
             self.viewModel = dependency.viewModelFactory.create()
-            self.bindViewModel()
         }
         self.configureWith(with: payload.category)
     }
@@ -159,7 +158,6 @@ extension ErrorCell: ConfiguratorModule {
     func configure(dependency: Dependency, payload: Payload) {
         if self.viewModel == nil {
             self.viewModel = dependency.viewModelFactory.create()
-            self.bindViewModel()
         }
         configureWith(with: payload.error)
     }
@@ -215,7 +213,6 @@ extension ProjectCollectionCell: ConfiguratorModule {
         if self.viewModel == nil {
             self.viewModel = dependency.viewModelFactory.create()
             self.dataSource = dependency.projectThumbnailCellDataSource.create()
-            self.bindViewModel()
         }
         self.configureWith(with: payload.themedProjects)
     }
@@ -314,7 +311,6 @@ extension ProjectThumbnailCardCell: ConfiguratorModule {
             self.viewModel = dependency.viewModelFactory.create()
             self.imageLoader = dependency.imageLoader
             self.dataSource = dependency.categoryDataSourceFactory.create()
-            self.bindViewModel()
         }
         self.configureWith(with: payload.project)
     }

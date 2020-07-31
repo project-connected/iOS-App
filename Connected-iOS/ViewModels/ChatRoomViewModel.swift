@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 protocol ChatRoomViewModelInputs {
-
+    func deinited()
 }
 
 protocol ChatRoomViewModelOutputs {
@@ -30,10 +30,15 @@ ChatRoomViewModelInputs, ChatRoomViewModelOutputs {
 
     var inputs: ChatRoomViewModelInputs { return self }
     var outputs: ChatRoomViewModelOutputs { return self }
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
     private let networkService: NetworkServiceType
 
     // MARK: - Inputs
+
+    private let deinitedProperty: PublishRelay<Void> = PublishRelay()
+    func deinited() {
+        deinitedProperty.accept(Void())
+    }
 
     // MARK: - Outputs
 
@@ -44,6 +49,9 @@ ChatRoomViewModelInputs, ChatRoomViewModelOutputs {
     ) {
         self.networkService = networkService
 
+        deinitedProperty
+            .bind(onNext: { self.disposeBag = DisposeBag() })
+            .disposed(by: disposeBag)
     }
 
     // MARK: - Functions

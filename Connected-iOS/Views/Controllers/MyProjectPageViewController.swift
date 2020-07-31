@@ -18,7 +18,7 @@ final class MyProjectPageViewController: UITableViewController {
 
     // MARK: - Properties
 
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
     private let viewModel: MyProjectPageViewModelType
     private let dataSource: BaseDataSource
 
@@ -61,6 +61,10 @@ final class MyProjectPageViewController: UITableViewController {
             label.centerXAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerXAnchor),
             label.centerYAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerYAnchor)
         ])
+    }
+
+    deinit {
+        viewModel.inputs.deinited()
     }
 
     // MARK: - Functions

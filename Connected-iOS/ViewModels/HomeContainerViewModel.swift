@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 protocol HomeContainerViewModelInputs {
-
+ func deinited()
 }
 
 protocol HomeContainerViewModelOutputs {
@@ -30,15 +30,24 @@ final class HomeContainerViewModel: HomeContainerViewModelType,
 
     var inputs: HomeContainerViewModelInputs { return self }
     var outputs: HomeContainerViewModelOutputs { return self }
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
 
     // MARK: - Inputs
+
+    private let deinitedProperty: PublishRelay<Void> = PublishRelay()
+    func deinited() {
+        deinitedProperty.accept(Void())
+    }
 
     // MARK: - Outputs
 
     // MARK: - Lifecycle
 
     init() {
+
+        deinitedProperty
+            .bind(onNext: { self.disposeBag = DisposeBag() })
+            .disposed(by: disposeBag)
 
     }
 

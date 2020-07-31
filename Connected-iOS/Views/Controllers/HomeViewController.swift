@@ -18,7 +18,7 @@ final class HomeViewController: UITableViewController {
 
     // MARK: - Properties
 
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
     private let viewModel: HomeViewModelType
     private let dataSource: HomeDataSource
     private let projectDetailViewControllerFactory: ProjectDetailViewController.Factory
@@ -50,6 +50,10 @@ final class HomeViewController: UITableViewController {
         super.viewWillAppear(animated)
 
         viewModel.inputs.viewWillAppear()
+    }
+
+    deinit {
+        viewModel.inputs.deinited()
     }
 
     // MARK: - Functions

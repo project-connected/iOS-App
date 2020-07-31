@@ -24,7 +24,7 @@ final class SignInViewController: UIViewController {
     // MARK: - Properties
 
     private let viewModel: SignInViewModelType
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
 
     // MARK: - Lifecycle
 
@@ -40,6 +40,10 @@ final class SignInViewController: UIViewController {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        viewModel.inputs.deinited()
     }
 
     // MARK: - Functions

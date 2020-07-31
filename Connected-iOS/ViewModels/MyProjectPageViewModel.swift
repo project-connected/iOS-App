@@ -13,6 +13,7 @@ import RxCocoa
 protocol MyProjectPageViewModelInputs {
     func viewDidLoad()
     func refresh()
+    func deinited()
 }
 
 protocol MyProjectPageViewModelOutputs {
@@ -31,7 +32,7 @@ MyProjectPageViewModelInputs, MyProjectPageViewModelOutputs {
 
     var inputs: MyProjectPageViewModelInputs { return self }
     var outputs: MyProjectPageViewModelOutputs { return self }
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
     private let networkService: NetworkServiceType
 
     // MARK: - Inputs
@@ -44,6 +45,11 @@ MyProjectPageViewModelInputs, MyProjectPageViewModelOutputs {
     private let refreshProperty: PublishRelay<Void> = PublishRelay()
     func refresh() {
         refreshProperty.accept(Void())
+    }
+
+    private let deinitedProperty: PublishRelay<Void> = PublishRelay()
+    func deinited() {
+        deinitedProperty.accept(Void())
     }
 
     // MARK: - Outputs
@@ -75,6 +81,10 @@ MyProjectPageViewModelInputs, MyProjectPageViewModelOutputs {
                     print(error)
                 }
             })
+            .disposed(by: disposeBag)
+
+        deinitedProperty
+            .bind(onNext: { self.disposeBag = DisposeBag() })
             .disposed(by: disposeBag)
     }
 

@@ -25,7 +25,7 @@ final class SignUpViewController: UIViewController {
 
     // MARK: - Properties
 
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
     private let viewModel: SignUpViewModelType
     private let webViewControllerFactory: WebViewController.Factory
 
@@ -47,6 +47,10 @@ final class SignUpViewController: UIViewController {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        viewModel.inputs.deinited()
     }
 
     // MARK: - Functions
@@ -79,7 +83,7 @@ final class SignUpViewController: UIViewController {
         signUpButton.rx.tap
             .asDriver()
             .throttle(.microseconds(500))
-            .drive(onNext: { self.viewModel.inputs.signUpButtonClicked() })
+            .drive(onNext: { [weak self] in self?.viewModel.inputs.signUpButtonClicked() })
             .disposed(by: disposeBag)
 
         agreeSwitch.rx.isOn
@@ -89,7 +93,7 @@ final class SignUpViewController: UIViewController {
 
         termsAndPoliciesButton.rx.tap
             .asDriver()
-            .drive(onNext: { self.viewModel.inputs.termsAndPoliciesClicked() })
+            .drive(onNext: { [weak self] in self?.viewModel.inputs.termsAndPoliciesClicked() })
             .disposed(by: disposeBag)
 
         viewModel.outputs.isSignUpButtonEnabled()
@@ -97,18 +101,19 @@ final class SignUpViewController: UIViewController {
             .disposed(by: disposeBag)
 
         viewModel.outputs.showSignUpErrorMsg()
-            .emit(onNext: { self.showAlert(title: "회원가입 실패", msg: $0, style: .alert) })
+            .emit(onNext: { [weak self] in self?.showAlert(title: "회원가입 실패", msg: $0, style: .alert) })
             .disposed(by: disposeBag)
 
         // TODO: 회원가입 성공 시 로그인 시키기
         viewModel.outputs.signIn()
-            .emit(onNext: { user in
-                self.signUpButton.setTitle("sign in - \(user)", for: .normal)
+            .emit(onNext: { [weak self] user in
+                self?.signUpButton.setTitle("sign in - \(user)", for: .normal)
             })
             .disposed(by: disposeBag)
 
         viewModel.outputs.presentTermsAndPolicies()
-            .emit(onNext: {
+            .emit(onNext: { [weak self] in
+                guard let `self` = self else { return }
                 let viewController = self.webViewControllerFactory.create()
                 self.present(viewController, animated: true, completion: nil)
             })

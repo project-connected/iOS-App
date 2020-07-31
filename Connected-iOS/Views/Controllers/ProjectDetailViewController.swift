@@ -16,8 +16,8 @@ final class ProjectDetailViewController: UIViewController {
 
     // MARK: - Properties
 
+    private var disposeBag = DisposeBag()
     private let viewModel: ProjectDetailViewModelType
-    private let disposeBag = DisposeBag()
 
     // MARK: - Lifecycle
 
@@ -36,6 +36,10 @@ final class ProjectDetailViewController: UIViewController {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        viewModel.inputs.deinited()
     }
 
     // MARK: - Functions
