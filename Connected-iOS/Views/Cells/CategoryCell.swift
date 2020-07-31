@@ -19,7 +19,9 @@ class CategoryCell: UICollectionViewCell, BaseCell {
     // MARK: - Properties
 
     private let disposeBag = DisposeBag()
-    var viewModel: CategoryCellViewModelType?
+    var viewModel: CategoryCellViewModelType? {
+        didSet { bindViewModel() }
+    }
 
     // MARK: - Lifecycle
 
@@ -32,6 +34,10 @@ class CategoryCell: UICollectionViewCell, BaseCell {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        viewModel?.inputs.deinited()
     }
 
     // MARK: - Functions
@@ -61,7 +67,7 @@ class CategoryCell: UICollectionViewCell, BaseCell {
         contentView.layer.cornerRadius = 10
     }
 
-    func bindViewModel() {
+    private func bindViewModel() {
         viewModel?.outputs.category()
             .drive(categoryLabel.rx.text)
             .disposed(by: disposeBag)

@@ -12,6 +12,7 @@ import RxSwift
 
 protocol ErrorCellViewModelInputs {
     func configure(with error: Error)
+    func deinited()
 }
 
 protocol ErrorCellViewModelOutputs {
@@ -31,13 +32,18 @@ ErrorCellViewModelInputs, ErrorCellViewModelOutputs {
 
     var inputs: ErrorCellViewModelInputs { return self }
     var outputs: ErrorCellViewModelOutputs { return self }
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
 
     // MARK: - Inputs
 
     private let configureProperty: PublishRelay<Error> = PublishRelay()
     func configure(with error: Error) {
         configureProperty.accept(error)
+    }
+
+    private let deinitedProperty: PublishRelay<Void> = PublishRelay()
+    func deinited() {
+        deinitedProperty.accept(Void())
     }
 
     // MARK: - Outputs
@@ -66,6 +72,10 @@ ErrorCellViewModelInputs, ErrorCellViewModelOutputs {
         error
             .map { $0.localizedDescription }
             .bind(to: errorMsgProperty)
+            .disposed(by: disposeBag)
+
+        deinitedProperty
+            .bind(onNext: { self.disposeBag = DisposeBag() })
             .disposed(by: disposeBag)
     }
 

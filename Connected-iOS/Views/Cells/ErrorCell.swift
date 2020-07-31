@@ -20,7 +20,9 @@ class ErrorCell: UITableViewCell, BaseCell {
     // MARK: - Properties
 
     private let disposeBag = DisposeBag()
-    var viewModel: ErrorCellViewModelType?
+    var viewModel: ErrorCellViewModelType? {
+        didSet { bindViewModel() }
+    }
 
     // MARK: - Lifecycle
 
@@ -33,6 +35,10 @@ class ErrorCell: UITableViewCell, BaseCell {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        viewModel?.inputs.deinited()
     }
 
     // MARK: - Functions
@@ -66,7 +72,7 @@ class ErrorCell: UITableViewCell, BaseCell {
         errorMsgLabel.backgroundColor = .yellow
     }
 
-    func bindViewModel() {
+    private func bindViewModel() {
 
         viewModel?.outputs.errorTitle()
             .drive(errorTitleLabel.rx.text)

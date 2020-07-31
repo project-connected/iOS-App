@@ -13,6 +13,7 @@ import RxSwift
 protocol ProjectCollectionCellViewModelInputs {
     func projectClicked(project: Project)
     func configure(with themedProjects: ThemedProjects)
+    func deinited()
 }
 
 protocol ProjectCollectionCellViewModelOutputs {
@@ -33,7 +34,7 @@ ProjectCollectionCellViewModelInputs, ProjectCollectionCellViewModelOutputs {
 
     var inputs: ProjectCollectionCellViewModelInputs { return self }
     var outputs: ProjectCollectionCellViewModelOutputs { return self }
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
 
     // MARK: - Inputs
 
@@ -46,6 +47,11 @@ ProjectCollectionCellViewModelInputs, ProjectCollectionCellViewModelOutputs {
     func configure(with themedProjects: ThemedProjects) {
         configureProperty.accept(themedProjects)
     }
+
+     private let deinitedProperty: PublishRelay<Void> = PublishRelay()
+     func deinited() {
+         deinitedProperty.accept(Void())
+     }
 
     // MARK: - Outputs
 
@@ -82,6 +88,10 @@ ProjectCollectionCellViewModelInputs, ProjectCollectionCellViewModelOutputs {
 
         projectClickedProperty
             .bind(to: showProjectDetailProperty)
+            .disposed(by: disposeBag)
+
+        deinitedProperty
+            .bind(onNext: { self.disposeBag = DisposeBag() })
             .disposed(by: disposeBag)
     }
 

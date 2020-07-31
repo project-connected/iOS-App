@@ -18,7 +18,7 @@ final class ChatLobbyViewController: UITableViewController {
 
     // MARK: - Properties
 
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
     private let viewModel: ChatLobbyViewModelType
     private let dataSource: BaseDataSource
     private let chatRoomViewControllerFactory: ChatRoomViewController.Factory
@@ -50,6 +50,10 @@ final class ChatLobbyViewController: UITableViewController {
         super.viewDidLoad()
 
         viewModel.inputs.viewDidLoad()
+    }
+
+    deinit {
+        viewModel.inputs.deinited()
     }
 
     // MARK: - Functions

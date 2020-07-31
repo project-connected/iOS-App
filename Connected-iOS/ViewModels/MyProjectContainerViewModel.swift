@@ -34,6 +34,7 @@ protocol MyProjectContainerViewModelInputs {
     func viewDidAppear()
     func topTabBarItemClicked(index: Int, item: ProjectState)
     func pageTransition(to index: Int)
+    func deinited()
 }
 
 protocol MyProjectContainerViewModelOutputs {
@@ -54,7 +55,7 @@ MyProjectContainerViewModelInputs, MyProjectContainerViewModelOutputs {
 
     var inputs: MyProjectContainerViewModelInputs { return self }
     var outputs: MyProjectContainerViewModelOutputs { return self }
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
 
     // MARK: - Inputs
 
@@ -76,6 +77,11 @@ MyProjectContainerViewModelInputs, MyProjectContainerViewModelOutputs {
     private let pageTransitionProperty: PublishRelay<Int> = PublishRelay()
     func pageTransition(to index: Int) {
         pageTransitionProperty.accept(index)
+    }
+
+    private let deinitedProperty: PublishRelay<Void> = PublishRelay()
+    func deinited() {
+        deinitedProperty.accept(Void())
     }
 
     // MARK: - Outputs
@@ -117,6 +123,10 @@ MyProjectContainerViewModelInputs, MyProjectContainerViewModelOutputs {
 
         index
             .bind(to: selectTopTabBarItemProperty)
+            .disposed(by: disposeBag)
+
+        deinitedProperty
+            .bind(onNext: { self.disposeBag = DisposeBag() })
             .disposed(by: disposeBag)
     }
 

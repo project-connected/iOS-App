@@ -16,7 +16,7 @@ final class MyProjectContainerViewController: UIViewController {
 
     // MARK: - Properties
 
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
     private let viewModel: MyProjectContainerViewModelType
     private let topTabBarViewController: TopTabBarViewController
     private let pageViewController: UIPageViewController = UIPageViewController(
@@ -59,6 +59,10 @@ final class MyProjectContainerViewController: UIViewController {
         super.viewDidAppear(animated)
 
         viewModel.inputs.viewDidAppear()
+    }
+
+    deinit {
+        viewModel.inputs.deinited()
     }
 
     // MARK: - Functions

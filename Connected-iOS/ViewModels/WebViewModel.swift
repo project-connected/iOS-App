@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 protocol WebViewModelInputs {
-
+    func deinited()
 }
 
 protocol WebViewModelOutputs {
@@ -30,9 +30,14 @@ WebViewModelInputs, WebViewModelOutputs {
 
     var inputs: WebViewModelInputs { return self }
     var outputs: WebViewModelOutputs { return self }
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
 
     // MARK: - Inputs
+
+    private let deinitedProperty: PublishRelay<Void> = PublishRelay()
+    func deinited() {
+        deinitedProperty.accept(Void())
+    }
 
     // MARK: - Outputs
 
@@ -40,6 +45,9 @@ WebViewModelInputs, WebViewModelOutputs {
 
     init() {
 
+        deinitedProperty
+            .bind(onNext: { self.disposeBag = DisposeBag() })
+            .disposed(by: disposeBag)
     }
 
     // MARK: - Functions

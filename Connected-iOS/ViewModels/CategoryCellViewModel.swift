@@ -12,6 +12,7 @@ import RxSwift
 
 protocol CategoryCellViewModelInputs {
     func configure(with category: String)
+    func deinited()
 }
 
 protocol CategoryCellViewModelOutputs {
@@ -30,13 +31,18 @@ CategoryCellViewModelInputs, CategoryCellViewModelOutputs {
 
     var inputs: CategoryCellViewModelInputs { return self }
     var outputs: CategoryCellViewModelOutputs { return self }
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
 
     // MARK: - Inputs
 
     private let configureProperty: PublishRelay<String> = PublishRelay()
     func configure(with category: String) {
         configureProperty.accept(category)
+    }
+
+    private let deinitedProperty: PublishRelay<Void> = PublishRelay()
+    func deinited() {
+        deinitedProperty.accept(Void())
     }
 
     // MARK: - Outputs
@@ -52,6 +58,10 @@ CategoryCellViewModelInputs, CategoryCellViewModelOutputs {
         configureProperty
             .bind(to: categoryProperty)
             .disposed(by: disposeBag)
+
+        deinitedProperty
+                  .bind(onNext: { self.disposeBag = DisposeBag() })
+                  .disposed(by: disposeBag)
     }
 
     // MARK: - Functions

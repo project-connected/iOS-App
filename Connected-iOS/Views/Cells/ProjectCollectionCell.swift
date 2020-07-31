@@ -27,8 +27,12 @@ class ProjectCollectionCell: UITableViewCell, BaseCell {
     // MARK: - Properties
 
     private let disposeBag = DisposeBag()
-    var viewModel: ProjectCollectionCellViewModelType?
-    var dataSource: BaseDataSource?
+    var viewModel: ProjectCollectionCellViewModelType? {
+        didSet { bindViewModel() }
+    }
+    var dataSource: BaseDataSource? {
+        didSet { configureCollectionView() }
+    }
     weak var delegate: ProjectCollectionCellDelegate?
 
     // MARK: - Lifecycle
@@ -44,20 +48,21 @@ class ProjectCollectionCell: UITableViewCell, BaseCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        viewModel?.inputs.deinited()
+    }
+
     // MARK: - Functions
 
-    func bindViewModel() {
-
-        configureCollectionView()
-
+    private func bindViewModel() {
         viewModel?.outputs.showProjectDetail()
             .emit(onNext: delegate?.showProjectDetail(project:))
             .disposed(by: disposeBag)
 
         viewModel?.outputs.projects()
-            .drive(onNext: { items in
-                self.dataSource?.set(items: items, cellClass: ProjectThumbnailCardCell.self, section: 0)
-                self.collectionView.reloadData()
+            .drive(onNext: { [weak self] items in
+                self?.dataSource?.set(items: items, cellClass: ProjectThumbnailCardCell.self, section: 0)
+                self?.collectionView.reloadData()
             })
             .disposed(by: disposeBag)
 

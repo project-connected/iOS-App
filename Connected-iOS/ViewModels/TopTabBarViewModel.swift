@@ -14,6 +14,7 @@ protocol TopTabBarViewModelInputs {
     func projectStates(states: [ProjectState])
     func itemClicked(index: Int)
     func selectItem(index: Int)
+    func deinited()
 }
 
 protocol TopTabBarViewModelOutputs {
@@ -34,7 +35,7 @@ TopTabBarViewModelInputs, TopTabBarViewModelOutputs {
 
     var inputs: TopTabBarViewModelInputs { return self }
     var outputs: TopTabBarViewModelOutputs { return self }
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
 
     // MARK: - Inputs
 
@@ -51,6 +52,11 @@ TopTabBarViewModelInputs, TopTabBarViewModelOutputs {
     private let selectItemProperty: PublishRelay<Int> = PublishRelay()
     func selectItem(index: Int) {
         selectItemProperty.accept(index)
+    }
+
+    private let deinitedProperty: PublishRelay<Void> = PublishRelay()
+    func deinited() {
+        deinitedProperty.accept(Void())
     }
 
     // MARK: - Outputs
@@ -88,9 +94,13 @@ TopTabBarViewModelInputs, TopTabBarViewModelOutputs {
             .combineLatest(
                 itemClickedProperty.asObservable(),
                 tabBarItemsProperty.asObservable()
-            )
+        )
             .map { clicked, items in items[clicked] }
             .bind(to: notifyClickedItemProperty)
+            .disposed(by: disposeBag)
+
+        deinitedProperty
+            .bind(onNext: { self.disposeBag = DisposeBag() })
             .disposed(by: disposeBag)
     }
 

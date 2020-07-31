@@ -14,6 +14,7 @@ protocol ChatLobbyViewModelInputs {
     func viewDidLoad()
     func pullToRefresh()
     func chatRoomClicked(chatRoom: ChatRoom)
+    func deinited()
 }
 
 protocol ChatLobbyViewModelOutputs {
@@ -35,7 +36,7 @@ ChatLobbyViewModelInputs, ChatLobbyViewModelOutputs {
 
     var inputs: ChatLobbyViewModelInputs { return self }
     var outputs: ChatLobbyViewModelOutputs { return self }
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
     private let networkService: NetworkServiceType
 
     // MARK: - Inputs
@@ -53,6 +54,11 @@ ChatLobbyViewModelInputs, ChatLobbyViewModelOutputs {
     private let chatRoomClickedProperty: PublishRelay<ChatRoom> = PublishRelay()
     func chatRoomClicked(chatRoom: ChatRoom) {
         chatRoomClickedProperty.accept(chatRoom)
+    }
+
+    private let deinitedProperty: PublishRelay<Void> = PublishRelay()
+    func deinited() {
+        deinitedProperty.accept(Void())
     }
 
     // MARK: - Outputs
@@ -105,6 +111,10 @@ ChatLobbyViewModelInputs, ChatLobbyViewModelOutputs {
 
         chatRoomClickedProperty
             .bind(to: showChatRoomProperty)
+            .disposed(by: disposeBag)
+
+        deinitedProperty
+            .bind(onNext: { self.disposeBag = DisposeBag() })
             .disposed(by: disposeBag)
     }
 

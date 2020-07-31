@@ -19,10 +19,10 @@ final class LogInViewController: UIViewController {
 
     // MARK: - Properties
 
+    private var disposeBag = DisposeBag()
     private let viewModel: LogInViewModelType
     private let signUpViewControllerFactory: SignUpViewController.Factory
     private let signInViewControllerFactory: SignInViewController.Factory
-    private let disposeBag = DisposeBag()
 
     // MARK: - Lifecycle
 
@@ -54,6 +54,10 @@ final class LogInViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+
+    deinit {
+        viewModel.inputs.deinited()
     }
 
     // MARK: - Functions

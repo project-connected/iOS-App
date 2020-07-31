@@ -27,6 +27,7 @@ enum TabBarItem {
 protocol RootViewModelInputs {
     func shouldSelect(index: Int)
     func viewDidLoad()
+     func deinited()
 }
 
 protocol RootViewModelOutputs {
@@ -43,7 +44,7 @@ final class RootViewModel: RootViewModelType, RootViewModelInputs, RootViewModel
 
     var inputs: RootViewModelInputs { return self }
     var outputs: RootViewModelOutputs { return self }
-    let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
 
     // MARK: - Inputs
 
@@ -55,6 +56,11 @@ final class RootViewModel: RootViewModelType, RootViewModelInputs, RootViewModel
     private let viewDidLoadProperty: PublishRelay<Void> = PublishRelay()
     func viewDidLoad() {
         viewDidLoadProperty.accept(Void())
+    }
+
+    private let deinitedProperty: PublishRelay<Void> = PublishRelay()
+    func deinited() {
+        deinitedProperty.accept(Void())
     }
 
     // MARK: - Outputs
@@ -96,6 +102,10 @@ final class RootViewModel: RootViewModelType, RootViewModelInputs, RootViewModel
             .map(tabData)
             .bind(to: tabBarItemsProperty)
             .disposed(by: disposeBag)
+
+               deinitedProperty
+                   .bind(onNext: { self.disposeBag = DisposeBag() })
+                   .disposed(by: disposeBag)
 
     }
 

@@ -12,6 +12,7 @@ import RxSwift
 
 protocol ProjectThumbnailCellViewModelInputs {
     func configure(with project: Project)
+      func deinited()
 }
 
 protocol ProjectThumbnailCellViewModelOutputs {
@@ -32,13 +33,18 @@ ProjectThumbnailCellViewModelInputs, ProjectThumbnailCellViewModelOutputs {
 
     var inputs: ProjectThumbnailCellViewModelInputs { return self }
     var outputs: ProjectThumbnailCellViewModelOutputs { return self }
-    private let disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
 
     // MARK: - Inputs
 
     private let configureProperty: PublishRelay<Project> = PublishRelay()
     func configure(with project: Project) {
         configureProperty.accept(project)
+    }
+
+    private let deinitedProperty: PublishRelay<Void> = PublishRelay()
+    func deinited() {
+        deinitedProperty.accept(Void())
     }
 
     // MARK: - Outputs
@@ -76,6 +82,10 @@ ProjectThumbnailCellViewModelInputs, ProjectThumbnailCellViewModelOutputs {
         project
             .map { $0.categories }
             .bind(to: projectCategoriesProperty)
+            .disposed(by: disposeBag)
+
+        deinitedProperty
+            .bind(onNext: { self.disposeBag = DisposeBag() })
             .disposed(by: disposeBag)
 
     }

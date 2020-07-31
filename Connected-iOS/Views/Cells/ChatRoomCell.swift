@@ -19,7 +19,9 @@ class ChatRoomCell: UITableViewCell, BaseCell {
     // MARK: - Properties
 
     private let disposeBag = DisposeBag()
-    var viewModel: ChatRoomCellViewModelType?
+    var viewModel: ChatRoomCellViewModelType? {
+        didSet { bindViewModel() }
+    }
 
     // MARK: - Lifecycle
 
@@ -32,6 +34,10 @@ class ChatRoomCell: UITableViewCell, BaseCell {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        viewModel?.inputs.deinited()
     }
 
     // MARK: - Functions
@@ -56,7 +62,7 @@ class ChatRoomCell: UITableViewCell, BaseCell {
         roomNameLabel.textAlignment = .center
     }
 
-    func bindViewModel() {
+    private func bindViewModel() {
         viewModel?.outputs.roomName()
             .drive(roomNameLabel.rx.text)
             .disposed(by: disposeBag)

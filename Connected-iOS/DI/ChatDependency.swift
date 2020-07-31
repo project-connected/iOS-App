@@ -126,7 +126,6 @@ extension ChatRoomCell: ConfiguratorModule {
     func configure(dependency: Dependency, payload: Payload) {
         if self.viewModel == nil {
             self.viewModel = dependency.viewModelFactory.create()
-            self.bindViewModel()
         }
         self.configureWith(with: payload.chatRoom)
     }
