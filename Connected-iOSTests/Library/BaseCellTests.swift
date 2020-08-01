@@ -15,7 +15,7 @@ struct MockItem {
 }
 
 class MockCell: BaseCell {
-    typealias Item = MockItem
+    var viewModel: Int?
 
     func configureWith(with item: MockItem) {
 

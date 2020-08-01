@@ -39,6 +39,7 @@
 		0884DB8624BD92E000A2E471 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0884DB8524BD92E000A2E471 /* Assets.xcassets */; };
 		0884DB8924BD92E000A2E471 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0884DB8724BD92E000A2E471 /* LaunchScreen.storyboard */; };
 		08A1809024C7418800EADCE0 /* Result+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A1808F24C7418800EADCE0 /* Result+.swift */; };
+		08AF511E24D581EF00352B70 /* LogInViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08AF511D24D581EF00352B70 /* LogInViewModelTests.swift */; };
 		08C79D5424C7F20600CBDF5F /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C79D5324C7F20600CBDF5F /* UIViewController+Alert.swift */; };
 		08C79D5724C7FFD300CBDF5F /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C79D5624C7FFD300CBDF5F /* SignInViewModel.swift */; };
 		08C79D5924C8013700CBDF5F /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C79D5824C8013700CBDF5F /* SignInViewController.swift */; };
@@ -83,7 +84,6 @@
 		08DEA5C324CD599500222A56 /* HomeDependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5C224CD599500222A56 /* HomeDependency.swift */; };
 		08DEA5C524CD760800222A56 /* TobTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5C424CD760800222A56 /* TobTabBarViewController.swift */; };
 		08DEA5C724CD768700222A56 /* TopTabBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5C624CD768700222A56 /* TopTabBarViewModel.swift */; };
-		08E455BB24C6BB8700E3A4FF /* RootTabBarControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E455BA24C6BB8700E3A4FF /* RootTabBarControllerTests.swift */; };
 		08EDD0B324C2DCD90038D6B9 /* NetworkServiceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EDD0B224C2DCD90038D6B9 /* NetworkServiceType.swift */; };
 		08EDD0B724C2E3140038D6B9 /* RootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EDD0B624C2E3140038D6B9 /* RootViewModel.swift */; };
 		08EDD0B924C2E5BF0038D6B9 /* RootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EDD0B824C2E5BF0038D6B9 /* RootTabBarController.swift */; };
@@ -140,6 +140,7 @@
 		0884DB8F24BD92E000A2E471 /* Connected-iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Connected-iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0884DB9524BD92E000A2E471 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		08A1808F24C7418800EADCE0 /* Result+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Result+.swift"; sourceTree = "<group>"; };
+		08AF511D24D581EF00352B70 /* LogInViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInViewModelTests.swift; sourceTree = "<group>"; };
 		08C79D5324C7F20600CBDF5F /* UIViewController+Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
 		08C79D5624C7FFD300CBDF5F /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 		08C79D5824C8013700CBDF5F /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
@@ -184,7 +185,6 @@
 		08DEA5C224CD599500222A56 /* HomeDependency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDependency.swift; sourceTree = "<group>"; };
 		08DEA5C424CD760800222A56 /* TobTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TobTabBarViewController.swift; sourceTree = "<group>"; };
 		08DEA5C624CD768700222A56 /* TopTabBarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopTabBarViewModel.swift; sourceTree = "<group>"; };
-		08E455BA24C6BB8700E3A4FF /* RootTabBarControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabBarControllerTests.swift; sourceTree = "<group>"; };
 		08EDD0B224C2DCD90038D6B9 /* NetworkServiceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceType.swift; sourceTree = "<group>"; };
 		08EDD0B624C2E3140038D6B9 /* RootViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModel.swift; sourceTree = "<group>"; };
 		08EDD0B824C2E5BF0038D6B9 /* RootTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabBarController.swift; sourceTree = "<group>"; };
@@ -441,7 +441,6 @@
 		08E455B924C6BB4F00E3A4FF /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				08E455BA24C6BB8700E3A4FF /* RootTabBarControllerTests.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -449,6 +448,7 @@
 		08E455BC24C6BFDB00E3A4FF /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				08AF511D24D581EF00352B70 /* LogInViewModelTests.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -807,9 +807,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08AF511E24D581EF00352B70 /* LogInViewModelTests.swift in Sources */,
 				08DEA59924C8993A00222A56 /* BaseCellTests.swift in Sources */,
 				0839A11A24C2058100A15253 /* AppDelegateTests.swift in Sources */,
-				08E455BB24C6BB8700E3A4FF /* RootTabBarControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

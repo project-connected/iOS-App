@@ -17,7 +17,7 @@ enum LogInViewControllerData {
 
 protocol LogInViewModelInputs {
     func signUpClicked()
-    func logInClicked()
+    func signInClicked()
     func deinited()
 }
 
@@ -41,7 +41,7 @@ final class LogInViewModel: LogInViewModelType, LogInViewModelInputs, LogInViewM
     private let btnClickedProperty: PublishRelay<LogInViewControllerData>
         = PublishRelay()
 
-    func logInClicked() {
+    func signInClicked() {
         btnClickedProperty.accept(.signIn)
     }
 
@@ -56,19 +56,21 @@ final class LogInViewModel: LogInViewModelType, LogInViewModelInputs, LogInViewM
 
     // MARK: - Outputs
 
-    private let displayViewControllerProperty: Signal<LogInViewControllerData>
+    private let displayViewControllerProperty: PublishRelay<LogInViewControllerData> = PublishRelay()
     func displayViewController() -> Signal<LogInViewControllerData> {
-        return displayViewControllerProperty
+        return displayViewControllerProperty.asSignal()
     }
 
     // MARK: - Lifecycle
 
     init() {
-        displayViewControllerProperty = btnClickedProperty.asSignal()
+        btnClickedProperty
+            .bind(to: displayViewControllerProperty)
+            .disposed(by: disposeBag)
 
-               deinitedProperty
-                   .bind(onNext: { self.disposeBag = DisposeBag() })
-                   .disposed(by: disposeBag)
+        deinitedProperty
+            .bind(onNext: { self.disposeBag = DisposeBag() })
+            .disposed(by: disposeBag)
     }
 
     // MARK: - Functions

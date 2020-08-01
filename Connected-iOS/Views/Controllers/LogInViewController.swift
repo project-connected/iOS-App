@@ -69,7 +69,7 @@ final class LogInViewController: UIViewController {
             .disposed(by: disposeBag)
 
         signInBtn.rx.tap.asDriver()
-            .drive(onNext: viewModel.inputs.logInClicked)
+            .drive(onNext: viewModel.inputs.signInClicked)
             .disposed(by: disposeBag)
 
         viewModel.outputs.displayViewController()

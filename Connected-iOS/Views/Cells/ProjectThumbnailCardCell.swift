@@ -87,14 +87,6 @@ class ProjectThumbnailCardCell: UICollectionViewCell, BaseCell {
 
     private func bindStyles() {
 
-        self.layer.shadowColor = UIColor.black.cgColor
-        self.layer.shadowOffset = .init(width: 10, height: 10)
-        self.layer.shadowOpacity = 0.5
-        self.layer.shadowRadius = 12
-        self.layer.shadowPath = UIBezierPath(rect: self.bounds).cgPath
-        self.layer.rasterizationScale = UIScreen.main.scale
-        self.layer.shouldRasterize = true
-
         contentView.layer.cornerRadius = 12
         contentView.layer.borderColor = UIColor.black.cgColor
         contentView.layer.borderWidth = 1

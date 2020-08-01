@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 protocol HomeContainerViewModelInputs {
- func deinited()
+    func deinited()
 }
 
 protocol HomeContainerViewModelOutputs {
@@ -24,7 +24,7 @@ protocol HomeContainerViewModelType {
 }
 
 final class HomeContainerViewModel: HomeContainerViewModelType,
-    HomeContainerViewModelInputs, HomeContainerViewModelOutputs {
+HomeContainerViewModelInputs, HomeContainerViewModelOutputs {
 
     // MARK: - Properties
 
