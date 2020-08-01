@@ -16,7 +16,12 @@ struct User {
 extension User {
     typealias AuthToken = String
     typealias Id = Int
+}
 
+extension User: Equatable {
+    static func == (left: User, right: User) -> Bool {
+        return left.id == right.id
+    }
 }
 
 struct SignUpInfo {

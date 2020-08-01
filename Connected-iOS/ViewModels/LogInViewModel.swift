@@ -22,7 +22,7 @@ protocol LogInViewModelInputs {
 }
 
 protocol LogInViewModelOutputs {
-    func displayViewController() -> Signal<LogInViewControllerData>
+    func pushViewController() -> Signal<LogInViewControllerData>
 }
 
 protocol LogInViewModelType {
@@ -56,16 +56,16 @@ final class LogInViewModel: LogInViewModelType, LogInViewModelInputs, LogInViewM
 
     // MARK: - Outputs
 
-    private let displayViewControllerProperty: PublishRelay<LogInViewControllerData> = PublishRelay()
-    func displayViewController() -> Signal<LogInViewControllerData> {
-        return displayViewControllerProperty.asSignal()
+    private let pushViewControllerProperty: PublishRelay<LogInViewControllerData> = PublishRelay()
+    func pushViewController() -> Signal<LogInViewControllerData> {
+        return pushViewControllerProperty.asSignal()
     }
 
     // MARK: - Lifecycle
 
     init() {
         btnClickedProperty
-            .bind(to: displayViewControllerProperty)
+            .bind(to: pushViewControllerProperty)
             .disposed(by: disposeBag)
 
         deinitedProperty

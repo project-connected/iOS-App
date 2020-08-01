@@ -14,7 +14,7 @@ extension AppDependency {
 
     static func resolve() -> AppDependency {
 
-        let networkService: NetworkServiceType = MockNetworkService()
+        let networkService: NetworkServiceType = TestNetworkService()
 //        let analyticsService: AnalyticsServiceType.Type = FirebaseApp.self
         let analyticsService: AnalyticsServiceType.Type = MockAnalyticsService.self
         let imageLoader: ImageLoaderType = KingfisherImageLoader()

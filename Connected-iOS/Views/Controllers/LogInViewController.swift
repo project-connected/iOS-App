@@ -72,7 +72,7 @@ final class LogInViewController: UIViewController {
             .drive(onNext: viewModel.inputs.signInClicked)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.displayViewController()
+        viewModel.outputs.pushViewController()
             .map(viewController(from:))
             .emit(onNext: { self.navigationController?.pushViewController($0, animated: true) })
             .disposed(by: disposeBag)

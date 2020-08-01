@@ -28,7 +28,7 @@ class LogInViewModelTests: XCTestCase {
         disposeBag = DisposeBag()
     }
 
-    func test_signInClicked() {
+    func test_pushViewController() {
         scheduler
             .createHotObservable([
                 .next(0, Void()),
@@ -40,21 +40,6 @@ class LogInViewModelTests: XCTestCase {
             })
             .disposed(by: disposeBag)
 
-        let observer = scheduler.createObserver(LogInViewControllerData.self)
-        viewModel.outputs.displayViewController()
-            .emit(to: observer)
-            .disposed(by: disposeBag)
-
-        scheduler.start()
-
-        expect(observer.events).to(equal([
-            .next(0, LogInViewControllerData.signIn),
-            .next(7, LogInViewControllerData.signIn),
-            .next(909, LogInViewControllerData.signIn)
-        ]))
-    }
-
-    func test_signUpClicked() {
         scheduler
             .createHotObservable([
                 .next(0, Void()),
@@ -67,16 +52,20 @@ class LogInViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         let observer = scheduler.createObserver(LogInViewControllerData.self)
-        viewModel.outputs.displayViewController()
+
+        viewModel.outputs.pushViewController()
             .emit(to: observer)
             .disposed(by: disposeBag)
 
         scheduler.start()
 
         expect(observer.events).to(equal([
+            .next(0, LogInViewControllerData.signIn),
             .next(0, LogInViewControllerData.signUp),
+            .next(7, LogInViewControllerData.signIn),
             .next(300, LogInViewControllerData.signUp),
-            .next(700, LogInViewControllerData.signUp)
+            .next(700, LogInViewControllerData.signUp),
+            .next(909, LogInViewControllerData.signIn)
         ]))
     }
 
@@ -116,7 +105,7 @@ class LogInViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         let observer = scheduler.createObserver(LogInViewControllerData.self)
-        viewModel.outputs.displayViewController()
+        viewModel.outputs.pushViewController()
             .emit(to: observer)
             .disposed(by: disposeBag)
 
