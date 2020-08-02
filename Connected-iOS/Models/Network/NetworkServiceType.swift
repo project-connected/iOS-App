@@ -37,7 +37,7 @@ protocol NetworkServiceType {
     func chatRooms() -> Single<Result<[ChatRoom], NetworkError>>
 }
 
-class MockNetworkService: NetworkServiceType {
+class TestNetworkService: NetworkServiceType {
     func signIn(email: String, password: String) -> Single<Result<User, NetworkError>> {
         if email == "1" {
             return Single.just(.success(User(id: 1, authToken: "auth-token-string")))

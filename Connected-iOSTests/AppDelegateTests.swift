@@ -28,7 +28,7 @@ class AppDelegateTests: XCTestCase {
         let appDelegate = AppDelegate(
             viewModel: AppDelegateViewModel(),
             analyticsService: MockAnalyticsService.self,
-            networkService: MockNetworkService(),
+            networkService: StubNetworkService(),
             rootViewController: ViewController()
         )
 

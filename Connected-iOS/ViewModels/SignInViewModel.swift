@@ -99,9 +99,10 @@ final class SignInViewModel: SignInViewModelType, SignInViewModelInputs, SignInV
 
         signInButtonClickedProperty
             .withLatestFrom(signInData)
-            .flatMap { (email, password) in
+            .flatMap({ (email, password) in
                 return self.networkService.signIn(email: email, password: password)
-        }.subscribeOn(ConcurrentDispatchQueueScheduler(qos: .userInitiated))
+            })
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .userInitiated))
             .bind(onNext: { result in
                 switch result {
                 case .success(let user):
@@ -109,7 +110,8 @@ final class SignInViewModel: SignInViewModelType, SignInViewModelInputs, SignInV
                 case .failure(let error):
                     self.showSignInErrorMsgProperty.accept(error.localizedDescription)
                 }
-            }).disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
 
         deinitedProperty
             .bind(onNext: { self.disposeBag = DisposeBag() })
