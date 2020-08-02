@@ -25,9 +25,17 @@ class SignInViewModelTests: XCTestCase {
         scheduler = TestScheduler(initialClock: 0)
     }
 
+    override func tearDown() {
+        super.tearDown()
+
+        viewModel = nil
+        disposeBag = nil
+        scheduler = nil
+    }
+
     func test_isSignInButtonEnabled() {
         viewModel = SignInViewModel(
-            networkService: MockNetworkService()
+            networkService: StubNetworkService()
         )
 
         scheduler
@@ -78,7 +86,7 @@ class SignInViewModelTests: XCTestCase {
 
     func test_showSignInErrorMsg() {
         viewModel = SignInViewModel(
-            networkService: MockNetworkService(
+            networkService: StubNetworkService(
                 signInResult: Result.failure(NetworkError.just)
             )
         )
@@ -137,7 +145,7 @@ class SignInViewModelTests: XCTestCase {
     func test_signIn() {
         let user = User(id: 0, authToken: "authToken")
         viewModel = SignInViewModel(
-            networkService: MockNetworkService(
+            networkService: StubNetworkService(
                 signInResult: Result.success(user)
             )
         )
@@ -195,7 +203,7 @@ class SignInViewModelTests: XCTestCase {
 
     func test_deinited() {
         viewModel = SignInViewModel(
-            networkService: MockNetworkService()
+            networkService: StubNetworkService()
         )
 
         scheduler

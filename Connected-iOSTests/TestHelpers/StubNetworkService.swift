@@ -1,5 +1,5 @@
 //
-//  MockNetworkService.swift
+//  StubNetworkService.swift
 //  Connected-iOSTests
 //
 //  Created by Jaedoo Ko on 2020/08/01.
@@ -12,7 +12,7 @@ import RxSwift
 import Nimble
 @testable import Connected_iOS
 
-class MockNetworkService: NetworkServiceType {
+class StubNetworkService: NetworkServiceType {
 
     private let signUpResult: Result<User, NetworkError>?
     private let signInResult: Result<User, NetworkError>?

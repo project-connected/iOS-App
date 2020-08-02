@@ -39,9 +39,11 @@
 		0884DB8624BD92E000A2E471 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0884DB8524BD92E000A2E471 /* Assets.xcassets */; };
 		0884DB8924BD92E000A2E471 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0884DB8724BD92E000A2E471 /* LaunchScreen.storyboard */; };
 		08A1809024C7418800EADCE0 /* Result+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A1808F24C7418800EADCE0 /* Result+.swift */; };
+		08AB639D24D6729900898A2D /* SignUpViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08AB639C24D6729900898A2D /* SignUpViewModelTests.swift */; };
+		08AB63A124D683AA00898A2D /* StubUserInfoValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08AB63A024D683AA00898A2D /* StubUserInfoValidator.swift */; };
 		08AF511E24D581EF00352B70 /* LogInViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08AF511D24D581EF00352B70 /* LogInViewModelTests.swift */; };
 		08AF512024D59A4300352B70 /* SignInViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08AF511F24D59A4300352B70 /* SignInViewModelTests.swift */; };
-		08AF512324D59C8A00352B70 /* MockNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08AF512224D59C8A00352B70 /* MockNetworkService.swift */; };
+		08AF512324D59C8A00352B70 /* StubNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08AF512224D59C8A00352B70 /* StubNetworkService.swift */; };
 		08C79D5424C7F20600CBDF5F /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C79D5324C7F20600CBDF5F /* UIViewController+Alert.swift */; };
 		08C79D5724C7FFD300CBDF5F /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C79D5624C7FFD300CBDF5F /* SignInViewModel.swift */; };
 		08C79D5924C8013700CBDF5F /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C79D5824C8013700CBDF5F /* SignInViewController.swift */; };
@@ -142,9 +144,11 @@
 		0884DB8F24BD92E000A2E471 /* Connected-iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Connected-iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0884DB9524BD92E000A2E471 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		08A1808F24C7418800EADCE0 /* Result+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Result+.swift"; sourceTree = "<group>"; };
+		08AB639C24D6729900898A2D /* SignUpViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModelTests.swift; sourceTree = "<group>"; };
+		08AB63A024D683AA00898A2D /* StubUserInfoValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubUserInfoValidator.swift; sourceTree = "<group>"; };
 		08AF511D24D581EF00352B70 /* LogInViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInViewModelTests.swift; sourceTree = "<group>"; };
 		08AF511F24D59A4300352B70 /* SignInViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModelTests.swift; sourceTree = "<group>"; };
-		08AF512224D59C8A00352B70 /* MockNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkService.swift; sourceTree = "<group>"; };
+		08AF512224D59C8A00352B70 /* StubNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubNetworkService.swift; sourceTree = "<group>"; };
 		08C79D5324C7F20600CBDF5F /* UIViewController+Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
 		08C79D5624C7FFD300CBDF5F /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 		08C79D5824C8013700CBDF5F /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
@@ -287,7 +291,8 @@
 		08AF512124D59C5000352B70 /* TestHelpers */ = {
 			isa = PBXGroup;
 			children = (
-				08AF512224D59C8A00352B70 /* MockNetworkService.swift */,
+				08AF512224D59C8A00352B70 /* StubNetworkService.swift */,
+				08AB63A024D683AA00898A2D /* StubUserInfoValidator.swift */,
 			);
 			path = TestHelpers;
 			sourceTree = "<group>";
@@ -463,6 +468,7 @@
 			children = (
 				08AF511D24D581EF00352B70 /* LogInViewModelTests.swift */,
 				08AF511F24D59A4300352B70 /* SignInViewModelTests.swift */,
+				08AB639C24D6729900898A2D /* SignUpViewModelTests.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -822,8 +828,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				08AF512024D59A4300352B70 /* SignInViewModelTests.swift in Sources */,
+				08AB63A124D683AA00898A2D /* StubUserInfoValidator.swift in Sources */,
 				08AF511E24D581EF00352B70 /* LogInViewModelTests.swift in Sources */,
-				08AF512324D59C8A00352B70 /* MockNetworkService.swift in Sources */,
+				08AB639D24D6729900898A2D /* SignUpViewModelTests.swift in Sources */,
+				08AF512324D59C8A00352B70 /* StubNetworkService.swift in Sources */,
 				08DEA59924C8993A00222A56 /* BaseCellTests.swift in Sources */,
 				0839A11A24C2058100A15253 /* AppDelegateTests.swift in Sources */,
 			);

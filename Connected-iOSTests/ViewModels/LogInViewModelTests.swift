@@ -28,6 +28,14 @@ class LogInViewModelTests: XCTestCase {
         disposeBag = DisposeBag()
     }
 
+    override func tearDown() {
+        super.tearDown()
+
+        viewModel = nil
+        scheduler = nil
+        disposeBag = nil
+    }
+
     func test_pushViewController() {
         scheduler
             .createHotObservable([
