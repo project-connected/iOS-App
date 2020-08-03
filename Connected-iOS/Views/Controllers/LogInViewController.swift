@@ -36,14 +36,18 @@ final class LogInViewController: UIViewController {
         self.signInViewControllerFactory = signInViewControllerFactory
 
         super.init(nibName: nil, bundle: nil)
-
-        setUpLayout()
-        bindStyles()
-        bindViewModel()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        setUpLayout()
+        bindStyles()
+        bindViewModel()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -56,20 +60,24 @@ final class LogInViewController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: true)
     }
 
-    deinit {
-        viewModel.inputs.deinited()
-    }
-
     // MARK: - Functions
 
     private func bindViewModel() {
 
-        signUpBtn.rx.tap.asDriver()
-            .drive(onNext: viewModel.inputs.signUpClicked)
+        self.rx.deallocated
+            .bind(onNext: { [weak self] in
+                self?.viewModel.inputs.deinited()
+            })
             .disposed(by: disposeBag)
 
-        signInBtn.rx.tap.asDriver()
-            .drive(onNext: viewModel.inputs.signInClicked)
+        signUpBtn.rx.tap
+            .throttle(.milliseconds(500), scheduler: MainScheduler.instance)
+            .bind(onNext: viewModel.inputs.signUpClicked)
+            .disposed(by: disposeBag)
+
+        signInBtn.rx.tap
+            .throttle(.milliseconds(500), scheduler: MainScheduler.instance)
+            .bind(onNext: viewModel.inputs.signInClicked)
             .disposed(by: disposeBag)
 
         viewModel.outputs.pushViewController()

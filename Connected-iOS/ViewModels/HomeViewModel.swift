@@ -17,7 +17,7 @@ enum HomeViewControllerData {
 
 protocol HomeViewModelInputs {
     func showProjectDetail(project: Project)
-    func viewWillAppear()
+    func viewDidLoad()
     func refresh()
     func deinited()
 }
@@ -45,9 +45,9 @@ final class HomeViewModel: HomeViewModelType, HomeViewModelInputs, HomeViewModel
 
     // MARK: - Inputs
 
-    private let viewWillAppearProperty: PublishRelay<Void> = PublishRelay()
-    func viewWillAppear() {
-        viewWillAppearProperty.accept(Void())
+    private let viewDidLoadProperty: PublishRelay<Void> = PublishRelay()
+    func viewDidLoad() {
+        viewDidLoadProperty.accept(Void())
     }
 
     private let refreshProperty: PublishRelay<Void> = PublishRelay()
@@ -92,12 +92,9 @@ final class HomeViewModel: HomeViewModelType, HomeViewModelInputs, HomeViewModel
     init(networkService: NetworkServiceType) {
         self.networkService = networkService
 
-        let initialRequest = viewWillAppearProperty.take(1)
-
-        let request = Observable.merge(
-            initialRequest,
-            refreshProperty.asObservable()
-        )
+        let request = Observable
+            .of(viewDidLoadProperty, refreshProperty)
+            .merge()
 
         request
             .do(onNext: { self.isRefreshingProperty.accept(true) })

@@ -37,11 +37,6 @@ final class RootTabBarController: UITabBarController {
         self.logInViewControllerFactory = logInViewControllerFactory
 
         super.init(nibName: nil, bundle: nil)
-
-        self.delegate = self
-        setUpLayout()
-        bindStyles()
-        bindViewModel()
     }
 
     required init?(coder: NSCoder) {
@@ -51,11 +46,11 @@ final class RootTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        viewModel.inputs.viewDidLoad()
-    }
+        setUpLayout()
+        bindStyles()
+        bindViewModel()
 
-    deinit {
-        viewModel.inputs.deinited()
+        viewModel.inputs.viewDidLoad()
     }
 
     // MARK: - Functions
@@ -65,6 +60,18 @@ final class RootTabBarController: UITabBarController {
     }
 
     private func bindViewModel() {
+
+        self.rx.deallocated
+            .bind(onNext: { [weak self] in
+                self?.viewModel.inputs.deinited()
+            })
+            .disposed(by: disposeBag)
+
+        self.rx.didSelect
+            .map { [weak self] _ in self?.selectedIndex }
+            .compactMap { $0 }
+            .bind(onNext: viewModel.inputs.didSelect(index:))
+            .disposed(by: disposeBag)
 
         viewModel.outputs.setViewControllers()
             .map(viewControllers(from:))
@@ -115,21 +122,8 @@ final class RootTabBarController: UITabBarController {
 
     private func tabBarItem(at index: Int) -> UITabBarItem? {
         guard index < (tabBar.items?.count ?? 0) else {
-                return nil
+            return nil
         }
         return tabBar.items?[index]
-    }
-}
-
-// MARK: - UITabBarControllerDelegate
-
-extension RootTabBarController: UITabBarControllerDelegate {
-    func tabBarController(
-        _ tabBarController: UITabBarController,
-        shouldSelect viewController: UIViewController
-    ) -> Bool {
-        let index = tabBarController.viewControllers?.firstIndex(of: viewController) ?? 0
-        viewModel.inputs.shouldSelect(index: index)
-        return true
     }
 }

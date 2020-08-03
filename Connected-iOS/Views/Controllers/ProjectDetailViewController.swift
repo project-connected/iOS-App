@@ -28,23 +28,29 @@ final class ProjectDetailViewController: UIViewController {
         self.viewModel = viewModel
 
         super.init(nibName: nil, bundle: nil)
-
-        setUpLayout()
-        bindStyles()
-        bindViewModel()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    deinit {
-        viewModel.inputs.deinited()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        setUpLayout()
+        bindStyles()
+        bindViewModel()
     }
 
     // MARK: - Functions
 
     private func bindViewModel() {
+
+        self.rx.deallocated
+            .bind(onNext: {[weak self] in
+                self?.viewModel.inputs.deinited()
+            })
+            .disposed(by: disposeBag)
 
     }
 

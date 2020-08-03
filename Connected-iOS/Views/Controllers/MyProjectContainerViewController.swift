@@ -38,11 +38,6 @@ final class MyProjectContainerViewController: UIViewController {
         self.dataSource = pageDataSource
 
         super.init(nibName: nil, bundle: nil)
-
-        setUpChildViewController()
-        setUpLayout()
-        bindStyles()
-        bindViewModel()
     }
 
     required init?(coder: NSCoder) {
@@ -52,22 +47,29 @@ final class MyProjectContainerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setUpChildViewController()
+        setUpLayout()
+        bindStyles()
+        bindViewModel()
+
         viewModel.inputs.viewDidLoad()
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        viewModel.inputs.viewDidAppear()
-    }
-
-    deinit {
-        viewModel.inputs.deinited()
     }
 
     // MARK: - Functions
 
     private func bindViewModel() {
+
+        self.rx.viewDidAppear
+            .bind(onNext: { [weak self] in
+                self?.viewModel.inputs.viewDidAppear()
+            })
+            .disposed(by: disposeBag)
+
+        self.rx.deallocated
+            .bind(onNext: {[weak self] in
+                self?.viewModel.inputs.deinited()
+            })
+            .disposed(by: disposeBag)
 
         viewModel.outputs.projectStates()
             .drive(onNext: { states in

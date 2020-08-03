@@ -32,43 +32,47 @@ final class SignInViewController: UIViewController {
         self.viewModel = viewModel
 
         super.init(nibName: nil, bundle: nil)
-
-        self.setUpLayout()
-        self.bindStyles()
-        self.bindViewModel()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    deinit {
-        viewModel.inputs.deinited()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        setUpLayout()
+        bindStyles()
+        bindViewModel()
     }
 
     // MARK: - Functions
 
     private func bindViewModel() {
+
+        self.rx.deallocated
+            .bind(onNext: {[weak self] in
+                self?.viewModel.inputs.deinited()
+            })
+            .disposed(by: disposeBag)
+
         emailTextField.rx.text
             .orEmpty
-            .asDriver()
-            .debounce(.milliseconds(500))
+            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
             .distinctUntilChanged()
-            .drive(onNext: viewModel.inputs.emailText(email:))
+            .bind(onNext: viewModel.inputs.emailText(email:))
             .disposed(by: disposeBag)
 
         passwordTextField.rx.text
             .orEmpty
-            .asDriver()
-            .debounce(.milliseconds(500))
+            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
             .distinctUntilChanged()
-            .drive(onNext: viewModel.inputs.passwordText(password:))
+            .bind(onNext: viewModel.inputs.passwordText(password:))
             .disposed(by: disposeBag)
 
         signInButton.rx.tap
-            .asDriver()
-            .throttle(.microseconds(500))
-            .drive(onNext: { self.viewModel.inputs.signInButtonClicked() })
+            .throttle(.microseconds(500), scheduler: MainScheduler.instance)
+            .bind(onNext: { self.viewModel.inputs.signInButtonClicked() })
             .disposed(by: disposeBag)
 
         viewModel.outputs.isSignInButtonEnabled()

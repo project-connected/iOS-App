@@ -35,30 +35,38 @@ final class HomeViewController: UITableViewController {
         self.projectDetailViewControllerFactory = projectDetailViewControllerFactory
 
         super.init(nibName: nil, bundle: nil)
-
-        configureTableView()
-        setUpLayout()
-        bindStyles()
-        bindViewModel()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
-        viewModel.inputs.viewWillAppear()
-    }
+        configureTableView()
+        setUpLayout()
+        bindStyles()
+        bindViewModel()
 
-    deinit {
-        viewModel.inputs.deinited()
+        viewModel.inputs.viewDidLoad()
     }
 
     // MARK: - Functions
 
     private func bindViewModel() {
+
+        self.rx.deallocated
+            .bind(onNext: {[weak self] in
+                self?.viewModel.inputs.deinited()
+            })
+            .disposed(by: disposeBag)
+
+        refresh.rx.controlEvent(.valueChanged)
+            .bind(onNext: { [weak self] in
+                self?.viewModel.inputs.refresh()
+            })
+            .disposed(by: disposeBag)
 
         viewModel.outputs.themedProjects()
             .drive(onNext: { items in
@@ -113,12 +121,7 @@ final class HomeViewController: UITableViewController {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 500
 
-        refresh.addTarget(self, action: #selector(pullToRefresh(refresh:)), for: .valueChanged)
         refreshControl = refresh
-    }
-
-    @objc func pullToRefresh(refresh: UIRefreshControl) {
-        viewModel.inputs.refresh()
     }
 
     private func viewController(from data: HomeViewControllerData) -> UIViewController {

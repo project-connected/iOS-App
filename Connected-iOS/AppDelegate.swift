@@ -54,8 +54,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         analyticsService.configure()
 
         window = UIWindow()
-        window?.makeKeyAndVisible()
         window?.rootViewController = rootViewController
+        window?.makeKeyAndVisible()
 
         bindViewModel()
 

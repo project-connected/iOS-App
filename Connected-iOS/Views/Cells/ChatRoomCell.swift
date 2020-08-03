@@ -36,10 +36,6 @@ class ChatRoomCell: UITableViewCell, BaseCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    deinit {
-        viewModel?.inputs.deinited()
-    }
-
     // MARK: - Functions
 
     private func setUpLayout() {
@@ -63,6 +59,13 @@ class ChatRoomCell: UITableViewCell, BaseCell {
     }
 
     private func bindViewModel() {
+
+        self.rx.deallocated
+            .bind(onNext: { [weak self] in
+                self?.viewModel?.inputs.deinited()
+            })
+            .disposed(by: disposeBag)
+
         viewModel?.outputs.roomName()
             .drive(roomNameLabel.rx.text)
             .disposed(by: disposeBag)

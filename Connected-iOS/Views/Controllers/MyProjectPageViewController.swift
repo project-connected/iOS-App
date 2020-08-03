@@ -32,12 +32,6 @@ final class MyProjectPageViewController: UITableViewController {
         self.dataSource = dataSource
 
         super.init(nibName: nil, bundle: nil)
-
-        configureTableView()
-        setUpLayout()
-        bindStyles()
-        bindViewModel()
-
     }
 
     required init?(coder: NSCoder) {
@@ -46,8 +40,14 @@ final class MyProjectPageViewController: UITableViewController {
 
     // TODO: - 테스트용 삭제
     private static var pageindex = 0
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        configureTableView()
+        setUpLayout()
+        bindStyles()
+        bindViewModel()
 
         viewModel.inputs.viewDidLoad()
 
@@ -63,13 +63,22 @@ final class MyProjectPageViewController: UITableViewController {
         ])
     }
 
-    deinit {
-        viewModel.inputs.deinited()
-    }
-
     // MARK: - Functions
 
     private func bindViewModel() {
+
+        self.rx.deallocated
+            .bind(onNext: {[weak self] in
+                self?.viewModel.inputs.deinited()
+            })
+            .disposed(by: disposeBag)
+
+        refresh.rx.controlEvent(.valueChanged)
+            .bind(onNext: { [weak self] in
+                self?.viewModel.inputs.refresh()
+            })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.isRefreshing()
             .drive(refresh.rx.isRefreshing)
             .disposed(by: disposeBag)
@@ -88,12 +97,6 @@ final class MyProjectPageViewController: UITableViewController {
         tableView.dataSource = dataSource
         tableView.registerCell(MyProjectCell.self)
 
-        refresh.addTarget(self, action: #selector(pullToRefresh(_:)), for: .valueChanged)
         self.refreshControl = refresh
-    }
-
-    @objc
-    private func pullToRefresh(_ sender: UIRefreshControl) {
-        viewModel.inputs.refresh()
     }
 }

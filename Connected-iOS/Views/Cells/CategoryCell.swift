@@ -36,10 +36,6 @@ class CategoryCell: UICollectionViewCell, BaseCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    deinit {
-        viewModel?.inputs.deinited()
-    }
-
     // MARK: - Functions
 
     private func setUpLayout() {
@@ -68,6 +64,13 @@ class CategoryCell: UICollectionViewCell, BaseCell {
     }
 
     private func bindViewModel() {
+
+        self.rx.deallocated
+            .bind(onNext: { [weak self] in
+                self?.viewModel?.inputs.deinited()
+            })
+            .disposed(by: disposeBag)
+
         viewModel?.outputs.category()
             .drive(categoryLabel.rx.text)
             .disposed(by: disposeBag)

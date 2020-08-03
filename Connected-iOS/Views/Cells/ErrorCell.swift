@@ -37,10 +37,6 @@ class ErrorCell: UITableViewCell, BaseCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    deinit {
-        viewModel?.inputs.deinited()
-    }
-
     // MARK: - Functions
 
     private func setUpLayout() {
@@ -73,6 +69,12 @@ class ErrorCell: UITableViewCell, BaseCell {
     }
 
     private func bindViewModel() {
+
+        self.rx.deallocated
+            .bind(onNext: { [weak self] in
+                self?.viewModel?.inputs.deinited()
+            })
+            .disposed(by: disposeBag)
 
         viewModel?.outputs.errorTitle()
             .drive(errorTitleLabel.rx.text)

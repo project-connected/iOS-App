@@ -39,61 +39,63 @@ final class SignUpViewController: UIViewController {
         self.webViewControllerFactory = webViewControllerFactory
 
         super.init(nibName: nil, bundle: nil)
-
-        setUpLayout()
-        bindStyles()
-        bindViewModel()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    deinit {
-        viewModel.inputs.deinited()
-    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
+        setUpLayout()
+        bindStyles()
+        bindViewModel()
+    }
     // MARK: - Functions
 
     private func bindViewModel() {
+
+        self.rx.deallocated
+            .bind(onNext: { [weak self] in
+                self?.viewModel.inputs.deinited()
+            })
+            .disposed(by: disposeBag)
+
         emailTextField.rx.text
             .orEmpty
-            .asDriver()
-            .debounce(.milliseconds(500))
+            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
             .distinctUntilChanged()
-            .drive(onNext: viewModel.inputs.emailText(email:))
+            .bind(onNext: viewModel.inputs.emailText(email:))
             .disposed(by: disposeBag)
 
         passwordTextField.rx.text
             .orEmpty
-            .asDriver()
-            .debounce(.milliseconds(500))
+            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
             .distinctUntilChanged()
-            .drive(onNext: viewModel.inputs.passwordText(password:))
+            .bind(onNext: viewModel.inputs.passwordText(password:))
             .disposed(by: disposeBag)
 
         nicknameTextField.rx.text
             .orEmpty
-            .asDriver()
-            .debounce(.milliseconds(500))
+            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
             .distinctUntilChanged()
-            .drive(onNext: viewModel.inputs.nicknameText(nickname:))
+            .bind(onNext: viewModel.inputs.nicknameText(nickname:))
             .disposed(by: disposeBag)
 
         signUpButton.rx.tap
-            .asDriver()
-            .throttle(.microseconds(500))
-            .drive(onNext: { [weak self] in self?.viewModel.inputs.signUpButtonClicked() })
+            .throttle(.microseconds(500), scheduler: MainScheduler.instance)
+            .bind(onNext: { [weak self] in self?.viewModel.inputs.signUpButtonClicked() })
             .disposed(by: disposeBag)
 
         agreeSwitch.rx.isOn
-            .asDriver()
-            .drive(onNext: self.viewModel.inputs.termsAndPoliciesAgree(_:))
+            .bind(onNext: self.viewModel.inputs.termsAndPoliciesAgree(_:))
             .disposed(by: disposeBag)
 
         termsAndPoliciesButton.rx.tap
-            .asDriver()
-            .drive(onNext: { [weak self] in self?.viewModel.inputs.termsAndPoliciesClicked() })
+            .bind(onNext: { [weak self] in
+                self?.viewModel.inputs.termsAndPoliciesClicked()
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.isSignUpButtonEnabled()
