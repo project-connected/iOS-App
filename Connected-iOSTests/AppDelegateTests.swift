@@ -23,6 +23,7 @@ class MockAnalyticsService: AnalyticsServiceType {
 }
 
 class StubAppCoordinator: AppCoordinatorType {
+    func clearChildren() { }
     func navigateToHome(navigationController: UINavigationController) { }
     func navigateToMyProject(navigationController: UINavigationController) { }
     func navigateToChat(navigationController: UINavigationController) { }

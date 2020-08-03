@@ -73,7 +73,7 @@
 		08DC441F24D868C600C26B23 /* HomeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DC441E24D868C600C26B23 /* HomeCoordinator.swift */; };
 		08DC442124D868F900C26B23 /* MyProjectCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DC442024D868F900C26B23 /* MyProjectCoordinator.swift */; };
 		08DC442324D8693300C26B23 /* ChatCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DC442224D8693300C26B23 /* ChatCoordinator.swift */; };
-		08DC442524D8695300C26B23 /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DC442424D8695300C26B23 /* ProfileCoordinator.swift */; };
+		08DC442524D8695300C26B23 /* LogInCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DC442424D8695300C26B23 /* LogInCoordinator.swift */; };
 		08DEA59924C8993A00222A56 /* BaseCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA59824C8993A00222A56 /* BaseCellTests.swift */; };
 		08DEA59B24C98EF500222A56 /* ProjectDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA59A24C98EF500222A56 /* ProjectDetailViewController.swift */; };
 		08DEA59D24C9930C00222A56 /* ProjectDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA59C24C9930C00222A56 /* ProjectDetailViewModel.swift */; };
@@ -92,7 +92,7 @@
 		08DEA5BB24CD4EAD00222A56 /* MyProjectContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5BA24CD4EAD00222A56 /* MyProjectContainerViewController.swift */; };
 		08DEA5BD24CD547D00222A56 /* MyProjectContainerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5BC24CD547D00222A56 /* MyProjectContainerViewModel.swift */; };
 		08DEA5BF24CD54CD00222A56 /* MyProjectDependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5BE24CD54CD00222A56 /* MyProjectDependency.swift */; };
-		08DEA5C124CD58F800222A56 /* ProfileDependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5C024CD58F800222A56 /* ProfileDependency.swift */; };
+		08DEA5C124CD58F800222A56 /* LogInDependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5C024CD58F800222A56 /* LogInDependency.swift */; };
 		08DEA5C324CD599500222A56 /* HomeDependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5C224CD599500222A56 /* HomeDependency.swift */; };
 		08DEA5C524CD760800222A56 /* TobTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5C424CD760800222A56 /* TobTabBarViewController.swift */; };
 		08DEA5C724CD768700222A56 /* TopTabBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA5C624CD768700222A56 /* TopTabBarViewModel.swift */; };
@@ -186,7 +186,7 @@
 		08DC441E24D868C600C26B23 /* HomeCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCoordinator.swift; sourceTree = "<group>"; };
 		08DC442024D868F900C26B23 /* MyProjectCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectCoordinator.swift; sourceTree = "<group>"; };
 		08DC442224D8693300C26B23 /* ChatCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCoordinator.swift; sourceTree = "<group>"; };
-		08DC442424D8695300C26B23 /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
+		08DC442424D8695300C26B23 /* LogInCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInCoordinator.swift; sourceTree = "<group>"; };
 		08DEA59824C8993A00222A56 /* BaseCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCellTests.swift; sourceTree = "<group>"; };
 		08DEA59A24C98EF500222A56 /* ProjectDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewController.swift; sourceTree = "<group>"; };
 		08DEA59C24C9930C00222A56 /* ProjectDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewModel.swift; sourceTree = "<group>"; };
@@ -205,7 +205,7 @@
 		08DEA5BA24CD4EAD00222A56 /* MyProjectContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectContainerViewController.swift; sourceTree = "<group>"; };
 		08DEA5BC24CD547D00222A56 /* MyProjectContainerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectContainerViewModel.swift; sourceTree = "<group>"; };
 		08DEA5BE24CD54CD00222A56 /* MyProjectDependency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectDependency.swift; sourceTree = "<group>"; };
-		08DEA5C024CD58F800222A56 /* ProfileDependency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDependency.swift; sourceTree = "<group>"; };
+		08DEA5C024CD58F800222A56 /* LogInDependency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInDependency.swift; sourceTree = "<group>"; };
 		08DEA5C224CD599500222A56 /* HomeDependency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDependency.swift; sourceTree = "<group>"; };
 		08DEA5C424CD760800222A56 /* TobTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TobTabBarViewController.swift; sourceTree = "<group>"; };
 		08DEA5C624CD768700222A56 /* TopTabBarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopTabBarViewModel.swift; sourceTree = "<group>"; };
@@ -447,7 +447,7 @@
 				08DC441E24D868C600C26B23 /* HomeCoordinator.swift */,
 				08DC442024D868F900C26B23 /* MyProjectCoordinator.swift */,
 				08DC442224D8693300C26B23 /* ChatCoordinator.swift */,
-				08DC442424D8695300C26B23 /* ProfileCoordinator.swift */,
+				08DC442424D8695300C26B23 /* LogInCoordinator.swift */,
 			);
 			path = Coordinators;
 			sourceTree = "<group>";
@@ -465,10 +465,10 @@
 			isa = PBXGroup;
 			children = (
 				0850430824C0505300C672C1 /* AppDependency.swift */,
-				08DEA5BE24CD54CD00222A56 /* MyProjectDependency.swift */,
-				08DEA5C024CD58F800222A56 /* ProfileDependency.swift */,
 				08DEA5C224CD599500222A56 /* HomeDependency.swift */,
+				08DEA5BE24CD54CD00222A56 /* MyProjectDependency.swift */,
 				0873E45224D0147B00BFC4B5 /* ChatDependency.swift */,
+				08DEA5C024CD58F800222A56 /* LogInDependency.swift */,
 			);
 			path = DI;
 			sourceTree = "<group>";
@@ -821,7 +821,7 @@
 				0873E45524D01D4900BFC4B5 /* ChatRoomCell.swift in Sources */,
 				08DEA59D24C9930C00222A56 /* ProjectDetailViewModel.swift in Sources */,
 				08CD578B24C53B130066AD1B /* User.swift in Sources */,
-				08DC442524D8695300C26B23 /* ProfileCoordinator.swift in Sources */,
+				08DC442524D8695300C26B23 /* LogInCoordinator.swift in Sources */,
 				08DEA5A424CA938000222A56 /* ProjectCollectionCell.swift in Sources */,
 				08DEA5BD24CD547D00222A56 /* MyProjectContainerViewModel.swift in Sources */,
 				08DC441B24D8473900C26B23 /* Coordinator.swift in Sources */,
@@ -838,7 +838,7 @@
 				08DEA5A624CA98BA00222A56 /* ProjectCollectionCellViewModel.swift in Sources */,
 				08DC441D24D8478200C26B23 /* AppCoordinator.swift in Sources */,
 				0873E44724CFCFB600BFC4B5 /* MyProjectPageViewModel.swift in Sources */,
-				08DEA5C124CD58F800222A56 /* ProfileDependency.swift in Sources */,
+				08DEA5C124CD58F800222A56 /* LogInDependency.swift in Sources */,
 				08EDD0C024C409650038D6B9 /* LogInViewModel.swift in Sources */,
 				08DEA5BF24CD54CD00222A56 /* MyProjectDependency.swift in Sources */,
 				08C79D5924C8013700CBDF5F /* SignInViewController.swift in Sources */,

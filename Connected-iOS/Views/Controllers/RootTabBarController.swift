@@ -84,6 +84,7 @@ final class RootTabBarController: UITabBarController {
     }
 
     private func viewControllers(list: [(RootViewControllerData, UINavigationController)]) -> [UIViewController] {
+        coordinator?.clearChildren()
         return list.map { data, controller in
             switch data {
             case .home:

@@ -21,22 +21,22 @@ final class SignUpViewController: UIViewController {
     private let nicknameTextField: UITextField = UITextField()
     private let termsAndPoliciesButton: UIButton = UIButton()
     private let agreeSwitch: UISwitch = UISwitch()
-    private let signUpButton: UIButton = UIButton(type: .system)
+    private let signUpButton: UIButton = UIButton()
 
     // MARK: - Properties
 
     private var disposeBag = DisposeBag()
     private let viewModel: SignUpViewModelType
-    private let webViewControllerFactory: WebViewController.Factory
+    private weak var coordinator: LogInCoordinatorType?
 
     // MARK: - Lifecycle
 
     init(
         viewModel: SignUpViewModelType,
-        webViewControllerFactory: WebViewController.Factory
+        coordinator: LogInCoordinatorType
     ) {
         self.viewModel = viewModel
-        self.webViewControllerFactory = webViewControllerFactory
+        self.coordinator = coordinator
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -121,9 +121,7 @@ final class SignUpViewController: UIViewController {
 
         viewModel.outputs.presentTermsAndPolicies()
             .emit(onNext: { [weak self] in
-                guard let `self` = self else { return }
-                let viewController = self.webViewControllerFactory.create()
-                self.present(viewController, animated: true, completion: nil)
+                self?.coordinator?.navigateToTermsAndPolicies()
             })
             .disposed(by: disposeBag)
     }

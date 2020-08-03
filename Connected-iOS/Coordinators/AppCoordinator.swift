@@ -9,6 +9,7 @@
 import UIKit
 
 protocol AppCoordinatorType: Coordinator {
+    func clearChildren()
     func navigateToHome(navigationController: UINavigationController)
     func navigateToMyProject(navigationController: UINavigationController)
     func navigateToChat(navigationController: UINavigationController)
@@ -20,12 +21,13 @@ class AppCoordinator: AppCoordinatorType {
 
     // MARK: - Properties
 
+    private var children = [Coordinator]()
     private let window: UIWindow
     private let rootTabBarControllerFactory: RootTabBarControllerFactory
     private let homeCoordinatorFactory: HomeCoordinator.Factory
     private let myProjectCoordinatorFactory: MyProjectCoordinator.Factory
     private let chatCoordinatorFactory: ChatCoordinator.Factory
-    private let logInCoordinatorFactory: LogInCoordinator.Factory
+    private let logInCoordinatorFactory: LogInCoordinatorFactory
 
     // MARK: - Lifecycle
 
@@ -35,7 +37,7 @@ class AppCoordinator: AppCoordinatorType {
         homeCoordinatorFactory: HomeCoordinator.Factory,
         myProjectCoordinatorFactory: MyProjectCoordinator.Factory,
         chatCoordinatorFactory: ChatCoordinator.Factory,
-        logInCoordinatorFactory: LogInCoordinator.Factory
+        logInCoordinatorFactory: @escaping LogInCoordinatorFactory
     ) {
         self.window = window
         self.rootTabBarControllerFactory = rootTabBarControllerFactory
@@ -52,10 +54,15 @@ class AppCoordinator: AppCoordinatorType {
         window.rootViewController = rootViewController
     }
 
+    func clearChildren() {
+        children = []
+    }
+
     func navigateToHome(navigationController: UINavigationController) {
         let coordinator = homeCoordinatorFactory.create(
             payload: .init(navigationController: navigationController)
         )
+        children.append(coordinator)
         coordinator.start()
     }
 
@@ -63,6 +70,7 @@ class AppCoordinator: AppCoordinatorType {
         let coordinator = myProjectCoordinatorFactory.create(
             payload: .init(navigationController: navigationController)
         )
+        children.append(coordinator)
         coordinator.start()
     }
 
@@ -70,13 +78,13 @@ class AppCoordinator: AppCoordinatorType {
         let coordinator = chatCoordinatorFactory.create(
             payload: .init(navigationController: navigationController)
         )
+        children.append(coordinator)
         coordinator.start()
     }
 
     func navigateToLogIn(navigationController: UINavigationController) {
-        let coordinator = logInCoordinatorFactory.create(
-            payload: .init(navigationController: navigationController)
-        )
+        let coordinator = logInCoordinatorFactory(navigationController)
+        children.append(coordinator)
         coordinator.start()
     }
 

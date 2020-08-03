@@ -12,11 +12,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // MARK: - Properties
 
-    var window: UIWindow?
+    var window: UIWindow? = UIWindow()
 
     private let viewModel: AppDelegateViewModelType
     private let analyticsService: AnalyticsServiceType.Type
-    private let appCoordinatorFactory: AppCoordinatorFactory
+    private let appCoordinator: AppCoordinatorType
 
     // MARK: - Lifecycle
 
@@ -24,7 +24,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let dependency = AppDependency.resolve()
         self.viewModel = dependency.viewModelFactory()
         self.analyticsService = dependency.analyticsService
-        self.appCoordinatorFactory = dependency.appCoordinatorFactory
+
+        guard let window = window else {
+            fatalError("UIWindow is nil")
+        }
+        self.appCoordinator = dependency.appCoordinatorFactory(window)
 
         super.init()
     }
@@ -36,7 +40,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) {
         self.viewModel = viewModel
         self.analyticsService = analyticsService
-        self.appCoordinatorFactory = appCoordinatorFactory
+
+        guard let window = window else {
+            fatalError("UIWindow is nil")
+        }
+        self.appCoordinator = appCoordinatorFactory(window)
 
         super.init()
     }
@@ -52,12 +60,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         analyticsService.configure()
 
-        window = UIWindow()
-        if let window = window {
-            window.makeKeyAndVisible()
-            appCoordinatorFactory(window)
-                .start()
-        }
+        window?.makeKeyAndVisible()
+        appCoordinator.start()
 
         return true
     }
