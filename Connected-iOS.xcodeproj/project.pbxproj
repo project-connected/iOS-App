@@ -45,6 +45,7 @@
 		08AF512024D59A4300352B70 /* SignInViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08AF511F24D59A4300352B70 /* SignInViewModelTests.swift */; };
 		08AF512324D59C8A00352B70 /* StubNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08AF512224D59C8A00352B70 /* StubNetworkService.swift */; };
 		08BC2FD124D7D2CB003C3E9A /* UIViewController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BC2FD024D7D2CB003C3E9A /* UIViewController+Rx.swift */; };
+		08BC2FD424D7EE52003C3E9A /* UIViewController+RxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BC2FD324D7EE52003C3E9A /* UIViewController+RxTests.swift */; };
 		08C79D5424C7F20600CBDF5F /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C79D5324C7F20600CBDF5F /* UIViewController+Alert.swift */; };
 		08C79D5724C7FFD300CBDF5F /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C79D5624C7FFD300CBDF5F /* SignInViewModel.swift */; };
 		08C79D5924C8013700CBDF5F /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C79D5824C8013700CBDF5F /* SignInViewController.swift */; };
@@ -151,6 +152,7 @@
 		08AF511F24D59A4300352B70 /* SignInViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModelTests.swift; sourceTree = "<group>"; };
 		08AF512224D59C8A00352B70 /* StubNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubNetworkService.swift; sourceTree = "<group>"; };
 		08BC2FD024D7D2CB003C3E9A /* UIViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Rx.swift"; sourceTree = "<group>"; };
+		08BC2FD324D7EE52003C3E9A /* UIViewController+RxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+RxTests.swift"; sourceTree = "<group>"; };
 		08C79D5324C7F20600CBDF5F /* UIViewController+Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
 		08C79D5624C7FFD300CBDF5F /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 		08C79D5824C8013700CBDF5F /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
@@ -426,6 +428,7 @@
 			isa = PBXGroup;
 			children = (
 				08DEA59824C8993A00222A56 /* BaseCellTests.swift */,
+				08BC2FD324D7EE52003C3E9A /* UIViewController+RxTests.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -837,6 +840,7 @@
 				08AB639D24D6729900898A2D /* SignUpViewModelTests.swift in Sources */,
 				08AF512324D59C8A00352B70 /* StubNetworkService.swift in Sources */,
 				08DEA59924C8993A00222A56 /* BaseCellTests.swift in Sources */,
+				08BC2FD424D7EE52003C3E9A /* UIViewController+RxTests.swift in Sources */,
 				0839A11A24C2058100A15253 /* AppDelegateTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

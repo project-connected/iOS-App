@@ -17,6 +17,23 @@ enum RootViewControllerData {
     case profile(isLoggedIn: Bool)
 }
 
+extension RootViewControllerData: Equatable {
+    static func == (left: RootViewControllerData, right: RootViewControllerData) -> Bool {
+        switch (left, right) {
+        case (.home, .home):
+            return true
+        case (.myProject, .myProject):
+            return true
+        case (.chat, .chat):
+            return true
+        case (.profile(let leftIsLoggedIn), .profile(let rightIsLoggedIn)):
+            return leftIsLoggedIn == rightIsLoggedIn
+        default:
+            return false
+        }
+    }
+}
+
 enum TabBarItem {
     case home(index: Int)
     case myProject(index: Int)
@@ -27,7 +44,7 @@ enum TabBarItem {
 protocol RootViewModelInputs {
     func didSelect(index: Int)
     func viewDidLoad()
-     func deinited()
+    func deinited()
 }
 
 protocol RootViewModelOutputs {
@@ -90,22 +107,26 @@ final class RootViewModel: RootViewModelType, RootViewModelInputs, RootViewModel
             .map(generateStandardViewControllers)
 
         let personalizedViewControllers = currentUser.filter { $0 != nil }
-            .distinctUntilChanged(==)
+            .distinctUntilChanged()
             .map { self.generatePersonalizedViewControllers(isLoggedIn: $0!) }
 
-        Observable.combineLatest(standardViewControllers, personalizedViewControllers)
+        let viewControllers = Observable
+            .combineLatest(standardViewControllers, personalizedViewControllers)
             .map(+)
+            .distinctUntilChanged()
+
+        viewControllers
             .bind(to: setViewControllersProperty)
             .disposed(by: disposeBag)
 
-        viewDidLoadProperty
+        viewControllers
             .map(tabData)
             .bind(to: tabBarItemsProperty)
             .disposed(by: disposeBag)
 
-               deinitedProperty
-                   .bind(onNext: { self.disposeBag = DisposeBag() })
-                   .disposed(by: disposeBag)
+        deinitedProperty
+            .bind(onNext: { self.disposeBag = DisposeBag() })
+            .disposed(by: disposeBag)
 
     }
 
@@ -119,7 +140,18 @@ final class RootViewModel: RootViewModelType, RootViewModelInputs, RootViewModel
         return [.myProject, .chat, .profile(isLoggedIn: isLoggedIn)]
     }
 
-    private func tabData() -> [TabBarItem] {
-        return [.home(index: 0), .myProject(index: 1), .chat(index: 2), .profile(index: 3)]
+    private func tabData(_ dataList: [RootViewControllerData]) -> [TabBarItem] {
+        return dataList.enumerated().map { index, data in
+            switch data {
+            case .home:
+                return .home(index: index)
+            case .myProject:
+                return .myProject(index: index)
+            case .chat:
+                return .chat(index: index)
+            case .profile:
+                return .profile(index: index)
+            }
+        }
     }
 }

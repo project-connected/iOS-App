@@ -35,15 +35,21 @@ final class ChatLobbyViewController: UITableViewController {
         self.chatRoomViewControllerFactory = chatRoomViewControllerFactory
 
         super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
         configureTableView()
         setUpLayout()
         bindStyles()
         bindViewModel()
-    }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        viewModel.inputs.viewDidLoad()
     }
 
     // MARK: - Functions
@@ -60,24 +66,18 @@ final class ChatLobbyViewController: UITableViewController {
 
     private func bindViewModel() {
 
-        self.rx.viewDidLoad
-            .bind(onNext: { [weak self] in
-                self?.viewModel.inputs.viewDidLoad()
-            })
-            .disposed(by: disposeBag)
-        
         self.rx.deallocated
             .bind(onNext: { [weak self] in
                 self?.viewModel.inputs.deinited()
             })
             .disposed(by: disposeBag)
-        
+
         refresh.rx.controlEvent(.valueChanged)
             .bind(onNext: { [weak self] in
                 self?.viewModel.inputs.pullToRefresh()
             })
             .disposed(by: disposeBag)
-        
+
         tableView.rx.itemSelected
             .map { [weak self] in self?.dataSource[$0] }
             .compactMap { $0 as? ChatRoom }
