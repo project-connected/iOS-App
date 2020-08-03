@@ -44,6 +44,7 @@
 		08AF511E24D581EF00352B70 /* LogInViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08AF511D24D581EF00352B70 /* LogInViewModelTests.swift */; };
 		08AF512024D59A4300352B70 /* SignInViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08AF511F24D59A4300352B70 /* SignInViewModelTests.swift */; };
 		08AF512324D59C8A00352B70 /* StubNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08AF512224D59C8A00352B70 /* StubNetworkService.swift */; };
+		08BC2FD124D7D2CB003C3E9A /* UIViewController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BC2FD024D7D2CB003C3E9A /* UIViewController+Rx.swift */; };
 		08C79D5424C7F20600CBDF5F /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C79D5324C7F20600CBDF5F /* UIViewController+Alert.swift */; };
 		08C79D5724C7FFD300CBDF5F /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C79D5624C7FFD300CBDF5F /* SignInViewModel.swift */; };
 		08C79D5924C8013700CBDF5F /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C79D5824C8013700CBDF5F /* SignInViewController.swift */; };
@@ -149,6 +150,7 @@
 		08AF511D24D581EF00352B70 /* LogInViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInViewModelTests.swift; sourceTree = "<group>"; };
 		08AF511F24D59A4300352B70 /* SignInViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModelTests.swift; sourceTree = "<group>"; };
 		08AF512224D59C8A00352B70 /* StubNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubNetworkService.swift; sourceTree = "<group>"; };
+		08BC2FD024D7D2CB003C3E9A /* UIViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Rx.swift"; sourceTree = "<group>"; };
 		08C79D5324C7F20600CBDF5F /* UIViewController+Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
 		08C79D5624C7FFD300CBDF5F /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 		08C79D5824C8013700CBDF5F /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
@@ -496,6 +498,7 @@
 				08C79D7124C8530A00CBDF5F /* BaseCell.swift */,
 				08DEA5AB24CAC4F800222A56 /* UITableView+.swift */,
 				087AC07724D1B0A000CAAF9E /* UITextField+.swift */,
+				08BC2FD024D7D2CB003C3E9A /* UIViewController+Rx.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -759,6 +762,7 @@
 				08DEA5AA24CABB3700222A56 /* HomeDataSource.swift in Sources */,
 				0873E44924CFD5BE00BFC4B5 /* MyProjectCell.swift in Sources */,
 				08DEA5B624CBFB7A00222A56 /* CategoryCellViewModel.swift in Sources */,
+				08BC2FD124D7D2CB003C3E9A /* UIViewController+Rx.swift in Sources */,
 				087AC07624D16DB600CAAF9E /* ChatRoomViewModel.swift in Sources */,
 				08CD578924C469FF0066AD1B /* SignUpViewModel.swift in Sources */,
 				0873E44B24CFD64100BFC4B5 /* MyProjectDataSource.swift in Sources */,

@@ -46,16 +46,6 @@ final class ChatLobbyViewController: UITableViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        viewModel.inputs.viewDidLoad()
-    }
-
-    deinit {
-        viewModel.inputs.deinited()
-    }
-
     // MARK: - Functions
 
     private func configureTableView() {
@@ -65,11 +55,37 @@ final class ChatLobbyViewController: UITableViewController {
         tableView.registerCell(ErrorCell.self)
         tableView.rowHeight = 80
 
-        refresh.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
         refreshControl = refresh
     }
 
     private func bindViewModel() {
+
+        self.rx.viewDidLoad
+            .bind(onNext: { [weak self] in
+                self?.viewModel.inputs.viewDidLoad()
+            })
+            .disposed(by: disposeBag)
+        
+        self.rx.deallocated
+            .bind(onNext: { [weak self] in
+                self?.viewModel.inputs.deinited()
+            })
+            .disposed(by: disposeBag)
+        
+        refresh.rx.controlEvent(.valueChanged)
+            .bind(onNext: { [weak self] in
+                self?.viewModel.inputs.pullToRefresh()
+            })
+            .disposed(by: disposeBag)
+        
+        tableView.rx.itemSelected
+            .map { [weak self] in self?.dataSource[$0] }
+            .compactMap { $0 as? ChatRoom }
+            .bind(onNext: { [weak self] in
+                self?.viewModel.inputs.chatRoomClicked(chatRoom: $0)
+            })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.chatRooms()
             .drive(onNext: { rooms in
                 self.dataSource.set(
@@ -112,15 +128,5 @@ final class ChatLobbyViewController: UITableViewController {
 
     private func setUpLayout() {
 
-    }
-
-    @objc
-    private func pullToRefresh(_ sender: UIRefreshControl) {
-        viewModel.inputs.pullToRefresh()
-    }
-
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let room = dataSource[indexPath] as? ChatRoom else { return }
-        viewModel.inputs.chatRoomClicked(chatRoom: room)
     }
 }

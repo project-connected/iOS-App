@@ -11,11 +11,11 @@ import RxSwift
 import RxCocoa
 
 final class MyProjectContainerViewController: UIViewController {
-
+    
     // MARK: - UI Properties
-
+    
     // MARK: - Properties
-
+    
     private var disposeBag = DisposeBag()
     private let viewModel: MyProjectContainerViewModelType
     private let topTabBarViewController: TopTabBarViewController
@@ -25,9 +25,9 @@ final class MyProjectContainerViewController: UIViewController {
         options: nil
     )
     private let dataSource: MyProjectPageDataSource
-
+    
     // MARK: - Lifecycle
-
+    
     init(
         viewModel: MyProjectContainerViewModelType,
         topTabBarViewController: TopTabBarViewController,
@@ -36,46 +36,48 @@ final class MyProjectContainerViewController: UIViewController {
         self.viewModel = viewModel
         self.topTabBarViewController = topTabBarViewController
         self.dataSource = pageDataSource
-
+        
         super.init(nibName: nil, bundle: nil)
-
+        
         setUpChildViewController()
         setUpLayout()
         bindStyles()
         bindViewModel()
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        viewModel.inputs.viewDidLoad()
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        viewModel.inputs.viewDidAppear()
-    }
-
-    deinit {
-        viewModel.inputs.deinited()
-    }
-
+    
     // MARK: - Functions
-
+    
     private func bindViewModel() {
-
+        
+        self.rx.viewDidLoad
+            .bind(onNext: { [weak self] in
+                self?.viewModel.inputs.viewDidLoad()
+            })
+            .disposed(by: disposeBag)
+        
+        self.rx.viewDidAppear
+            .bind(onNext: { [weak self] in
+                self?.viewModel.inputs.viewDidAppear()
+            })
+            .disposed(by: disposeBag)
+        
+        self.rx.deallocated
+            .bind(onNext: {[weak self] in
+                self?.viewModel.inputs.deinited()
+            })
+            .disposed(by: disposeBag)
+        
         viewModel.outputs.projectStates()
             .drive(onNext: { states in
                 self.topTabBarViewController.setProjectStates(projectStates: states)
                 self.dataSource.setProjectStates(projectStates: states)
             })
             .disposed(by: disposeBag)
-
+        
         viewModel.outputs.pageToIndex()
             .emit(onNext: { (index, direction) in
                 guard let viewController = self.dataSource.getViewController(at: index) else { return }
@@ -87,40 +89,40 @@ final class MyProjectContainerViewController: UIViewController {
                 )
             })
             .disposed(by: disposeBag)
-
+        
         viewModel.outputs.selectTopTabBarItem()
             .emit(onNext: topTabBarViewController.selectItem(index:))
             .disposed(by: disposeBag)
     }
-
+    
     private func bindStyles() {
         view.backgroundColor = .white
     }
-
+    
     private func setUpLayout() {
         [topTabBarViewController.view, pageViewController.view]
             .compactMap { $0 }
             .addSubviews(parent: self.view)
             .setTranslatesAutoresizingMaskIntoConstraints()
-
+        
         NSLayoutConstraint.activate([
             topTabBarViewController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             topTabBarViewController.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             topTabBarViewController.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             topTabBarViewController.view.heightAnchor.constraint(equalToConstant: 60),
-
+            
             pageViewController.view.topAnchor.constraint(equalTo: topTabBarViewController.view.bottomAnchor),
             pageViewController.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             pageViewController.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             pageViewController.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
     }
-
+    
     private func setUpChildViewController() {
         topTabBarViewController.delegate = self
         addChild(topTabBarViewController)
         topTabBarViewController.didMove(toParent: self)
-
+        
         pageViewController.delegate = self
         pageViewController.dataSource = dataSource
         addChild(pageViewController)
@@ -145,5 +147,5 @@ extension MyProjectContainerViewController: UIPageViewControllerDelegate {
         guard let index = dataSource.indexAt(viewController) else { return }
         viewModel.inputs.pageTransition(to: index)
     }
-
+    
 }

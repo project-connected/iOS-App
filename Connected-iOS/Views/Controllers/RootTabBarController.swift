@@ -11,18 +11,18 @@ import RxCocoa
 import RxSwift
 
 final class RootTabBarController: UITabBarController {
-
+    
     // MARK: - Properties
-
+    
     private var disposeBag = DisposeBag()
     private let viewModel: RootViewModelType
     private let homeContainerViewControllerFactory: HomeContainerViewController.Factory
     private let myProjectContainerViewControllerFactory: MyProjectContainerViewController.Factory
     private let chatLobbyViewControllerFactory: ChatLobbyViewController.Factory
     private let logInViewControllerFactory: LogInViewController.Factory
-
+    
     // MARK: - Lifecycle
-
+    
     init(
         viewModel: RootViewModelType,
         homeContainerViewControllerFactory: HomeContainerViewController.Factory,
@@ -35,56 +35,63 @@ final class RootTabBarController: UITabBarController {
         self.myProjectContainerViewControllerFactory = myProjectContainerViewControllerFactory
         self.chatLobbyViewControllerFactory = chatLobbyViewControllerFactory
         self.logInViewControllerFactory = logInViewControllerFactory
-
+        
         super.init(nibName: nil, bundle: nil)
-
-        self.delegate = self
+        
         setUpLayout()
         bindStyles()
         bindViewModel()
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        viewModel.inputs.viewDidLoad()
-    }
-
-    deinit {
-        viewModel.inputs.deinited()
-    }
-
+    
     // MARK: - Functions
-
+    
     private func setUpLayout() {
-
+        
     }
-
+    
     private func bindViewModel() {
-
+        
+        self.rx.viewDidLoad
+            .bind(onNext: { [weak self] in
+                self?.viewModel.inputs.viewDidLoad()
+            })
+            .disposed(by: disposeBag)
+        
+        self.rx.deallocated
+            .bind(onNext: { [weak self] in
+                self?.viewModel.inputs.deinited()
+            })
+            .disposed(by: disposeBag)
+        
+        self.rx.didSelect
+            .map{ [weak self] _ in self?.selectedIndex }
+            .compactMap { $0 }
+            .bind(onNext: viewModel.inputs.didSelect(index:))
+            .disposed(by: disposeBag)
+        
         viewModel.outputs.setViewControllers()
             .map(viewControllers(from:))
             .map { $0.map(UINavigationController.init(rootViewController:)) }
             .drive(onNext: { [weak self] in self?.setViewControllers($0, animated: false) })
             .disposed(by: disposeBag)
-
+        
         viewModel.outputs.tabBarItems()
             .drive(onNext: setTabBarItemStyles(items:))
             .disposed(by: disposeBag)
     }
-
+    
     private func bindStyles() {
-
+        
     }
-
+    
     private func viewControllers(from data: [RootViewControllerData]) -> [UIViewController] {
         return data.map(viewController(from:))
     }
-
+    
     private func viewController(from data: RootViewControllerData) -> UIViewController {
         switch data {
         case .home:
@@ -97,7 +104,7 @@ final class RootTabBarController: UITabBarController {
             return isLoggedIn ? ViewController2() : logInViewControllerFactory.create()
         }
     }
-
+    
     private func setTabBarItemStyles(items: [TabBarItem]) {
         items.forEach { item in
             switch item {
@@ -112,24 +119,11 @@ final class RootTabBarController: UITabBarController {
             }
         }
     }
-
+    
     private func tabBarItem(at index: Int) -> UITabBarItem? {
         guard index < (tabBar.items?.count ?? 0) else {
-                return nil
+            return nil
         }
         return tabBar.items?[index]
-    }
-}
-
-// MARK: - UITabBarControllerDelegate
-
-extension RootTabBarController: UITabBarControllerDelegate {
-    func tabBarController(
-        _ tabBarController: UITabBarController,
-        shouldSelect viewController: UIViewController
-    ) -> Bool {
-        let index = tabBarController.viewControllers?.firstIndex(of: viewController) ?? 0
-        viewModel.inputs.shouldSelect(index: index)
-        return true
     }
 }

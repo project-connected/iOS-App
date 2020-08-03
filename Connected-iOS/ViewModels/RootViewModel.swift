@@ -25,7 +25,7 @@ enum TabBarItem {
 }
 
 protocol RootViewModelInputs {
-    func shouldSelect(index: Int)
+    func didSelect(index: Int)
     func viewDidLoad()
      func deinited()
 }
@@ -48,9 +48,9 @@ final class RootViewModel: RootViewModelType, RootViewModelInputs, RootViewModel
 
     // MARK: - Inputs
 
-    private let shouldSelectProperty: PublishRelay<Int> = PublishRelay()
-    func shouldSelect(index: Int) {
-        shouldSelectProperty.accept(index)
+    private let didSelectProperty: PublishRelay<Int> = PublishRelay()
+    func didSelect(index: Int) {
+        didSelectProperty.accept(index)
     }
 
     private let viewDidLoadProperty: PublishRelay<Void> = PublishRelay()
