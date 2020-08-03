@@ -19,44 +19,47 @@ extension AppDependency {
         let analyticsService: AnalyticsServiceType.Type = MockAnalyticsService.self
         let imageLoader: ImageLoaderType = KingfisherImageLoader()
 
-        let homeContainerViewControllerFactory = resolveHomeContainerDependencies(
+        let homeCoordinatorFactory = resolveHomeDependencies(
             networkService: networkService,
             imageLoader: imageLoader
         )
 
-        let myProjectContainerViewControllerFactory = resolveMyProjectContainerDependencies(
+        let myProjectCoordinatorFactory = resolveMyProjectDependencies(
             networkService: networkService,
             imageLoader: imageLoader
         )
 
-        let chatLobbyViewControllerFactory = resolveChatDependencies(
+        let chatCoordinatorFactory = resolveChatDependencies(
             networkService: networkService,
             imageLoader: imageLoader
         )
 
-        let loginViewControllerFactory = resolveLogInDependencies(
+        let loginCoordinatorFactory = resolveLogInDependencies(
             networkService: networkService
         )
 
-        let rootTabBarControllerFactory: RootTabBarController.Factory = .init(
-            dependency: .init(
-                viewModelFactory: .init(
-                    dependency: .init()
-                ),
-                homeContainerViewControllerFactory: homeContainerViewControllerFactory,
-                myProjectContainerViewControllerFactory: myProjectContainerViewControllerFactory,
-                chatLobbyViewControllerFactory: chatLobbyViewControllerFactory,
-                loginViewControllerFactory: loginViewControllerFactory
+        let rootTabBarControllerFactory: RootTabBarControllerFactory = { coordinator in
+            RootTabBarController(
+                viewModel: RootViewModel(),
+                coordinator: coordinator
             )
-        )
+        }
+
+        let appCoordinatorFactory: AppCoordinatorFactory = { window in
+            AppCoordinator(
+                window: window,
+                rootTabBarControllerFactory: rootTabBarControllerFactory,
+                homeCoordinatorFactory: homeCoordinatorFactory,
+                myProjectCoordinatorFactory: myProjectCoordinatorFactory,
+                chatCoordinatorFactory: chatCoordinatorFactory,
+                logInCoordinatorFactory: loginCoordinatorFactory
+            )
+        }
 
         return AppDependency(
-            viewModelFactory: .init(
-                dependency: .init()
-            ),
+            viewModelFactory: { AppDelegateViewModel() },
             analyticsService: analyticsService,
-            networkService: networkService,
-            rootViewController: rootTabBarControllerFactory.create()
+            appCoordinatorFactory: appCoordinatorFactory
         )
     }
 
@@ -65,71 +68,14 @@ extension AppDependency {
 // MARK: - AppDependency
 
 struct AppDependency {
-    let viewModelFactory: AppDelegateViewModel.Factory
+    let viewModelFactory: AppDelegateViewModelFactory
     let analyticsService: AnalyticsServiceType.Type
-    let networkService: NetworkServiceType
-    let rootViewController: UIViewController
+    let appCoordinatorFactory: AppCoordinatorFactory
 }
 
-// MARK: - AppDelegateViewModel
+typealias AppDelegateViewModelFactory = () -> AppDelegateViewModelType
 
-extension AppDelegateViewModel: FactoryModule {
-    convenience init(dependency: Dependency, payload: ()) {
-        self.init(dependency: dependency)
-    }
+typealias AppCoordinatorFactory = (UIWindow) -> AppCoordinatorType
 
-    struct Dependency {
-
-    }
-}
-
-extension Factory where Module == AppDelegateViewModel {
-    func create() -> AppDelegateViewModelType {
-        let module = Module()
-        return module
-    }
-}
-
-// MARK: - RootViewModel
-
-extension RootViewModel: FactoryModule {
-    convenience init(dependency: Dependency, payload: ()) {
-        self.init(dependency: dependency)
-    }
-
-    struct Dependency {
-
-    }
-}
-
-extension Factory where Module == RootViewModel {
-    func create() -> RootViewModelType {
-        let module = Module()
-        return module
-    }
-}
-
-// MARK: - RootTabBarController
-
-extension RootTabBarController: FactoryModule {
-    struct Dependency {
-        let viewModelFactory: RootViewModel.Factory
-        let homeContainerViewControllerFactory: HomeContainerViewController.Factory
-        let myProjectContainerViewControllerFactory: MyProjectContainerViewController.Factory
-        let chatLobbyViewControllerFactory: ChatLobbyViewController.Factory
-        let loginViewControllerFactory: LogInViewController.Factory
-    }
-}
-
-extension Factory where Module == RootTabBarController {
-    func create() -> UIViewController {
-        let module = Module(
-            viewModel: dependency.viewModelFactory.create(),
-            homeContainerViewControllerFactory: dependency.homeContainerViewControllerFactory,
-            myProjectContainerViewControllerFactory: dependency.myProjectContainerViewControllerFactory,
-            chatLobbyViewControllerFactory: dependency.chatLobbyViewControllerFactory,
-            logInViewControllerFactory: dependency.loginViewControllerFactory
-        )
-        return module
-    }
-}
+typealias RootViewModelFactory = () -> RootViewModelType
+typealias RootTabBarControllerFactory = (AppCoordinatorType) -> RootTabBarController

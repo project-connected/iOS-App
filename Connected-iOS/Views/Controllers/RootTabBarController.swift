@@ -16,25 +16,16 @@ final class RootTabBarController: UITabBarController {
 
     private var disposeBag = DisposeBag()
     private let viewModel: RootViewModelType
-    private let homeContainerViewControllerFactory: HomeContainerViewController.Factory
-    private let myProjectContainerViewControllerFactory: MyProjectContainerViewController.Factory
-    private let chatLobbyViewControllerFactory: ChatLobbyViewController.Factory
-    private let logInViewControllerFactory: LogInViewController.Factory
+    private weak var coordinator: AppCoordinatorType?
 
     // MARK: - Lifecycle
 
     init(
         viewModel: RootViewModelType,
-        homeContainerViewControllerFactory: HomeContainerViewController.Factory,
-        myProjectContainerViewControllerFactory: MyProjectContainerViewController.Factory,
-        chatLobbyViewControllerFactory: ChatLobbyViewController.Factory,
-        logInViewControllerFactory: LogInViewController.Factory
+        coordinator: AppCoordinatorType
     ) {
         self.viewModel = viewModel
-        self.homeContainerViewControllerFactory = homeContainerViewControllerFactory
-        self.myProjectContainerViewControllerFactory = myProjectContainerViewControllerFactory
-        self.chatLobbyViewControllerFactory = chatLobbyViewControllerFactory
-        self.logInViewControllerFactory = logInViewControllerFactory
+        self.coordinator = coordinator
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -74,9 +65,13 @@ final class RootTabBarController: UITabBarController {
             .disposed(by: disposeBag)
 
         viewModel.outputs.setViewControllers()
-            .map(viewControllers(from:))
-            .map { $0.map(UINavigationController.init(rootViewController:)) }
-            .drive(onNext: { [weak self] in self?.setViewControllers($0, animated: false) })
+            .map({ dataList in
+                return dataList.map { ($0, UINavigationController()) }
+            })
+            .map(viewControllers(list:))
+            .drive(onNext: { [weak self] in
+                self?.setViewControllers($0, animated: false)
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.tabBarItems()
@@ -88,20 +83,21 @@ final class RootTabBarController: UITabBarController {
 
     }
 
-    private func viewControllers(from data: [RootViewControllerData]) -> [UIViewController] {
-        return data.map(viewController(from:))
-    }
-
-    private func viewController(from data: RootViewControllerData) -> UIViewController {
-        switch data {
-        case .home:
-            return homeContainerViewControllerFactory.create()
-        case .myProject:
-            return myProjectContainerViewControllerFactory.create()
-        case .chat:
-            return chatLobbyViewControllerFactory.create()
-        case .profile(let isLoggedIn):
-            return isLoggedIn ? ViewController2() : logInViewControllerFactory.create()
+    private func viewControllers(list: [(RootViewControllerData, UINavigationController)]) -> [UIViewController] {
+        return list.map { data, controller in
+            switch data {
+            case .home:
+                coordinator?.navigateToHome(navigationController: controller)
+            case .myProject:
+                coordinator?.navigateToMyProject(navigationController: controller)
+            case .chat:
+                coordinator?.navigateToChat(navigationController: controller)
+            case .profile(let isLoggedIn):
+                isLoggedIn
+                    ? coordinator?.navigateToProfile(navigationController: controller)
+                    : coordinator?.navigateToLogIn(navigationController: controller)
+            }
+            return controller
         }
     }
 

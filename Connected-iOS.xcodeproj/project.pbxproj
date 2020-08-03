@@ -68,6 +68,12 @@
 		08CD578D24C53BA30066AD1B /* AppDelegateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CD578C24C53BA30066AD1B /* AppDelegateViewModel.swift */; };
 		08CD579024C5B87E0066AD1B /* AutoLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CD578F24C5B87E0066AD1B /* AutoLayout.swift */; };
 		08CD579324C5BC740066AD1B /* BorderStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CD579224C5BC740066AD1B /* BorderStyles.swift */; };
+		08DC441B24D8473900C26B23 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DC441A24D8473900C26B23 /* Coordinator.swift */; };
+		08DC441D24D8478200C26B23 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DC441C24D8478200C26B23 /* AppCoordinator.swift */; };
+		08DC441F24D868C600C26B23 /* HomeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DC441E24D868C600C26B23 /* HomeCoordinator.swift */; };
+		08DC442124D868F900C26B23 /* MyProjectCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DC442024D868F900C26B23 /* MyProjectCoordinator.swift */; };
+		08DC442324D8693300C26B23 /* ChatCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DC442224D8693300C26B23 /* ChatCoordinator.swift */; };
+		08DC442524D8695300C26B23 /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DC442424D8695300C26B23 /* ProfileCoordinator.swift */; };
 		08DEA59924C8993A00222A56 /* BaseCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA59824C8993A00222A56 /* BaseCellTests.swift */; };
 		08DEA59B24C98EF500222A56 /* ProjectDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA59A24C98EF500222A56 /* ProjectDetailViewController.swift */; };
 		08DEA59D24C9930C00222A56 /* ProjectDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DEA59C24C9930C00222A56 /* ProjectDetailViewModel.swift */; };
@@ -175,6 +181,12 @@
 		08CD578C24C53BA30066AD1B /* AppDelegateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateViewModel.swift; sourceTree = "<group>"; };
 		08CD578F24C5B87E0066AD1B /* AutoLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoLayout.swift; sourceTree = "<group>"; };
 		08CD579224C5BC740066AD1B /* BorderStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderStyles.swift; sourceTree = "<group>"; };
+		08DC441A24D8473900C26B23 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		08DC441C24D8478200C26B23 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		08DC441E24D868C600C26B23 /* HomeCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCoordinator.swift; sourceTree = "<group>"; };
+		08DC442024D868F900C26B23 /* MyProjectCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectCoordinator.swift; sourceTree = "<group>"; };
+		08DC442224D8693300C26B23 /* ChatCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCoordinator.swift; sourceTree = "<group>"; };
+		08DC442424D8695300C26B23 /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
 		08DEA59824C8993A00222A56 /* BaseCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCellTests.swift; sourceTree = "<group>"; };
 		08DEA59A24C98EF500222A56 /* ProjectDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewController.swift; sourceTree = "<group>"; };
 		08DEA59C24C9930C00222A56 /* ProjectDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewModel.swift; sourceTree = "<group>"; };
@@ -268,6 +280,7 @@
 				08DEA59E24C993D200222A56 /* DI */,
 				08EDD0BA24C2E9ED0038D6B9 /* Library */,
 				08D5698B24C2CE9B00171E63 /* Models */,
+				08DC441924D8471100C26B23 /* Coordinators */,
 				08C79D6824C835EC00CBDF5F /* DataSources */,
 				08D5698924C2CE0700171E63 /* ViewModels */,
 				08D5698824C2CDFE00171E63 /* Views */,
@@ -304,6 +317,7 @@
 		08C79D6024C8138000CBDF5F /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				08C79D7124C8530A00CBDF5F /* BaseCell.swift */,
 				08C79D6124C8139D00CBDF5F /* ProjectThumbnailCardCell.swift */,
 				08DEA5A324CA938000222A56 /* ProjectCollectionCell.swift */,
 				08DEA5AD24CBE7A700222A56 /* ErrorCell.swift */,
@@ -325,6 +339,7 @@
 		08C79D6824C835EC00CBDF5F /* DataSources */ = {
 			isa = PBXGroup;
 			children = (
+				08C79D6F24C84E3C00CBDF5F /* BaseDataSource.swift */,
 				08C79D6924C8362600CBDF5F /* ProjectThumbnailDataSource.swift */,
 				08DEA5A924CABB3700222A56 /* HomeDataSource.swift */,
 				08DEA5B124CBFA7000222A56 /* CategoryDataSource.swift */,
@@ -424,6 +439,19 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		08DC441924D8471100C26B23 /* Coordinators */ = {
+			isa = PBXGroup;
+			children = (
+				08DC441A24D8473900C26B23 /* Coordinator.swift */,
+				08DC441C24D8478200C26B23 /* AppCoordinator.swift */,
+				08DC441E24D868C600C26B23 /* HomeCoordinator.swift */,
+				08DC442024D868F900C26B23 /* MyProjectCoordinator.swift */,
+				08DC442224D8693300C26B23 /* ChatCoordinator.swift */,
+				08DC442424D8695300C26B23 /* ProfileCoordinator.swift */,
+			);
+			path = Coordinators;
+			sourceTree = "<group>";
+		};
 		08DEA59724C8992200222A56 /* Library */ = {
 			isa = PBXGroup;
 			children = (
@@ -497,8 +525,6 @@
 				08C79D5A24C808F100CBDF5F /* UIButton+.swift */,
 				08C79D6B24C8490200CBDF5F /* SharedFunctions.swift */,
 				08C79D6D24C849D000CBDF5F /* UICollectionView+.swift */,
-				08C79D6F24C84E3C00CBDF5F /* BaseDataSource.swift */,
-				08C79D7124C8530A00CBDF5F /* BaseCell.swift */,
 				08DEA5AB24CAC4F800222A56 /* UITableView+.swift */,
 				087AC07724D1B0A000CAAF9E /* UITextField+.swift */,
 				08BC2FD024D7D2CB003C3E9A /* UIViewController+Rx.swift */,
@@ -788,16 +814,20 @@
 				087AC07824D1B0A000CAAF9E /* UITextField+.swift in Sources */,
 				0873E44524CFCF4C00BFC4B5 /* MyProjectPageViewController.swift in Sources */,
 				08DEA5B224CBFA7000222A56 /* CategoryDataSource.swift in Sources */,
+				08DC442324D8693300C26B23 /* ChatCoordinator.swift in Sources */,
 				085A523924C2BE77009990D5 /* AnalyticsServiceType.swift in Sources */,
 				080496A924D2739500F9894C /* UserInfoValidator.swift in Sources */,
 				08C79D5F24C810D500CBDF5F /* HomeViewModel.swift in Sources */,
 				0873E45524D01D4900BFC4B5 /* ChatRoomCell.swift in Sources */,
 				08DEA59D24C9930C00222A56 /* ProjectDetailViewModel.swift in Sources */,
 				08CD578B24C53B130066AD1B /* User.swift in Sources */,
+				08DC442524D8695300C26B23 /* ProfileCoordinator.swift in Sources */,
 				08DEA5A424CA938000222A56 /* ProjectCollectionCell.swift in Sources */,
 				08DEA5BD24CD547D00222A56 /* MyProjectContainerViewModel.swift in Sources */,
+				08DC441B24D8473900C26B23 /* Coordinator.swift in Sources */,
 				0884DB8124BD92DF00A2E471 /* ViewController.swift in Sources */,
 				08CD579324C5BC740066AD1B /* BorderStyles.swift in Sources */,
+				08DC441F24D868C600C26B23 /* HomeCoordinator.swift in Sources */,
 				087AC07424D16D8700CAAF9E /* ChatRoomViewController.swift in Sources */,
 				08CD578724C468290066AD1B /* SignUpViewController.swift in Sources */,
 				08DEA5A224CA887B00222A56 /* HomeContainerViewModel.swift in Sources */,
@@ -806,6 +836,7 @@
 				0873E44F24D013CA00BFC4B5 /* ChatLobbyViewController.swift in Sources */,
 				080496AD24D2AAE300F9894C /* WebViewModel.swift in Sources */,
 				08DEA5A624CA98BA00222A56 /* ProjectCollectionCellViewModel.swift in Sources */,
+				08DC441D24D8478200C26B23 /* AppCoordinator.swift in Sources */,
 				0873E44724CFCFB600BFC4B5 /* MyProjectPageViewModel.swift in Sources */,
 				08DEA5C124CD58F800222A56 /* ProfileDependency.swift in Sources */,
 				08EDD0C024C409650038D6B9 /* LogInViewModel.swift in Sources */,
@@ -822,6 +853,7 @@
 				08DEA5B924CC408900222A56 /* TagLayout.swift in Sources */,
 				08C79D5424C7F20600CBDF5F /* UIViewController+Alert.swift in Sources */,
 				08C79D7424C853F600CBDF5F /* Project.swift in Sources */,
+				08DC442124D868F900C26B23 /* MyProjectCoordinator.swift in Sources */,
 				0873E45B24D02C3000BFC4B5 /* ChatRoomCellViewModel.swift in Sources */,
 				08DEA5B024CBE8D200222A56 /* ErrorCellViewModel.swift in Sources */,
 				08C79D6C24C8490200CBDF5F /* SharedFunctions.swift in Sources */,

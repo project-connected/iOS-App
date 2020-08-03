@@ -13,37 +13,41 @@ extension AppDependency {
 
     static func resolveLogInDependencies(
         networkService: NetworkServiceType
-    ) -> LogInViewController.Factory {
+    ) -> LogInCoordinator.Factory {
 
         let userInfoValidator = UserInfoValidator()
 
-        return LogInViewController.Factory(
+        return .init(
             dependency: .init(
-                viewModelFactory: .init(
-                    dependency: .init()
-                ),
-                signUpViewControllerFactory: .init(
+                loginViewControllerFactory: .init(
                     dependency: .init(
                         viewModelFactory: .init(
-                            dependency: .init(
-                                networkService: networkService,
-                                userInfoValidator: userInfoValidator
-                            )
+                            dependency: .init()
                         ),
-                        webViewControllerFactory: .init(
+                        signUpViewControllerFactory: .init(
                             dependency: .init(
                                 viewModelFactory: .init(
-                                    dependency: .init()
+                                    dependency: .init(
+                                        networkService: networkService,
+                                        userInfoValidator: userInfoValidator
+                                    )
+                                ),
+                                webViewControllerFactory: .init(
+                                    dependency: .init(
+                                        viewModelFactory: .init(
+                                            dependency: .init()
+                                        )
+                                    )
                                 )
                             )
-                        )
-                    )
-                ),
-                signInViewControllerFactory: .init(
-                    dependency: .init(
-                        viewModelFactory: .init(
+                        ),
+                        signInViewControllerFactory: .init(
                             dependency: .init(
-                                networkService: networkService
+                                viewModelFactory: .init(
+                                    dependency: .init(
+                                        networkService: networkService
+                                    )
+                                )
                             )
                         )
                     )

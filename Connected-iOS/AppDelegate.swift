@@ -16,30 +16,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private let viewModel: AppDelegateViewModelType
     private let analyticsService: AnalyticsServiceType.Type
-    private let networkService: NetworkServiceType
-    private let rootViewController: UIViewController
+    private let appCoordinatorFactory: AppCoordinatorFactory
 
     // MARK: - Lifecycle
 
     private override init() {
         let dependency = AppDependency.resolve()
-        self.viewModel = dependency.viewModelFactory.create()
+        self.viewModel = dependency.viewModelFactory()
         self.analyticsService = dependency.analyticsService
-        self.networkService = dependency.networkService
-        self.rootViewController = dependency.rootViewController
+        self.appCoordinatorFactory = dependency.appCoordinatorFactory
+
         super.init()
     }
 
     init(
         viewModel: AppDelegateViewModelType,
         analyticsService: AnalyticsServiceType.Type,
-        networkService: NetworkServiceType,
-        rootViewController: UIViewController
+        appCoordinatorFactory: @escaping AppCoordinatorFactory
     ) {
         self.viewModel = viewModel
         self.analyticsService = analyticsService
-        self.networkService = networkService
-        self.rootViewController = rootViewController
+        self.appCoordinatorFactory = appCoordinatorFactory
 
         super.init()
     }
@@ -51,13 +48,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
 
+        bindViewModel()
+
         analyticsService.configure()
 
         window = UIWindow()
-        window?.rootViewController = rootViewController
-        window?.makeKeyAndVisible()
-
-        bindViewModel()
+        if let window = window {
+            window.makeKeyAndVisible()
+            appCoordinatorFactory(window)
+                .start()
+        }
 
         return true
     }

@@ -10,45 +10,49 @@ import Foundation
 import Pure
 
 extension AppDependency {
-    static func resolveHomeContainerDependencies(
+    static func resolveHomeDependencies(
         networkService: NetworkServiceType,
         imageLoader: ImageLoaderType
-    ) -> HomeContainerViewController.Factory {
+    ) -> HomeCoordinator.Factory {
         return .init(
             dependency: .init(
-                viewModelFactory: .init(
-                    dependency: .init()
-                ),
-                homeViewControllerFactory: .init(
+                homeContainerViewControllerFactory: .init(
                     dependency: .init(
                         viewModelFactory: .init(
-                            dependency: .init(
-                                networkService: networkService
-                            )
+                            dependency: .init()
                         ),
-                        homeDataSourceFactory: .init(
+                        homeViewControllerFactory: .init(
                             dependency: .init(
-                                errorCellConfigurator: .init(
+                                viewModelFactory: .init(
                                     dependency: .init(
-                                        viewModelFactory: .init()
+                                        networkService: networkService
                                     )
                                 ),
-                                projectCollectionCellConfigurator: .init(
+                                homeDataSourceFactory: .init(
                                     dependency: .init(
-                                        viewModelFactory: .init(),
-                                        projectThumbnailCellDataSource: .init(
+                                        errorCellConfigurator: .init(
                                             dependency: .init(
-                                                cellViewModelFactory: .init(),
-                                                cellConfigurator: .init(
+                                                viewModelFactory: .init()
+                                            )
+                                        ),
+                                        projectCollectionCellConfigurator: .init(
+                                            dependency: .init(
+                                                viewModelFactory: .init(),
+                                                projectThumbnailCellDataSource: .init(
                                                     dependency: .init(
-                                                        viewModelFactory: .init(),
-                                                        imageLoader: imageLoader,
-                                                        categoryDataSourceFactory: .init(
+                                                        cellViewModelFactory: .init(),
+                                                        cellConfigurator: .init(
                                                             dependency: .init(
-                                                                categoryCellConfigurator: .init(
+                                                                viewModelFactory: .init(),
+                                                                imageLoader: imageLoader,
+                                                                categoryDataSourceFactory: .init(
                                                                     dependency: .init(
-                                                                        viewModelFactory: .init(
-                                                                            dependency: .init()
+                                                                        categoryCellConfigurator: .init(
+                                                                            dependency: .init(
+                                                                                viewModelFactory: .init(
+                                                                                    dependency: .init()
+                                                                                )
+                                                                            )
                                                                         )
                                                                     )
                                                                 )
@@ -59,13 +63,13 @@ extension AppDependency {
                                             )
                                         )
                                     )
-                                )
-                            )
-                        ),
-                        projectDetailViewControllerFactory: .init(
-                            dependency: .init(
-                                viewModelFactory: .init(
-                                    dependency: .init()
+                                ),
+                                projectDetailViewControllerFactory: .init(
+                                    dependency: .init(
+                                        viewModelFactory: .init(
+                                            dependency: .init()
+                                        )
+                                    )
                                 )
                             )
                         )

@@ -13,35 +13,39 @@ extension AppDependency {
     static func resolveChatDependencies(
         networkService: NetworkServiceType,
         imageLoader: ImageLoaderType
-    ) -> ChatLobbyViewController.Factory {
+    ) -> ChatCoordinator.Factory {
         return .init(
             dependency: .init(
-                viewModelFactory: .init(
-                    dependency: .init(
-                        networkService: networkService
-                    )
-                ),
-                chatRoomDataSourceFactory: .init(
-                    dependency: .init(
-                        cellConfigurator: .init(
-                            dependency: .init(
-                                viewModelFactory: .init(
-                                    dependency: .init()
-                                )
-                            )
-                        ),
-                        errorCellConfigurator: .init(
-                            dependency: .init(
-                                viewModelFactory: .init()
-                            )
-                        )
-                    )
-                ),
-                chatRoomViewControllerFactory: .init(
+                chatLobbyViewControllerFactory: .init(
                     dependency: .init(
                         viewModelFactory: .init(
                             dependency: .init(
                                 networkService: networkService
+                            )
+                        ),
+                        chatRoomDataSourceFactory: .init(
+                            dependency: .init(
+                                cellConfigurator: .init(
+                                    dependency: .init(
+                                        viewModelFactory: .init(
+                                            dependency: .init()
+                                        )
+                                    )
+                                ),
+                                errorCellConfigurator: .init(
+                                    dependency: .init(
+                                        viewModelFactory: .init()
+                                    )
+                                )
+                            )
+                        ),
+                        chatRoomViewControllerFactory: .init(
+                            dependency: .init(
+                                viewModelFactory: .init(
+                                    dependency: .init(
+                                        networkService: networkService
+                                    )
+                                )
                             )
                         )
                     )

@@ -55,7 +55,11 @@ final class SignUpViewController: UIViewController {
     // MARK: - Functions
 
     private func bindViewModel() {
+        bindViewModelInputs()
+        bindViewModelOutputs()
+    }
 
+    private func bindViewModelInputs() {
         self.rx.deallocated
             .bind(onNext: { [weak self] in
                 self?.viewModel.inputs.deinited()
@@ -97,7 +101,9 @@ final class SignUpViewController: UIViewController {
                 self?.viewModel.inputs.termsAndPoliciesClicked()
             })
             .disposed(by: disposeBag)
+    }
 
+    private func bindViewModelOutputs() {
         viewModel.outputs.isSignUpButtonEnabled()
             .drive(signUpButton.rx.isEnabled)
             .disposed(by: disposeBag)

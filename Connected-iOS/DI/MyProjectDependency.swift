@@ -10,29 +10,33 @@ import Foundation
 import Pure
 
 extension AppDependency {
-    static func resolveMyProjectContainerDependencies(
+    static func resolveMyProjectDependencies(
         networkService: NetworkServiceType,
         imageLoader: ImageLoaderType
-    ) -> MyProjectContainerViewController.Factory {
+    ) -> MyProjectCoordinator.Factory {
         return .init(
             dependency: .init(
-                viewModelFactory: .init(),
-                topTabBarViewControllerFactory: .init(
+                myProjectContainerViewControllerFactory: .init(
                     dependency: .init(
-                        viewModelFactory: .init()
-                    )
-                ),
-                pageDataSourceFactory: .init(
-                    dependency: .init(
-                        pageViewControllerFactory: .init(
+                        viewModelFactory: .init(),
+                        topTabBarViewControllerFactory: .init(
                             dependency: .init(
-                                viewModelFactory: .init(
+                                viewModelFactory: .init()
+                            )
+                        ),
+                        pageDataSourceFactory: .init(
+                            dependency: .init(
+                                pageViewControllerFactory: .init(
                                     dependency: .init(
-                                        networkService: networkService
+                                        viewModelFactory: .init(
+                                            dependency: .init(
+                                                networkService: networkService
+                                            )
+                                        ),
+                                        myProjectDataSourceFactory: .init(
+                                            dependency: .init()
+                                        )
                                     )
-                                ),
-                                myProjectDataSourceFactory: .init(
-                                    dependency: .init()
                                 )
                             )
                         )
