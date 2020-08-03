@@ -40,6 +40,7 @@ final class MyProjectPageViewController: UITableViewController {
 
     // TODO: - 테스트용 삭제
     private static var pageindex = 0
+
     override func viewDidLoad() {
         super.viewDidLoad()
 

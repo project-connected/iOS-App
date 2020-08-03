@@ -48,13 +48,24 @@ class ProjectCollectionCell: UITableViewCell, BaseCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    deinit {
-        viewModel?.inputs.deinited()
-    }
-
     // MARK: - Functions
 
     private func bindViewModel() {
+
+        self.rx.deallocated
+            .bind(onNext: { [weak self] in
+                self?.viewModel?.inputs.deinited()
+            })
+            .disposed(by: disposeBag)
+
+        collectionView.rx.itemSelected
+            .map { [weak self] in self?.dataSource?[$0] }
+            .compactMap { $0 as? Project }
+            .bind(onNext: { [weak self] in
+                self?.viewModel?.inputs.projectClicked(project: $0)
+            })
+            .disposed(by: disposeBag)
+
         viewModel?.outputs.showProjectDetail()
             .emit(onNext: delegate?.showProjectDetail(project:))
             .disposed(by: disposeBag)
@@ -77,7 +88,6 @@ class ProjectCollectionCell: UITableViewCell, BaseCell {
 
     private func configureCollectionView() {
         collectionView.dataSource = dataSource
-        collectionView.delegate = self
         collectionView.registerCell(ProjectThumbnailCardCell.self)
     }
 
@@ -115,15 +125,5 @@ class ProjectCollectionCell: UITableViewCell, BaseCell {
             collectionView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
             collectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
-    }
-}
-
-// MARK: - UICollectionViewDelegate
-
-extension ProjectCollectionCell: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let project = dataSource?[indexPath] as? Project {
-            viewModel?.inputs.projectClicked(project: project)
-        }
     }
 }
