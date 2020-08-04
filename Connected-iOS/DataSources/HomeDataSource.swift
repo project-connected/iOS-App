@@ -13,23 +13,24 @@ class HomeDataSource: BaseDataSource {
     // MARK: - Properties
 
     private let errorCellViewModelFactory: ErrorCellViewModelFactory
-    private let projectCollectionCellConfigurator: ProjectCollectionCell.Configurator
-    weak var cellDelegate: ProjectCollectionCellDelegate?
+    private let projectCollectionCellFactory: ProjectCollectionCellViewModelFactory
+    private let projectThumbnailDataSourceFactory: ProjectThumbnailDataSourceFactory
+    private weak var coordinator: ProjectDetailCoordinatorType?
 
     // MARK: - Lifecycle
 
     init(
         errorCellViewModelFactory: @escaping ErrorCellViewModelFactory,
-        projectCollectionCellConfigurator: ProjectCollectionCell.Configurator
+        projectCollectionCellFactory: @escaping ProjectCollectionCellViewModelFactory,
+        projectThumbnailDataSourceFactory: @escaping ProjectThumbnailDataSourceFactory,
+        coordinator: ProjectDetailCoordinatorType
     ) {
         self.errorCellViewModelFactory = errorCellViewModelFactory
-        self.projectCollectionCellConfigurator = projectCollectionCellConfigurator
+        self.projectCollectionCellFactory = projectCollectionCellFactory
+        self.projectThumbnailDataSourceFactory = projectThumbnailDataSourceFactory
+        self.coordinator = coordinator
 
         super.init()
-    }
-
-    required init(dependency: Dependency, payload: ()) {
-        fatalError("Fatal Error HomeDataSource initializer")
     }
 
     // MARK: - Functions
@@ -37,10 +38,17 @@ class HomeDataSource: BaseDataSource {
     override func configureCell(tableCell cell: UITableViewCell, with item: Any) {
         switch (cell, item) {
         case let (cell as ErrorCell, item as Error):
-            cell.configureWith(with: item, viewModelFactory: errorCellViewModelFactory)
+            if cell.viewModel == nil {
+                cell.viewModel = errorCellViewModelFactory()
+            }
+            cell.configureWith(with: item)
         case let (cell as ProjectCollectionCell, item as ThemedProjects):
-            cell.delegate = cellDelegate
-            projectCollectionCellConfigurator.configure(cell, payload: .init(themedProjects: item))
+            if cell.viewModel == nil {
+                cell.viewModel = projectCollectionCellFactory()
+                cell.dataSource = projectThumbnailDataSourceFactory()
+                cell.coordinator = coordinator
+            }
+            cell.configureWith(with: item)
         default:
             fatalError("Unrecognized set : \(cell), \(item)")
         }

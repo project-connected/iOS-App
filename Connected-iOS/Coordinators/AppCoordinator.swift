@@ -24,7 +24,7 @@ class AppCoordinator: AppCoordinatorType {
     private var children = [Coordinator]()
     private let window: UIWindow
     private let rootTabBarControllerFactory: RootTabBarControllerFactory
-    private let homeCoordinatorFactory: HomeCoordinator.Factory
+    private let homeCoordinatorFactory: HomeCoordinatorFactory
     private let myProjectCoordinatorFactory: MyProjectCoordinatorFactory
     private let chatCoordinatorFactory: ChatCoordinatorFactory
     private let logInCoordinatorFactory: LogInCoordinatorFactory
@@ -34,7 +34,7 @@ class AppCoordinator: AppCoordinatorType {
     init(
         window: UIWindow,
         rootTabBarControllerFactory: @escaping RootTabBarControllerFactory,
-        homeCoordinatorFactory: HomeCoordinator.Factory,
+        homeCoordinatorFactory: @escaping HomeCoordinatorFactory,
         myProjectCoordinatorFactory: @escaping MyProjectCoordinatorFactory,
         chatCoordinatorFactory: @escaping ChatCoordinatorFactory,
         logInCoordinatorFactory: @escaping LogInCoordinatorFactory
@@ -59,9 +59,7 @@ class AppCoordinator: AppCoordinatorType {
     }
 
     func navigateToHome(navigationController: UINavigationController) {
-        let coordinator = homeCoordinatorFactory.create(
-            payload: .init(navigationController: navigationController)
-        )
+        let coordinator = homeCoordinatorFactory(navigationController)
         children.append(coordinator)
         coordinator.start()
     }

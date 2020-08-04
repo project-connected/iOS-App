@@ -21,18 +21,15 @@ final class HomeViewController: UITableViewController {
     private var disposeBag = DisposeBag()
     private let viewModel: HomeViewModelType
     private let dataSource: HomeDataSource
-    private let projectDetailViewControllerFactory: ProjectDetailViewController.Factory
 
     // MARK: - Lifecycle
 
     init(
         viewModel: HomeViewModelType,
-        homeDataSource: HomeDataSource,
-        projectDetailViewControllerFactory: ProjectDetailViewController.Factory
+        homeDataSource: HomeDataSource
     ) {
         self.viewModel = viewModel
         self.dataSource = homeDataSource
-        self.projectDetailViewControllerFactory = projectDetailViewControllerFactory
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -90,11 +87,6 @@ final class HomeViewController: UITableViewController {
             })
             .disposed(by: disposeBag)
 
-        viewModel.outputs.presentViewController()
-            .map(viewController(from:))
-            .emit(onNext: { self.navigationController?.pushViewController($0, animated: true) })
-            .disposed(by: disposeBag)
-
         viewModel.outputs.isRefreshing()
             .drive(refresh.rx.isRefreshing)
             .disposed(by: disposeBag)
@@ -111,7 +103,6 @@ final class HomeViewController: UITableViewController {
     }
 
     private func configureTableView() {
-        dataSource.cellDelegate = self
         tableView.dataSource = dataSource
         tableView.delegate = self
 
@@ -122,20 +113,5 @@ final class HomeViewController: UITableViewController {
         tableView.estimatedRowHeight = 500
 
         refreshControl = refresh
-    }
-
-    private func viewController(from data: HomeViewControllerData) -> UIViewController {
-        switch data {
-        case .projectDatail(let project):
-            return projectDetailViewControllerFactory.create(payload: .init(project: project))
-        }
-    }
-}
-
-// MARK: - ProjectCollectionCellDelegate
-
-extension HomeViewController: ProjectCollectionCellDelegate {
-    func showProjectDetail(project: Project) {
-        viewModel.inputs.showProjectDetail(project: project)
     }
 }

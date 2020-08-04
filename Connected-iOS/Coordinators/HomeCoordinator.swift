@@ -7,41 +7,43 @@
 //
 
 import UIKit
-import Pure
 
-extension HomeCoordinator: FactoryModule {
-    struct Dependency {
-        let homeContainerViewControllerFactory: HomeContainerViewController.Factory
-    }
-
-    struct Payload {
-        let navigationController: UINavigationController
-    }
+protocol ProjectDetailCoordinatorType: Coordinator {
+    func pushToProjectDetail(project: Project)
 }
 
-protocol HomeCoordinatorType: Coordinator {
-
-}
-
-class HomeCoordinator: HomeCoordinatorType {
+class HomeCoordinator: Coordinator {
 
     // MARK: - Properties
 
     private let navigationController: UINavigationController
-    private let homeContainerViewControllerFactory: HomeContainerViewController.Factory
+    private let homeContainerViewControllerFactory: HomeContainerViewControllerFactory
+    private let projectDetailViewControllerFactory: ProjectDetailViewControllerFactory
 
     // MARK: - Lifecycle
 
-    required init(dependency: Dependency, payload: Payload) {
-        self.navigationController = payload.navigationController
-        self.homeContainerViewControllerFactory = dependency.homeContainerViewControllerFactory
+    init(
+        navigationController: UINavigationController,
+        homeContainerViewControllerFactory: @escaping HomeContainerViewControllerFactory,
+        projectDetailViewControllerFactory: @escaping ProjectDetailViewControllerFactory
+    ) {
+        self.navigationController = navigationController
+        self.homeContainerViewControllerFactory = homeContainerViewControllerFactory
+        self.projectDetailViewControllerFactory = projectDetailViewControllerFactory
     }
 
     // MARK: - Functions
 
     func start() {
-        let viewController = homeContainerViewControllerFactory.create()
+        let viewController = homeContainerViewControllerFactory(self)
         navigationController.pushViewController(viewController, animated: true)
     }
 
+}
+
+extension HomeCoordinator: ProjectDetailCoordinatorType {
+    func pushToProjectDetail(project: Project) {
+        let viewController = projectDetailViewControllerFactory(project)
+        navigationController.pushViewController(viewController, animated: true)
+    }
 }

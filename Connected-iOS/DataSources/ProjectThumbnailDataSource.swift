@@ -12,23 +12,22 @@ class ProjectThumbnailDataSource: BaseDataSource {
 
     // MARK: - Properties
 
-    private let cellViewModelFactory: ProjectThumbnailCellViewModel.Factory
-    private let cellConfigurator: ProjectThumbnailCardCell.Configurator
+    private let cellViewModelFactory: ProjectThumbnailCellViewModelFactory
+    private let categoryDataSourceFactory: CategoryDataSourceFactory
+    private let imageLoader: ImageLoaderType
 
     // MARK: - Lifecycle
 
     init(
-        cellViewModelFactory: ProjectThumbnailCellViewModel.Factory,
-        cellConfigurator: ProjectThumbnailCardCell.Configurator
+        cellViewModelFactory: @escaping ProjectThumbnailCellViewModelFactory,
+        categoryDataSourceFactory: @escaping CategoryDataSourceFactory,
+        imageLoader: ImageLoaderType
     ) {
         self.cellViewModelFactory = cellViewModelFactory
-        self.cellConfigurator = cellConfigurator
+        self.categoryDataSourceFactory = categoryDataSourceFactory
+        self.imageLoader = imageLoader
 
         super.init()
-    }
-
-    required init(dependency: Dependency, payload: ()) {
-        fatalError("Fatal Error ProjectThumbnailDataSource initializer")
     }
 
     // MARK: - Functions
@@ -36,7 +35,12 @@ class ProjectThumbnailDataSource: BaseDataSource {
     override func configureCell(collectionCell cell: UICollectionViewCell, with item: Any) {
         switch (cell, item) {
         case let (cell as ProjectThumbnailCardCell, item as Project):
-            cellConfigurator.configure(cell, payload: .init(project: item))
+            if cell.viewModel == nil {
+                cell.viewModel = cellViewModelFactory()
+                cell.dataSource = categoryDataSourceFactory()
+                cell.imageLoader = imageLoader
+            }
+            cell.configureWith(with: item)
         default:
             fatalError("Unrecognized set : \(cell), \(item)")
         }

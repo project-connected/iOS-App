@@ -12,8 +12,6 @@ import RxCocoa
 
 class ProjectThumbnailCardCell: UICollectionViewCell, BaseCell {
 
-    typealias Item = Project
-
     // MARK: - UI Properties
 
     private let stackView: UIStackView = UIStackView()

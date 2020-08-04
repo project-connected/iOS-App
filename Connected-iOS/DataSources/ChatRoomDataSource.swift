@@ -30,9 +30,15 @@ class ChatRoomDataSource: BaseDataSource {
     override func configureCell(tableCell cell: UITableViewCell, with item: Any) {
         switch (cell, item) {
         case let (cell as ChatRoomCell, item as ChatRoom):
-            cell.configureWith(with: item, viewModelFactory: chatRoomCellViewModelFactory)
+            if cell.viewModel == nil {
+                cell.viewModel = chatRoomCellViewModelFactory()
+            }
+            cell.configureWith(with: item)
         case let (cell as ErrorCell, item as Error):
-            cell.configureWith(with: item, viewModelFactory: errorCellViewModelFactory)
+            if cell.viewModel == nil {
+                cell.viewModel = errorCellViewModelFactory()
+            }
+            cell.configureWith(with: item)
         default:
             fatalError("Unrecognized set : \(cell), \(item)")
         }

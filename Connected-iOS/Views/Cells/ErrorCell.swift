@@ -12,8 +12,6 @@ import RxCocoa
 
 class ErrorCell: UITableViewCell, BaseCell {
 
-    typealias Item = Error
-
     // MARK: - UI Properties
 
     private let errorTitleLabel: UILabel = UILabel()
@@ -87,10 +85,7 @@ class ErrorCell: UITableViewCell, BaseCell {
             .disposed(by: disposeBag)
     }
 
-    func configureWith(with error: Error, viewModelFactory: ErrorCellViewModelFactory) {
-        if viewModel == nil {
-            viewModel = viewModelFactory()
-        }
+    func configureWith(with error: Error) {
         viewModel?.inputs.configure(with: error)
     }
 }
