@@ -20,10 +20,6 @@ class MyProjectDataSource: BaseDataSource {
 
     }
 
-    required init(dependency: Dependency, payload: ()) {
-        fatalError("Fatal Error \(classNameWithoutModule(Self.self)) initializer")
-    }
-
     // MARK: - Functions
 
     override func configureCell(tableCell cell: UITableViewCell, with item: Any) {

@@ -41,7 +41,6 @@ extension AppDependency {
 typealias ChatCoordinatorFactory = (UINavigationController) -> Coordinator
 
 typealias ChatLobbyViewControllerFactory = (ChatCoordinatorType) -> ChatLobbyViewController
+typealias ChatRoomViewControllerFactory = (ChatRoom) -> ChatRoomViewController
 
 typealias ChatRoomCellViewModelFactory = () -> ChatRoomCellViewModelType
-
-typealias ChatRoomViewControllerFactory = (ChatRoom) -> ChatRoomViewController

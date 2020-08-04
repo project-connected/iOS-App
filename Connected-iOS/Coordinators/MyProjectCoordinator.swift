@@ -7,41 +7,37 @@
 //
 
 import UIKit
-import Pure
-
-extension MyProjectCoordinator: FactoryModule {
-    struct Dependency {
-        let myProjectContainerViewControllerFactory: MyProjectContainerViewController.Factory
-    }
-
-    struct Payload {
-        let navigationController: UINavigationController
-    }
-}
 
 protocol MyProjectCoordinatorType: Coordinator {
 
 }
 
-class MyProjectCoordinator: MyProjectCoordinatorType {
+class MyProjectCoordinator: Coordinator {
 
     // MARK: - Properties
 
     private let navigationController: UINavigationController
-    private let myProjectContainerViewControllerFactory: MyProjectContainerViewController.Factory
+    private let myProjectContainerViewControllerFactory: MyProjectContainerViewControllerFactory
 
     // MARK: - Lifecycle
 
-    required init(dependency: Dependency, payload: Payload) {
-        self.navigationController = payload.navigationController
-        self.myProjectContainerViewControllerFactory = dependency.myProjectContainerViewControllerFactory
+    init(
+        navigationController: UINavigationController,
+        myProjectContainerViewControllerFactory: @escaping MyProjectContainerViewControllerFactory
+    ) {
+        self.navigationController = navigationController
+        self.myProjectContainerViewControllerFactory = myProjectContainerViewControllerFactory
     }
 
     // MARK: - Functions
 
     func start() {
-        let viewController = myProjectContainerViewControllerFactory.create()
+        let viewController = myProjectContainerViewControllerFactory()
         navigationController.pushViewController(viewController, animated: true)
     }
+
+}
+
+extension MyProjectCoordinator: MyProjectCoordinatorType {
 
 }

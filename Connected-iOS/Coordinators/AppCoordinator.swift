@@ -25,7 +25,7 @@ class AppCoordinator: AppCoordinatorType {
     private let window: UIWindow
     private let rootTabBarControllerFactory: RootTabBarControllerFactory
     private let homeCoordinatorFactory: HomeCoordinator.Factory
-    private let myProjectCoordinatorFactory: MyProjectCoordinator.Factory
+    private let myProjectCoordinatorFactory: MyProjectCoordinatorFactory
     private let chatCoordinatorFactory: ChatCoordinatorFactory
     private let logInCoordinatorFactory: LogInCoordinatorFactory
 
@@ -35,7 +35,7 @@ class AppCoordinator: AppCoordinatorType {
         window: UIWindow,
         rootTabBarControllerFactory: @escaping RootTabBarControllerFactory,
         homeCoordinatorFactory: HomeCoordinator.Factory,
-        myProjectCoordinatorFactory: MyProjectCoordinator.Factory,
+        myProjectCoordinatorFactory: @escaping MyProjectCoordinatorFactory,
         chatCoordinatorFactory: @escaping ChatCoordinatorFactory,
         logInCoordinatorFactory: @escaping LogInCoordinatorFactory
     ) {
@@ -67,9 +67,7 @@ class AppCoordinator: AppCoordinatorType {
     }
 
     func navigateToMyProject(navigationController: UINavigationController) {
-        let coordinator = myProjectCoordinatorFactory.create(
-            payload: .init(navigationController: navigationController)
-        )
+        let coordinator = myProjectCoordinatorFactory(navigationController)
         children.append(coordinator)
         coordinator.start()
     }
