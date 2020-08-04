@@ -6,8 +6,7 @@
 //  Copyright © 2020 connected. All rights reserved.
 //
 
-import Foundation
-import Pure
+import UIKit
 import Firebase
 
 extension AppDependency {
@@ -19,9 +18,12 @@ extension AppDependency {
         let analyticsService: AnalyticsServiceType.Type = MockAnalyticsService.self
         let imageLoader: ImageLoaderType = KingfisherImageLoader()
 
+        let errorCellViewModelFactory: ErrorCellViewModelFactory = { ErrorCellViewModel() }
+
         let homeCoordinatorFactory = resolveHomeDependencies(
             networkService: networkService,
-            imageLoader: imageLoader
+            imageLoader: imageLoader,
+            errorCellViewModelFactory: errorCellViewModelFactory
         )
 
         let myProjectCoordinatorFactory = resolveMyProjectDependencies(
@@ -31,7 +33,8 @@ extension AppDependency {
 
         let chatCoordinatorFactory = resolveChatDependencies(
             networkService: networkService,
-            imageLoader: imageLoader
+            imageLoader: imageLoader,
+            errorCellViewModelFactory: errorCellViewModelFactory
         )
 
         let loginCoordinatorFactory = resolveLogInDependencies(
@@ -57,7 +60,7 @@ extension AppDependency {
         }
 
         return AppDependency(
-            viewModelFactory: { AppDelegateViewModel() },
+            viewModel: AppDelegateViewModel(),
             analyticsService: analyticsService,
             appCoordinatorFactory: appCoordinatorFactory
         )
@@ -68,14 +71,13 @@ extension AppDependency {
 // MARK: - AppDependency
 
 struct AppDependency {
-    let viewModelFactory: AppDelegateViewModelFactory
+    let viewModel: AppDelegateViewModelType
     let analyticsService: AnalyticsServiceType.Type
     let appCoordinatorFactory: AppCoordinatorFactory
 }
 
-typealias AppDelegateViewModelFactory = () -> AppDelegateViewModelType
-
 typealias AppCoordinatorFactory = (UIWindow) -> AppCoordinatorType
 
-typealias RootViewModelFactory = () -> RootViewModelType
 typealias RootTabBarControllerFactory = (AppCoordinatorType) -> RootTabBarController
+
+typealias ErrorCellViewModelFactory = () -> ErrorCellViewModelType

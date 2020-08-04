@@ -21,18 +21,18 @@ final class ChatLobbyViewController: UITableViewController {
     private var disposeBag = DisposeBag()
     private let viewModel: ChatLobbyViewModelType
     private let dataSource: BaseDataSource
-    private let chatRoomViewControllerFactory: ChatRoomViewController.Factory
+    private weak var coordinator: ChatCoordinatorType?
 
     // MARK: - Lifecycle
 
     init(
         viewModel: ChatLobbyViewModelType,
         dataSource: BaseDataSource,
-        chatRoomViewControllerFactory: ChatRoomViewController.Factory
+        coordinator: ChatCoordinatorType
     ) {
         self.viewModel = viewModel
         self.dataSource = dataSource
-        self.chatRoomViewControllerFactory = chatRoomViewControllerFactory
+        self.coordinator = coordinator
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -113,12 +113,7 @@ final class ChatLobbyViewController: UITableViewController {
             .disposed(by: disposeBag)
 
         viewModel.outputs.showChatRoom()
-            .emit(onNext: { chatRoom in
-                let viewController = self.chatRoomViewControllerFactory.create(
-                    payload: .init(chatRoom: chatRoom)
-                )
-                self.navigationController?.pushViewController(viewController, animated: true)
-            })
+            .emit(onNext: coordinator?.pushToChatRoom(chatRoom:))
             .disposed(by: disposeBag)
     }
 

@@ -12,6 +12,8 @@ import RxCocoa
 
 class ChatRoomCell: UITableViewCell, BaseCell {
 
+    typealias Item = ChatRoom
+
     // MARK: - UI Properties
 
     private let roomNameLabel: UILabel = UILabel()
@@ -19,7 +21,7 @@ class ChatRoomCell: UITableViewCell, BaseCell {
     // MARK: - Properties
 
     private let disposeBag = DisposeBag()
-    var viewModel: ChatRoomCellViewModelType? {
+    private var viewModel: ChatRoomCellViewModelType? {
         didSet { bindViewModel() }
     }
 
@@ -71,7 +73,10 @@ class ChatRoomCell: UITableViewCell, BaseCell {
             .disposed(by: disposeBag)
     }
 
-    func configureWith(with item: ChatRoom) {
+    func configureWith(with item: ChatRoom, viewModelFactory: ChatRoomCellViewModelFactory) {
+        if viewModel == nil {
+            viewModel = viewModelFactory()
+        }
         viewModel?.inputs.configure(with: item)
     }
 }

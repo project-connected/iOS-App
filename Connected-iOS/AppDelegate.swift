@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private override init() {
         let dependency = AppDependency.resolve()
-        self.viewModel = dependency.viewModelFactory()
+        self.viewModel = dependency.viewModel
         self.analyticsService = dependency.analyticsService
 
         guard let window = window else {

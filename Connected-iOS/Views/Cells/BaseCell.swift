@@ -11,14 +11,8 @@ import Foundation
 public protocol BaseCell: class {
 
     associatedtype Item
-    associatedtype ViewModelType
 
     static var reusableId: String { get }
-
-    var viewModel: ViewModelType? { get set }
-
-    func configureWith(with item: Item)
-
 }
 
 extension BaseCell {

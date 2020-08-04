@@ -12,6 +12,8 @@ import RxCocoa
 
 class CategoryCell: UICollectionViewCell, BaseCell {
 
+    typealias Item = String
+
     // MARK: - UI Properties
 
     private let categoryLabel: UILabel = UILabel()

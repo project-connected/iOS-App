@@ -26,7 +26,7 @@ class AppCoordinator: AppCoordinatorType {
     private let rootTabBarControllerFactory: RootTabBarControllerFactory
     private let homeCoordinatorFactory: HomeCoordinator.Factory
     private let myProjectCoordinatorFactory: MyProjectCoordinator.Factory
-    private let chatCoordinatorFactory: ChatCoordinator.Factory
+    private let chatCoordinatorFactory: ChatCoordinatorFactory
     private let logInCoordinatorFactory: LogInCoordinatorFactory
 
     // MARK: - Lifecycle
@@ -36,7 +36,7 @@ class AppCoordinator: AppCoordinatorType {
         rootTabBarControllerFactory: @escaping RootTabBarControllerFactory,
         homeCoordinatorFactory: HomeCoordinator.Factory,
         myProjectCoordinatorFactory: MyProjectCoordinator.Factory,
-        chatCoordinatorFactory: ChatCoordinator.Factory,
+        chatCoordinatorFactory: @escaping ChatCoordinatorFactory,
         logInCoordinatorFactory: @escaping LogInCoordinatorFactory
     ) {
         self.window = window
@@ -75,9 +75,7 @@ class AppCoordinator: AppCoordinatorType {
     }
 
     func navigateToChat(navigationController: UINavigationController) {
-        let coordinator = chatCoordinatorFactory.create(
-            payload: .init(navigationController: navigationController)
-        )
+        let coordinator = chatCoordinatorFactory(navigationController)
         children.append(coordinator)
         coordinator.start()
     }

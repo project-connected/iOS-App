@@ -7,40 +7,42 @@
 //
 
 import UIKit
-import Pure
-
-extension ChatCoordinator: FactoryModule {
-    struct Dependency {
-        let chatLobbyViewControllerFactory: ChatLobbyViewController.Factory
-    }
-
-    struct Payload {
-        let navigationController: UINavigationController
-    }
-}
 
 protocol ChatCoordinatorType: Coordinator {
-
+    func pushToChatRoom(chatRoom: ChatRoom)
 }
 
-class ChatCoordinator: ChatCoordinatorType {
+class ChatCoordinator: Coordinator {
 
     // MARK: - Properties
 
     private let navigationController: UINavigationController
-    private let chatLobbyViewControllerFactory: ChatLobbyViewController.Factory
+    private let chatLobbyViewControllerFactory: ChatLobbyViewControllerFactory
+    private let chatRoomViewControllerFactory: ChatRoomViewControllerFactory
 
     // MARK: - Lifecycle
 
-    required init(dependency: Dependency, payload: Payload) {
-        self.navigationController = payload.navigationController
-        self.chatLobbyViewControllerFactory = dependency.chatLobbyViewControllerFactory
+    init(
+        navigationController: UINavigationController,
+        chatLobbyViewControllerFactory: @escaping ChatLobbyViewControllerFactory,
+        chatRoomViewControllerFactory: @escaping ChatRoomViewControllerFactory
+    ) {
+        self.navigationController = navigationController
+        self.chatLobbyViewControllerFactory = chatLobbyViewControllerFactory
+        self.chatRoomViewControllerFactory = chatRoomViewControllerFactory
     }
 
     // MARK: - Functions
 
     func start() {
-        let viewController = chatLobbyViewControllerFactory.create()
+        let viewController = chatLobbyViewControllerFactory(self)
+        navigationController.pushViewController(viewController, animated: true)
+    }
+}
+
+extension ChatCoordinator: ChatCoordinatorType {
+    func pushToChatRoom(chatRoom: ChatRoom) {
+        let viewController = chatRoomViewControllerFactory(chatRoom)
         navigationController.pushViewController(viewController, animated: true)
     }
 }

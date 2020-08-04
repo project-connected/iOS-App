@@ -12,7 +12,8 @@ import Pure
 extension AppDependency {
     static func resolveHomeDependencies(
         networkService: NetworkServiceType,
-        imageLoader: ImageLoaderType
+        imageLoader: ImageLoaderType,
+        errorCellViewModelFactory: @escaping ErrorCellViewModelFactory
     ) -> HomeCoordinator.Factory {
         return .init(
             dependency: .init(
@@ -30,11 +31,7 @@ extension AppDependency {
                                 ),
                                 homeDataSourceFactory: .init(
                                     dependency: .init(
-                                        errorCellConfigurator: .init(
-                                            dependency: .init(
-                                                viewModelFactory: .init()
-                                            )
-                                        ),
+                                        errorCellViewModelFactory: errorCellViewModelFactory,
                                         projectCollectionCellConfigurator: .init(
                                             dependency: .init(
                                                 viewModelFactory: .init(),
@@ -133,45 +130,11 @@ extension CategoryCell: ConfiguratorModule {
     }
 }
 
-// MARK: - ErrorCellViewModel
-
-extension ErrorCellViewModel: FactoryModule {
-    convenience init(dependency: (), payload: ()) {
-        self.init()
-    }
-}
-
-extension Factory where Module == ErrorCellViewModel {
-    func create() -> ErrorCellViewModelType {
-        let module = Module()
-        return module
-    }
-}
-
-// MARK: - ErrorCell
-
-extension ErrorCell: ConfiguratorModule {
-    struct Dependency {
-        let viewModelFactory: ErrorCellViewModel.Factory
-    }
-
-    struct Payload {
-        let error: Error
-    }
-
-    func configure(dependency: Dependency, payload: Payload) {
-        if self.viewModel == nil {
-            self.viewModel = dependency.viewModelFactory.create()
-        }
-        configureWith(with: payload.error)
-    }
-}
-
 // MARK: - HomeDataSource
 
 extension HomeDataSource: FactoryModule {
     struct Dependency {
-        let errorCellConfigurator: ErrorCell.Configurator
+        let errorCellViewModelFactory: ErrorCellViewModelFactory
         let projectCollectionCellConfigurator: ProjectCollectionCell.Configurator
     }
 }
@@ -179,7 +142,7 @@ extension HomeDataSource: FactoryModule {
 extension Factory where Module == HomeDataSource {
     func create() -> HomeDataSource {
         let module = Module(
-            errorCellConfigurator: dependency.errorCellConfigurator,
+            errorCellViewModelFactory: dependency.errorCellViewModelFactory,
             projectCollectionCellConfigurator: dependency.projectCollectionCellConfigurator
         )
         return module

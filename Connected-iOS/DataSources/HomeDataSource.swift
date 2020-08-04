@@ -12,17 +12,17 @@ class HomeDataSource: BaseDataSource {
 
     // MARK: - Properties
 
-    private let errorCellConfigurator: ErrorCell.Configurator
+    private let errorCellViewModelFactory: ErrorCellViewModelFactory
     private let projectCollectionCellConfigurator: ProjectCollectionCell.Configurator
     weak var cellDelegate: ProjectCollectionCellDelegate?
 
     // MARK: - Lifecycle
 
     init(
-        errorCellConfigurator: ErrorCell.Configurator,
+        errorCellViewModelFactory: @escaping ErrorCellViewModelFactory,
         projectCollectionCellConfigurator: ProjectCollectionCell.Configurator
     ) {
-        self.errorCellConfigurator = errorCellConfigurator
+        self.errorCellViewModelFactory = errorCellViewModelFactory
         self.projectCollectionCellConfigurator = projectCollectionCellConfigurator
 
         super.init()
@@ -37,7 +37,7 @@ class HomeDataSource: BaseDataSource {
     override func configureCell(tableCell cell: UITableViewCell, with item: Any) {
         switch (cell, item) {
         case let (cell as ErrorCell, item as Error):
-            errorCellConfigurator.configure(cell, payload: .init(error: item))
+            cell.configureWith(with: item, viewModelFactory: errorCellViewModelFactory)
         case let (cell as ProjectCollectionCell, item as ThemedProjects):
             cell.delegate = cellDelegate
             projectCollectionCellConfigurator.configure(cell, payload: .init(themedProjects: item))

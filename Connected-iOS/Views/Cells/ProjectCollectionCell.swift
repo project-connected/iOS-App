@@ -16,6 +16,8 @@ protocol ProjectCollectionCellDelegate: class, Alertable {
 
 class ProjectCollectionCell: UITableViewCell, BaseCell {
 
+    typealias Item = ThemedProjects
+
     // MARK: - UI Properties
 
     private let titleLabel: UILabel = UILabel()
