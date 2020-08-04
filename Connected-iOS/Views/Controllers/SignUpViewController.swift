@@ -27,13 +27,13 @@ final class SignUpViewController: UIViewController {
 
     private var disposeBag = DisposeBag()
     private let viewModel: SignUpViewModelType
-    private weak var coordinator: LogInCoordinatorType?
+    private weak var coordinator: TermsAndPoliciesCoordinatorType?
 
     // MARK: - Lifecycle
 
     init(
         viewModel: SignUpViewModelType,
-        coordinator: LogInCoordinatorType
+        coordinator: TermsAndPoliciesCoordinatorType
     ) {
         self.viewModel = viewModel
         self.coordinator = coordinator
@@ -121,7 +121,7 @@ final class SignUpViewController: UIViewController {
 
         viewModel.outputs.presentTermsAndPolicies()
             .emit(onNext: { [weak self] in
-                self?.coordinator?.navigateToTermsAndPolicies()
+                self?.coordinator?.presentTermsAndPolicies()
             })
             .disposed(by: disposeBag)
     }

@@ -51,7 +51,7 @@ extension AppDependency {
     }
 }
 
-typealias LogInCoordinatorFactory = (UINavigationController) -> LogInCoordinatorType
+typealias LogInCoordinatorFactory = (UINavigationController) -> Coordinator
 
 typealias LogInViewModelFactory = () -> LogInViewModelType
 typealias LogInViewControllerFactory = (LogInCoordinatorType) -> LogInViewController
@@ -60,7 +60,7 @@ typealias SignInViewModelFactory = () -> SignInViewModelType
 typealias SignInViewControllerFactory = () -> SignInViewController
 
 typealias SignUpViewModelFactory = () -> SignUpViewModelType
-typealias SignUpViewControllerFactory = (LogInCoordinatorType) -> SignUpViewController
+typealias SignUpViewControllerFactory = (TermsAndPoliciesCoordinatorType) -> SignUpViewController
 
 typealias WebViewModelFactory = () -> WebViewModelType
 typealias WebViewControllerFactory = () -> WebViewController

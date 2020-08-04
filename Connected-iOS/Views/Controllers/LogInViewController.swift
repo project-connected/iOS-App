@@ -126,9 +126,9 @@ final class LogInViewController: UIViewController {
     private func navigate(to data: LogInViewControllerData) {
         switch data {
         case .signUp:
-            coordinator?.navigateToSignUp()
+            coordinator?.pushToSignUp()
         case .signIn:
-            coordinator?.navigateToSignIn()
+            coordinator?.pushToSignIn()
         }
     }
 }

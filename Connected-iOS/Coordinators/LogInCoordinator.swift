@@ -8,13 +8,16 @@
 
 import UIKit
 
-protocol LogInCoordinatorType: Coordinator {
-    func navigateToSignUp()
-    func navigateToSignIn()
-    func navigateToTermsAndPolicies()
+protocol LogInCoordinatorType: class {
+    func pushToSignUp()
+    func pushToSignIn()
 }
 
-class LogInCoordinator: LogInCoordinatorType {
+protocol TermsAndPoliciesCoordinatorType: class {
+    func presentTermsAndPolicies()
+}
+
+class LogInCoordinator: Coordinator {
 
     // MARK: - Properties
 
@@ -46,18 +49,22 @@ class LogInCoordinator: LogInCoordinatorType {
         let viewController = logInViewControllerFactory(self)
         navigationController.pushViewController(viewController, animated: true)
     }
+}
 
-    func navigateToSignUp() {
+extension LogInCoordinator: LogInCoordinatorType {
+    func pushToSignUp() {
         let viewController = signUpViewControllerFactory(self)
         navigationController.pushViewController(viewController, animated: true)
     }
 
-    func navigateToSignIn() {
+    func pushToSignIn() {
         let viewController = signInViewControllerFactory()
         navigationController.pushViewController(viewController, animated: true)
     }
+}
 
-    func navigateToTermsAndPolicies() {
+extension LogInCoordinator: TermsAndPoliciesCoordinatorType {
+    func presentTermsAndPolicies() {
         let viewController = webViewControllerFactory()
         navigationController.topViewController?.present(viewController, animated: true, completion: nil)
     }
