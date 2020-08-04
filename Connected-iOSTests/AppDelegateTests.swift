@@ -8,7 +8,6 @@
 
 import XCTest
 @testable import Connected_iOS
-import Pure
 import Nimble
 
 class TestAppDelegate: NSObject, UIApplicationDelegate {
