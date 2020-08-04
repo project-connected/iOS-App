@@ -12,21 +12,17 @@ class ChatRoomDataSource: BaseDataSource {
 
     // MARK: - Properties
 
-    private let cellConfigurator: ChatRoomCell.Configurator
-    private let errorCellConfigurator: ErrorCell.Configurator
+    private let chatRoomCellViewModelFactory: ChatRoomCellViewModelFactory
+    private let errorCellViewModelFactory: ErrorCellViewModelFactory
 
     // MARK: - Lifecycle
 
     init(
-        cellConfigurator: ChatRoomCell.Configurator,
-        errorCellConfigurator: ErrorCell.Configurator
+        chatRoomCellViewModelFactory: @escaping ChatRoomCellViewModelFactory,
+        errorCellViewModelFactory: @escaping ErrorCellViewModelFactory
     ) {
-        self.cellConfigurator = cellConfigurator
-        self.errorCellConfigurator = errorCellConfigurator
-    }
-
-    required init(dependency: Dependency, payload: ()) {
-        fatalError("Fatal Error \(classNameWithoutModule(Self.self)) initializer")
+        self.chatRoomCellViewModelFactory = chatRoomCellViewModelFactory
+        self.errorCellViewModelFactory = errorCellViewModelFactory
     }
 
     // MARK: - Functions
@@ -34,9 +30,15 @@ class ChatRoomDataSource: BaseDataSource {
     override func configureCell(tableCell cell: UITableViewCell, with item: Any) {
         switch (cell, item) {
         case let (cell as ChatRoomCell, item as ChatRoom):
-            cellConfigurator.configure(cell, payload: .init(chatRoom: item))
+            if cell.viewModel == nil {
+                cell.viewModel = chatRoomCellViewModelFactory()
+            }
+            cell.configureWith(with: item)
         case let (cell as ErrorCell, item as Error):
-            errorCellConfigurator.configure(cell, payload: .init(error: item))
+            if cell.viewModel == nil {
+                cell.viewModel = errorCellViewModelFactory()
+            }
+            cell.configureWith(with: item)
         default:
             fatalError("Unrecognized set : \(cell), \(item)")
         }

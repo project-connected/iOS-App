@@ -10,20 +10,13 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-enum HomeViewControllerData {
-    case projectDatail(project: Project)
-
-}
-
 protocol HomeViewModelInputs {
-    func showProjectDetail(project: Project)
     func viewDidLoad()
     func refresh()
     func deinited()
 }
 
 protocol HomeViewModelOutputs {
-    func presentViewController() -> Signal<HomeViewControllerData>
     func themedProjects() -> Driver<[ThemedProjects]>
     func isRefreshing() -> Driver<Bool>
     func showError() -> Signal<Error>
@@ -55,11 +48,6 @@ final class HomeViewModel: HomeViewModelType, HomeViewModelInputs, HomeViewModel
         refreshProperty.accept(Void())
     }
 
-    private let showProjectDetailProperty: PublishRelay<Project> = PublishRelay()
-    func showProjectDetail(project: Project) {
-        showProjectDetailProperty.accept(project)
-    }
-
     private let deinitedProperty: PublishRelay<Void> = PublishRelay()
     func deinited() {
         deinitedProperty.accept(Void())
@@ -70,11 +58,6 @@ final class HomeViewModel: HomeViewModelType, HomeViewModelInputs, HomeViewModel
     private let themedProjectsProperty: BehaviorRelay<[ThemedProjects]> = BehaviorRelay(value: [])
     func themedProjects() -> Driver<[ThemedProjects]> {
         return themedProjectsProperty.asDriver()
-    }
-
-    private let presentViewControllerProperty: PublishRelay<HomeViewControllerData> = PublishRelay()
-    func presentViewController() -> Signal<HomeViewControllerData> {
-        return presentViewControllerProperty.asSignal()
     }
 
     private let isRefreshingProperty: BehaviorRelay<Bool> = BehaviorRelay(value: false)
@@ -109,11 +92,6 @@ final class HomeViewModel: HomeViewModelType, HomeViewModelInputs, HomeViewModel
                     self.showErrorProperty.accept(error)
                 }
             })
-            .disposed(by: disposeBag)
-
-        showProjectDetailProperty
-            .map(HomeViewControllerData.projectDatail(project:))
-            .bind(to: presentViewControllerProperty)
             .disposed(by: disposeBag)
 
         deinitedProperty

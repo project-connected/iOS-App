@@ -18,7 +18,6 @@ public protocol BaseCell: class {
     var viewModel: ViewModelType? { get set }
 
     func configureWith(with item: Item)
-
 }
 
 extension BaseCell {

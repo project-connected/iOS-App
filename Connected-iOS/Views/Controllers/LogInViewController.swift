@@ -21,19 +21,16 @@ final class LogInViewController: UIViewController {
 
     private var disposeBag = DisposeBag()
     private let viewModel: LogInViewModelType
-    private let signUpViewControllerFactory: SignUpViewController.Factory
-    private let signInViewControllerFactory: SignInViewController.Factory
+    private weak var coordinator: LogInCoordinatorType?
 
     // MARK: - Lifecycle
 
     init(
         viewModel: LogInViewModelType,
-        signUpViewControllerFactory: SignUpViewController.Factory,
-        signInViewControllerFactory: SignInViewController.Factory
+        coordinator: LogInCoordinatorType
     ) {
         self.viewModel = viewModel
-        self.signUpViewControllerFactory = signUpViewControllerFactory
-        self.signInViewControllerFactory = signInViewControllerFactory
+        self.coordinator = coordinator
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -81,8 +78,7 @@ final class LogInViewController: UIViewController {
             .disposed(by: disposeBag)
 
         viewModel.outputs.pushViewController()
-            .map(viewController(from:))
-            .emit(onNext: { self.navigationController?.pushViewController($0, animated: true) })
+            .emit(onNext: navigate(to:))
             .disposed(by: disposeBag)
     }
 
@@ -127,12 +123,12 @@ final class LogInViewController: UIViewController {
         ])
     }
 
-    private func viewController(from data: LogInViewControllerData) -> UIViewController {
+    private func navigate(to data: LogInViewControllerData) {
         switch data {
         case .signUp:
-            return signUpViewControllerFactory.create()
+            coordinator?.pushToSignUp()
         case .signIn:
-            return signInViewControllerFactory.create()
+            coordinator?.pushToSignIn()
         }
     }
 }

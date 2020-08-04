@@ -12,18 +12,14 @@ class CategoryDataSource: BaseDataSource {
 
     // MARK: - Properties
 
-    private let categoryCellConfigurator: CategoryCell.Configurator
+    private let categoryCellViewModelFactory: CategoryCellViewModelFactory
 
     // MARK: - Lifecycle
 
     init(
-        categoryCellConfigurator: CategoryCell.Configurator
+        categoryCellViewModelFactory: @escaping CategoryCellViewModelFactory
     ) {
-        self.categoryCellConfigurator = categoryCellConfigurator
-    }
-
-    required init(dependency: Dependency, payload: ()) {
-        fatalError("Fatal Error CategoryDataSource initializer")
+        self.categoryCellViewModelFactory = categoryCellViewModelFactory
     }
 
     // MARK: - Functions
@@ -31,7 +27,10 @@ class CategoryDataSource: BaseDataSource {
     override func configureCell(collectionCell cell: UICollectionViewCell, with item: Any) {
         switch (cell, item) {
         case let (cell as CategoryCell, item as String):
-            categoryCellConfigurator.configure(cell, payload: .init(category: item))
+            if cell.viewModel == nil {
+                cell.viewModel = categoryCellViewModelFactory()
+            }
+            cell.configureWith(with: item)
         default:
             fatalError("Unrecognized set : \(cell), \(item)")
         }

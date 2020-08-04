@@ -6,8 +6,7 @@
 //  Copyright © 2020 connected. All rights reserved.
 //
 
-import Foundation
-import Pure
+import UIKit
 import Firebase
 
 extension AppDependency {
@@ -19,44 +18,51 @@ extension AppDependency {
         let analyticsService: AnalyticsServiceType.Type = MockAnalyticsService.self
         let imageLoader: ImageLoaderType = KingfisherImageLoader()
 
-        let homeContainerViewControllerFactory = resolveHomeContainerDependencies(
+        let errorCellViewModelFactory: ErrorCellViewModelFactory = { ErrorCellViewModel() }
+
+        let homeCoordinatorFactory = resolveHomeDependencies(
+            networkService: networkService,
+            imageLoader: imageLoader,
+            errorCellViewModelFactory: errorCellViewModelFactory
+        )
+
+        let myProjectCoordinatorFactory = resolveMyProjectDependencies(
             networkService: networkService,
             imageLoader: imageLoader
         )
 
-        let myProjectContainerViewControllerFactory = resolveMyProjectContainerDependencies(
+        let chatCoordinatorFactory = resolveChatDependencies(
             networkService: networkService,
-            imageLoader: imageLoader
+            imageLoader: imageLoader,
+            errorCellViewModelFactory: errorCellViewModelFactory
         )
 
-        let chatLobbyViewControllerFactory = resolveChatDependencies(
-            networkService: networkService,
-            imageLoader: imageLoader
-        )
-
-        let loginViewControllerFactory = resolveLogInDependencies(
+        let loginCoordinatorFactory = resolveLogInDependencies(
             networkService: networkService
         )
 
-        let rootTabBarControllerFactory: RootTabBarController.Factory = .init(
-            dependency: .init(
-                viewModelFactory: .init(
-                    dependency: .init()
-                ),
-                homeContainerViewControllerFactory: homeContainerViewControllerFactory,
-                myProjectContainerViewControllerFactory: myProjectContainerViewControllerFactory,
-                chatLobbyViewControllerFactory: chatLobbyViewControllerFactory,
-                loginViewControllerFactory: loginViewControllerFactory
+        let rootTabBarControllerFactory: RootTabBarControllerFactory = { coordinator in
+            RootTabBarController(
+                viewModel: RootViewModel(),
+                coordinator: coordinator
             )
-        )
+        }
+
+        let appCoordinatorFactory: AppCoordinatorFactory = { window in
+            AppCoordinator(
+                window: window,
+                rootTabBarControllerFactory: rootTabBarControllerFactory,
+                homeCoordinatorFactory: homeCoordinatorFactory,
+                myProjectCoordinatorFactory: myProjectCoordinatorFactory,
+                chatCoordinatorFactory: chatCoordinatorFactory,
+                logInCoordinatorFactory: loginCoordinatorFactory
+            )
+        }
 
         return AppDependency(
-            viewModelFactory: .init(
-                dependency: .init()
-            ),
+            viewModel: AppDelegateViewModel(),
             analyticsService: analyticsService,
-            networkService: networkService,
-            rootViewController: rootTabBarControllerFactory.create()
+            appCoordinatorFactory: appCoordinatorFactory
         )
     }
 
@@ -65,71 +71,13 @@ extension AppDependency {
 // MARK: - AppDependency
 
 struct AppDependency {
-    let viewModelFactory: AppDelegateViewModel.Factory
+    let viewModel: AppDelegateViewModelType
     let analyticsService: AnalyticsServiceType.Type
-    let networkService: NetworkServiceType
-    let rootViewController: UIViewController
+    let appCoordinatorFactory: AppCoordinatorFactory
 }
 
-// MARK: - AppDelegateViewModel
+typealias AppCoordinatorFactory = (UIWindow) -> AppCoordinatorType
 
-extension AppDelegateViewModel: FactoryModule {
-    convenience init(dependency: Dependency, payload: ()) {
-        self.init(dependency: dependency)
-    }
+typealias RootTabBarControllerFactory = (AppCoordinatorType) -> RootTabBarController
 
-    struct Dependency {
-
-    }
-}
-
-extension Factory where Module == AppDelegateViewModel {
-    func create() -> AppDelegateViewModelType {
-        let module = Module()
-        return module
-    }
-}
-
-// MARK: - RootViewModel
-
-extension RootViewModel: FactoryModule {
-    convenience init(dependency: Dependency, payload: ()) {
-        self.init(dependency: dependency)
-    }
-
-    struct Dependency {
-
-    }
-}
-
-extension Factory where Module == RootViewModel {
-    func create() -> RootViewModelType {
-        let module = Module()
-        return module
-    }
-}
-
-// MARK: - RootTabBarController
-
-extension RootTabBarController: FactoryModule {
-    struct Dependency {
-        let viewModelFactory: RootViewModel.Factory
-        let homeContainerViewControllerFactory: HomeContainerViewController.Factory
-        let myProjectContainerViewControllerFactory: MyProjectContainerViewController.Factory
-        let chatLobbyViewControllerFactory: ChatLobbyViewController.Factory
-        let loginViewControllerFactory: LogInViewController.Factory
-    }
-}
-
-extension Factory where Module == RootTabBarController {
-    func create() -> UIViewController {
-        let module = Module(
-            viewModel: dependency.viewModelFactory.create(),
-            homeContainerViewControllerFactory: dependency.homeContainerViewControllerFactory,
-            myProjectContainerViewControllerFactory: dependency.myProjectContainerViewControllerFactory,
-            chatLobbyViewControllerFactory: dependency.chatLobbyViewControllerFactory,
-            logInViewControllerFactory: dependency.loginViewControllerFactory
-        )
-        return module
-    }
-}
+typealias ErrorCellViewModelFactory = () -> ErrorCellViewModelType

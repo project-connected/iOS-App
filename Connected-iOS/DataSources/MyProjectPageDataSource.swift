@@ -13,18 +13,14 @@ class MyProjectPageDataSource: NSObject, UIPageViewControllerDataSource {
     // MARK: - Properties
 
     private var pages: [(ProjectState, UIViewController)] = []
-    private let pageViewControllerFactory: MyProjectPageViewController.Factory
+    private let pageViewControllerFactory: MyProjectPageViewControllerFactory
 
     // MARK: - Lifecycle
 
     init(
-        myProjectPageViewControllerFactory: MyProjectPageViewController.Factory
+        myProjectPageViewControllerFactory: @escaping MyProjectPageViewControllerFactory
     ) {
         self.pageViewControllerFactory = myProjectPageViewControllerFactory
-    }
-
-    required init(dependency: Dependency, payload: ()) {
-        fatalError("Fatal Error CategoryDataSource initializer")
     }
 
     // MARK: - Functions
@@ -74,7 +70,7 @@ class MyProjectPageDataSource: NSObject, UIPageViewControllerDataSource {
     }
 
     final func setProjectStates(projectStates: [ProjectState]) {
-        let pages = projectStates.map { ($0, pageViewControllerFactory.create()) }
+        let pages = projectStates.map { ($0, pageViewControllerFactory()) }
         self.pages = pages
     }
 }

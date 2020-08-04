@@ -12,34 +12,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // MARK: - Properties
 
-    var window: UIWindow?
+    var window: UIWindow? = UIWindow()
 
     private let viewModel: AppDelegateViewModelType
     private let analyticsService: AnalyticsServiceType.Type
-    private let networkService: NetworkServiceType
-    private let rootViewController: UIViewController
+    private let appCoordinator: AppCoordinatorType
 
     // MARK: - Lifecycle
 
     private override init() {
         let dependency = AppDependency.resolve()
-        self.viewModel = dependency.viewModelFactory.create()
+        self.viewModel = dependency.viewModel
         self.analyticsService = dependency.analyticsService
-        self.networkService = dependency.networkService
-        self.rootViewController = dependency.rootViewController
+
+        guard let window = window else {
+            fatalError("UIWindow is nil")
+        }
+        self.appCoordinator = dependency.appCoordinatorFactory(window)
+
         super.init()
     }
 
     init(
         viewModel: AppDelegateViewModelType,
         analyticsService: AnalyticsServiceType.Type,
-        networkService: NetworkServiceType,
-        rootViewController: UIViewController
+        appCoordinatorFactory: @escaping AppCoordinatorFactory
     ) {
         self.viewModel = viewModel
         self.analyticsService = analyticsService
-        self.networkService = networkService
-        self.rootViewController = rootViewController
+
+        guard let window = window else {
+            fatalError("UIWindow is nil")
+        }
+        self.appCoordinator = appCoordinatorFactory(window)
 
         super.init()
     }
@@ -51,13 +56,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
 
+        bindViewModel()
+
         analyticsService.configure()
 
-        window = UIWindow()
-        window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
-
-        bindViewModel()
+        appCoordinator.start()
 
         return true
     }

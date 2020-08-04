@@ -10,10 +10,6 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-protocol ProjectCollectionCellDelegate: class, Alertable {
-    func showProjectDetail(project: Project)
-}
-
 class ProjectCollectionCell: UITableViewCell, BaseCell {
 
     // MARK: - UI Properties
@@ -33,7 +29,7 @@ class ProjectCollectionCell: UITableViewCell, BaseCell {
     var dataSource: BaseDataSource? {
         didSet { configureCollectionView() }
     }
-    weak var delegate: ProjectCollectionCellDelegate?
+    weak var coordinator: ProjectDetailCoordinatorType?
 
     // MARK: - Lifecycle
 
@@ -67,7 +63,9 @@ class ProjectCollectionCell: UITableViewCell, BaseCell {
             .disposed(by: disposeBag)
 
         viewModel?.outputs.showProjectDetail()
-            .emit(onNext: delegate?.showProjectDetail(project:))
+            .emit(onNext: { [weak self] in
+                self?.coordinator?.pushToProjectDetail(project: $0)
+            })
             .disposed(by: disposeBag)
 
         viewModel?.outputs.projects()

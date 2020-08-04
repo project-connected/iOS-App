@@ -8,7 +8,6 @@
 
 import XCTest
 @testable import Connected_iOS
-import Pure
 import Nimble
 
 class TestAppDelegate: NSObject, UIApplicationDelegate {
@@ -22,14 +21,23 @@ class MockAnalyticsService: AnalyticsServiceType {
     }
 }
 
+class StubAppCoordinator: AppCoordinatorType {
+    func clearChildren() { }
+    func navigateToHome(navigationController: UINavigationController) { }
+    func navigateToMyProject(navigationController: UINavigationController) { }
+    func navigateToChat(navigationController: UINavigationController) { }
+    func navigateToLogIn(navigationController: UINavigationController) { }
+    func navigateToProfile(navigationController: UINavigationController) { }
+    func start() { }
+}
+
 class AppDelegateTests: XCTestCase {
 
     func testInjectRootViewControllerDependencies() {
         let appDelegate = AppDelegate(
             viewModel: AppDelegateViewModel(),
             analyticsService: MockAnalyticsService.self,
-            networkService: StubNetworkService(),
-            rootViewController: ViewController()
+            appCoordinatorFactory: { window in StubAppCoordinator() }
         )
 
         _ = appDelegate.application(.shared, didFinishLaunchingWithOptions: nil)

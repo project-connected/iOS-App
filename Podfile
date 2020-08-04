@@ -11,8 +11,6 @@ target 'Connected-iOS' do
   pod 'RxCocoa'
   pod 'Kingfisher'
   pod 'Moya'
-  pod 'Pure'
-  pod 'Pure/Stub'
 
   target 'Connected-iOSTests' do
     pod 'RxBlocking'

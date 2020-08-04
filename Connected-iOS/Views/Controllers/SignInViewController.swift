@@ -19,7 +19,7 @@ final class SignInViewController: UIViewController {
     private let formStackView: UIStackView = UIStackView()
     private let emailTextField: UITextField = UITextField()
     private let passwordTextField: UITextField = UITextField()
-    private let signInButton: UIButton = UIButton(type: .system)
+    private let signInButton: UIButton = UIButton()
 
     // MARK: - Properties
 

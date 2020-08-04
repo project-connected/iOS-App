@@ -12,24 +12,25 @@ class HomeDataSource: BaseDataSource {
 
     // MARK: - Properties
 
-    private let errorCellConfigurator: ErrorCell.Configurator
-    private let projectCollectionCellConfigurator: ProjectCollectionCell.Configurator
-    weak var cellDelegate: ProjectCollectionCellDelegate?
+    private let errorCellViewModelFactory: ErrorCellViewModelFactory
+    private let projectCollectionCellFactory: ProjectCollectionCellViewModelFactory
+    private let projectThumbnailDataSourceFactory: ProjectThumbnailDataSourceFactory
+    private weak var coordinator: ProjectDetailCoordinatorType?
 
     // MARK: - Lifecycle
 
     init(
-        errorCellConfigurator: ErrorCell.Configurator,
-        projectCollectionCellConfigurator: ProjectCollectionCell.Configurator
+        errorCellViewModelFactory: @escaping ErrorCellViewModelFactory,
+        projectCollectionCellFactory: @escaping ProjectCollectionCellViewModelFactory,
+        projectThumbnailDataSourceFactory: @escaping ProjectThumbnailDataSourceFactory,
+        coordinator: ProjectDetailCoordinatorType
     ) {
-        self.errorCellConfigurator = errorCellConfigurator
-        self.projectCollectionCellConfigurator = projectCollectionCellConfigurator
+        self.errorCellViewModelFactory = errorCellViewModelFactory
+        self.projectCollectionCellFactory = projectCollectionCellFactory
+        self.projectThumbnailDataSourceFactory = projectThumbnailDataSourceFactory
+        self.coordinator = coordinator
 
         super.init()
-    }
-
-    required init(dependency: Dependency, payload: ()) {
-        fatalError("Fatal Error HomeDataSource initializer")
     }
 
     // MARK: - Functions
@@ -37,10 +38,17 @@ class HomeDataSource: BaseDataSource {
     override func configureCell(tableCell cell: UITableViewCell, with item: Any) {
         switch (cell, item) {
         case let (cell as ErrorCell, item as Error):
-            errorCellConfigurator.configure(cell, payload: .init(error: item))
+            if cell.viewModel == nil {
+                cell.viewModel = errorCellViewModelFactory()
+            }
+            cell.configureWith(with: item)
         case let (cell as ProjectCollectionCell, item as ThemedProjects):
-            cell.delegate = cellDelegate
-            projectCollectionCellConfigurator.configure(cell, payload: .init(themedProjects: item))
+            if cell.viewModel == nil {
+                cell.viewModel = projectCollectionCellFactory()
+                cell.dataSource = projectThumbnailDataSourceFactory()
+                cell.coordinator = coordinator
+            }
+            cell.configureWith(with: item)
         default:
             fatalError("Unrecognized set : \(cell), \(item)")
         }
