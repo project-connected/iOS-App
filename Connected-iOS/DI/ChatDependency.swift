@@ -29,8 +29,12 @@ extension AppDependency {
                 },
                 chatRoomViewControllerFactory: { chatRoom in
                     ChatRoomViewController(
+                        chatRoom: chatRoom,
                         viewModel: ChatRoomViewModel(networkService: networkService),
-                        chatRoom: chatRoom
+                        dataSource: ChatMessageDataSource(
+                            myMsgCellViewModelFactory: { ChatMyMessageCellViewModel() },
+                            counterpartMsgCellViewModelFactory: { ChatCounterpartMessageCellViewModel() }
+                        )
                     )
                 }
             )

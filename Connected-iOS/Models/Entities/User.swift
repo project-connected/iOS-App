@@ -11,20 +11,20 @@ import Foundation
 public struct User {
     let id: Id
     let authToken: AuthToken?
-
 }
 
 public extension User {
     struct SignUpInfo {
         let email: String
         let password: String
-        let nickname: String
+        let nickname: Nickname
     }
 }
 
 public extension User {
     typealias AuthToken = String
     typealias Id = Int
+    typealias Nickname = String
 }
 
 extension User: Equatable {

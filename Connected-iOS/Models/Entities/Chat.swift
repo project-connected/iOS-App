@@ -17,7 +17,7 @@ public extension Chat {
 
     struct Message {
         let roomId: Chat.Room.Id
-        let sender: User.Id
+        let sender: (id: User.Id, nickname: User.Nickname)
         let contents: Contents
     }
 }

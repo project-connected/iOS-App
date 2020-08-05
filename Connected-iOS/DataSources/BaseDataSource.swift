@@ -45,13 +45,15 @@ open class BaseDataSource: NSObject, UICollectionViewDataSource, UITableViewData
         self.items[section] = items.map { ($0, Cell.reusableId) }
     }
 
-    public final func append<Cell: BaseCell, Item: Any>(
+    @discardableResult
+    public final func appendRow<Cell: BaseCell, Item: Any>(
         item: Item,
         cellClass: Cell.Type,
         section: Int
-    ) where Cell.Item == Item {
+    ) -> IndexPath where Cell.Item == Item {
         padSection(section: section)
         items[section].append((item, Cell.reusableId))
+        return IndexPath(item: items[section].count - 1, section: section)
     }
 
     private func padSection(section: Int) {
