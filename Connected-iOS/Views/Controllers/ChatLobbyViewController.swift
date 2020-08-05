@@ -79,8 +79,7 @@ final class ChatLobbyViewController: UITableViewController {
             .disposed(by: disposeBag)
 
         tableView.rx.itemSelected
-            .map { [weak self] in self?.dataSource[$0] }
-            .compactMap { $0 as? ChatRoom }
+            .compactMap { [weak self] in self?.dataSource[$0] as? Chat.Room }
             .bind(onNext: { [weak self] in
                 self?.viewModel.inputs.chatRoomClicked(chatRoom: $0)
             })

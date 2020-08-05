@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 protocol ChatRoomCellViewModelInputs {
-    func configure(with room: ChatRoom)
+    func configure(with room: Chat.Room)
     func deinited()
 }
 
@@ -38,8 +38,8 @@ ChatRoomCellViewModelInputs, ChatRoomCellViewModelOutputs {
 
     // MARK: - Inputs
 
-    private let configureProperty: PublishRelay<ChatRoom> = PublishRelay()
-    func configure(with room: ChatRoom) {
+    private let configureProperty: PublishRelay<Chat.Room> = PublishRelay()
+    func configure(with room: Chat.Room) {
         configureProperty.accept(room)
     }
 

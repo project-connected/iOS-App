@@ -26,7 +26,7 @@ class AppCoordinator: AppCoordinatorType {
     private let rootTabBarControllerFactory: RootTabBarControllerFactory
     private let homeCoordinatorFactory: HomeCoordinatorFactory
     private let myProjectCoordinatorFactory: MyProjectCoordinatorFactory
-    private let chatCoordinatorFactory: ChatCoordinatorFactory
+    private let chatCoordinatorFactory: ChatCoordinator.Factory
     private let logInCoordinatorFactory: LogInCoordinatorFactory
 
     // MARK: - Lifecycle
@@ -36,7 +36,7 @@ class AppCoordinator: AppCoordinatorType {
         rootTabBarControllerFactory: @escaping RootTabBarControllerFactory,
         homeCoordinatorFactory: @escaping HomeCoordinatorFactory,
         myProjectCoordinatorFactory: @escaping MyProjectCoordinatorFactory,
-        chatCoordinatorFactory: @escaping ChatCoordinatorFactory,
+        chatCoordinatorFactory: @escaping ChatCoordinator.Factory,
         logInCoordinatorFactory: @escaping LogInCoordinatorFactory
     ) {
         self.window = window

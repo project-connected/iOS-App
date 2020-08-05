@@ -23,7 +23,7 @@ final class ChatRoomViewController: UIViewController {
 
     init(
         viewModel: ChatRoomViewModelType,
-        chatRoom: ChatRoom
+        chatRoom: Chat.Room
     ) {
         self.viewModel = viewModel
 
@@ -40,6 +40,8 @@ final class ChatRoomViewController: UIViewController {
         setUpLayout()
         bindStyles()
         bindViewModel()
+
+        viewModel.inputs.viewDidLoad()
     }
 
     // MARK: - Functions
@@ -48,6 +50,17 @@ final class ChatRoomViewController: UIViewController {
         self.rx.deallocated
             .bind(onNext: {[weak self] in
                 self?.viewModel.inputs.deinited()
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.addNewMessage()
+            .emit(onNext: { [weak self] data in
+                switch data {
+                case .myMsg(let msg):
+                    _ = 1
+                case .counterpartMsg(let msg):
+                    _ = 2
+                }
             })
             .disposed(by: disposeBag)
     }

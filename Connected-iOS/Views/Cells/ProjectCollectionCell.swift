@@ -55,8 +55,7 @@ class ProjectCollectionCell: UITableViewCell, BaseCell {
             .disposed(by: disposeBag)
 
         collectionView.rx.itemSelected
-            .map { [weak self] in self?.dataSource?[$0] }
-            .compactMap { $0 as? Project }
+            .compactMap { [weak self] in self?.dataSource?[$0] as? Project }
             .bind(onNext: { [weak self] in
                 self?.viewModel?.inputs.projectClicked(project: $0)
             })
