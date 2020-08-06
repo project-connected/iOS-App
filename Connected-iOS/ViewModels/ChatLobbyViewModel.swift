@@ -13,15 +13,15 @@ import RxCocoa
 protocol ChatLobbyViewModelInputs {
     func viewDidLoad()
     func pullToRefresh()
-    func chatRoomClicked(chatRoom: ChatRoom)
+    func chatRoomClicked(chatRoom: Chat.Room)
     func deinited()
 }
 
 protocol ChatLobbyViewModelOutputs {
-    func chatRooms() -> Driver<[ChatRoom]>
+    func chatRooms() -> Driver<[Chat.Room]>
     func showErrorMsg() -> Signal<Error>
     func isRefreshing() -> Driver<Bool>
-    func showChatRoom() -> Signal<ChatRoom>
+    func showChatRoom() -> Signal<Chat.Room>
 }
 
 protocol ChatLobbyViewModelType {
@@ -51,8 +51,8 @@ ChatLobbyViewModelInputs, ChatLobbyViewModelOutputs {
         pullToRefreshProperty.accept(Void())
     }
 
-    private let chatRoomClickedProperty: PublishRelay<ChatRoom> = PublishRelay()
-    func chatRoomClicked(chatRoom: ChatRoom) {
+    private let chatRoomClickedProperty: PublishRelay<Chat.Room> = PublishRelay()
+    func chatRoomClicked(chatRoom: Chat.Room) {
         chatRoomClickedProperty.accept(chatRoom)
     }
 
@@ -63,8 +63,8 @@ ChatLobbyViewModelInputs, ChatLobbyViewModelOutputs {
 
     // MARK: - Outputs
 
-    private let chatRoomsProperty: BehaviorRelay<[ChatRoom]> = BehaviorRelay(value: [])
-    func chatRooms() -> Driver<[ChatRoom]> {
+    private let chatRoomsProperty: BehaviorRelay<[Chat.Room]> = BehaviorRelay(value: [])
+    func chatRooms() -> Driver<[Chat.Room]> {
         return chatRoomsProperty.asDriver()
     }
 
@@ -78,8 +78,8 @@ ChatLobbyViewModelInputs, ChatLobbyViewModelOutputs {
         return isRefreshingProperty.asDriver()
     }
 
-    private let showChatRoomProperty: PublishRelay<ChatRoom> = PublishRelay()
-    func showChatRoom() -> Signal<ChatRoom> {
+    private let showChatRoomProperty: PublishRelay<Chat.Room> = PublishRelay()
+    func showChatRoom() -> Signal<Chat.Room> {
         return showChatRoomProperty.asSignal()
     }
 

@@ -71,7 +71,7 @@ class ChatRoomCell: UITableViewCell, BaseCell {
             .disposed(by: disposeBag)
     }
 
-    func configureWith(with item: ChatRoom) {
+    func configureWith(with item: Chat.Room) {
         viewModel?.inputs.configure(with: item)
     }
 }

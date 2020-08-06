@@ -59,8 +59,7 @@ final class RootTabBarController: UITabBarController {
             .disposed(by: disposeBag)
 
         self.rx.didSelect
-            .map { [weak self] _ in self?.selectedIndex }
-            .compactMap { $0 }
+            .compactMap { [weak self] _ in self?.selectedIndex }
             .bind(onNext: viewModel.inputs.didSelect(index:))
             .disposed(by: disposeBag)
 

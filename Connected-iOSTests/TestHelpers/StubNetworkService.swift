@@ -18,14 +18,14 @@ class StubNetworkService: NetworkServiceType {
     private let signInResult: Result<User, NetworkError>?
     private let projectsResult: Result<[Project], NetworkError>?
     private let themedProjectsResult: Result<[ThemedProjects], NetworkError>?
-    private let chatRoomsResult: Result<[ChatRoom], NetworkError>?
+    private let chatRoomsResult: Result<[Chat.Room], NetworkError>?
 
     init(
         signUpResult: Result<User, NetworkError>? = nil,
         signInResult: Result<User, NetworkError>? = nil,
         projectsResult: Result<[Project], NetworkError>? = nil,
         themedProjectsResult: Result<[ThemedProjects], NetworkError>? = nil,
-        chatRoomsResult: Result<[ChatRoom], NetworkError>? = nil
+        chatRoomsResult: Result<[Chat.Room], NetworkError>? = nil
     ) {
         self.signUpResult = signUpResult
         self.signInResult = signInResult
@@ -50,7 +50,7 @@ class StubNetworkService: NetworkServiceType {
         return Single.just(self.themedProjectsResult!)
     }
 
-    func chatRooms() -> Single<Result<[ChatRoom], NetworkError>> {
+    func chatRooms() -> Single<Result<[Chat.Room], NetworkError>> {
         return Single.just(self.chatRoomsResult!)
     }
 

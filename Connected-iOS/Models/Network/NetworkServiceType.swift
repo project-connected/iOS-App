@@ -34,7 +34,7 @@ protocol NetworkServiceType {
     func signIn(email: String, password: String) -> Single<Result<User, NetworkError>>
     func projects() -> Single<Result<[Project], NetworkError>>
     func themedProjects() -> Single<Result<[ThemedProjects], NetworkError>>
-    func chatRooms() -> Single<Result<[ChatRoom], NetworkError>>
+    func chatRooms() -> Single<Result<[Chat.Room], NetworkError>>
 }
 
 class TestNetworkService: NetworkServiceType {
@@ -87,8 +87,8 @@ class TestNetworkService: NetworkServiceType {
         return Single.just(.failure(NetworkError.just))
     }
 
-    func chatRooms() -> Single<Result<[ChatRoom], NetworkError>> {
-        let rooms = [ChatRoom(id: 1), ChatRoom(id: 2)]
+    func chatRooms() -> Single<Result<[Chat.Room], NetworkError>> {
+        let rooms = [Chat.Room(id: 1), Chat.Room(id: 2)]
         return Single.just(.success(rooms))
     }
 }

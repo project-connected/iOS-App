@@ -13,7 +13,7 @@ extension AppDependency {
         networkService: NetworkServiceType,
         imageLoader: ImageLoaderType,
         errorCellViewModelFactory: @escaping ErrorCellViewModelFactory
-    ) -> ChatCoordinatorFactory {
+    ) -> ChatCoordinator.Factory {
         return { navigationController in
             ChatCoordinator(
                 navigationController: navigationController,
@@ -29,8 +29,12 @@ extension AppDependency {
                 },
                 chatRoomViewControllerFactory: { chatRoom in
                     ChatRoomViewController(
+                        chatRoom: chatRoom,
                         viewModel: ChatRoomViewModel(networkService: networkService),
-                        chatRoom: chatRoom
+                        dataSource: ChatMessageDataSource(
+                            myMsgCellViewModelFactory: { ChatMyMessageCellViewModel() },
+                            counterpartMsgCellViewModelFactory: { ChatCounterpartMessageCellViewModel() }
+                        )
                     )
                 }
             )
@@ -38,9 +42,26 @@ extension AppDependency {
     }
 }
 
-typealias ChatCoordinatorFactory = (UINavigationController) -> Coordinator
+extension ChatCoordinator {
+    typealias Factory = (UINavigationController) -> Coordinator
+}
 
-typealias ChatLobbyViewControllerFactory = (ChatCoordinatorType) -> ChatLobbyViewController
-typealias ChatRoomViewControllerFactory = (ChatRoom) -> ChatRoomViewController
+extension ChatLobbyViewController {
+    typealias Factory = (ChatCoordinatorType) -> ChatLobbyViewController
+}
 
-typealias ChatRoomCellViewModelFactory = () -> ChatRoomCellViewModelType
+extension ChatRoomViewController {
+    typealias Factory = (Chat.Room) -> ChatRoomViewController
+}
+
+extension ChatRoomCellViewModelType {
+    typealias Factory = () -> ChatRoomCellViewModelType
+}
+
+extension ChatMyMessageCellViewModelType {
+    typealias Factory = () -> ChatMyMessageCellViewModelType
+}
+
+extension ChatCounterpartMessageCellViewModelType {
+    typealias Factory = () -> ChatCounterpartMessageCellViewModelType
+}

@@ -41,13 +41,28 @@ open class BaseDataSource: NSObject, UICollectionViewDataSource, UITableViewData
         cellClass: Cell.Type,
         section: Int
     ) where Cell.Item == Item {
+        padSection(section: section)
+        self.items[section] = items.map { ($0, Cell.reusableId) }
+    }
+
+    @discardableResult
+    public final func appendRow<Cell: BaseCell, Item: Any>(
+        item: Item,
+        cellClass: Cell.Type,
+        section: Int
+    ) -> IndexPath where Cell.Item == Item {
+        padSection(section: section)
+        items[section].append((item, Cell.reusableId))
+        return IndexPath(item: items[section].count - 1, section: section)
+    }
+
+    private func padSection(section: Int) {
         if self.items.count <= section {
             self.items += [[(item: Any, reusableId: String)]](
                 repeating: [],
                 count: section - self.items.count + 1
             )
         }
-        self.items[section] = items.map { ($0, Cell.reusableId) }
     }
 
     public final subscript(indexPath: IndexPath) -> Any {
@@ -56,6 +71,17 @@ open class BaseDataSource: NSObject, UICollectionViewDataSource, UITableViewData
 
     open func configureCell(collectionCell cell: UICollectionViewCell, with item: Any) { }
     open func configureCell(tableCell cell: UITableViewCell, with item: Any) { }
+
+    public final func configure<Cell: BaseCell>(
+        cell: Cell,
+        item: Cell.Item,
+        factory: () -> Cell.ViewModelType
+    ) {
+        if cell.viewModel == nil {
+            cell.viewModel = factory()
+        }
+        cell.configureWith(with: item)
+    }
 
     // MARK: - CollectionViewDataSource
 

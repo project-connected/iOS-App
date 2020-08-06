@@ -8,24 +8,27 @@
 
 import Foundation
 
-struct User {
+public struct User {
     let id: Id
     let authToken: AuthToken?
 }
 
-extension User {
-    typealias AuthToken = String
-    typealias Id = Int
-}
-
-extension User: Equatable {
-    static func == (left: User, right: User) -> Bool {
-        return left.id == right.id
+public extension User {
+    struct SignUpInfo {
+        let email: String
+        let password: String
+        let nickname: Nickname
     }
 }
 
-struct SignUpInfo {
-    let email: String
-    let password: String
-    let nickname: String
+public extension User {
+    typealias AuthToken = String
+    typealias Id = Int
+    typealias Nickname = String
+}
+
+extension User: Equatable {
+    public static func == (left: User, right: User) -> Bool {
+        return left.id == right.id
+    }
 }

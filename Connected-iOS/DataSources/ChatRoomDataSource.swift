@@ -12,13 +12,13 @@ class ChatRoomDataSource: BaseDataSource {
 
     // MARK: - Properties
 
-    private let chatRoomCellViewModelFactory: ChatRoomCellViewModelFactory
+    private let chatRoomCellViewModelFactory: ChatRoomCellViewModel.Factory
     private let errorCellViewModelFactory: ErrorCellViewModelFactory
 
     // MARK: - Lifecycle
 
     init(
-        chatRoomCellViewModelFactory: @escaping ChatRoomCellViewModelFactory,
+        chatRoomCellViewModelFactory: @escaping ChatRoomCellViewModel.Factory,
         errorCellViewModelFactory: @escaping ErrorCellViewModelFactory
     ) {
         self.chatRoomCellViewModelFactory = chatRoomCellViewModelFactory
@@ -29,7 +29,7 @@ class ChatRoomDataSource: BaseDataSource {
 
     override func configureCell(tableCell cell: UITableViewCell, with item: Any) {
         switch (cell, item) {
-        case let (cell as ChatRoomCell, item as ChatRoom):
+        case let (cell as ChatRoomCell, item as Chat.Room):
             if cell.viewModel == nil {
                 cell.viewModel = chatRoomCellViewModelFactory()
             }
